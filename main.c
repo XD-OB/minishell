@@ -21,18 +21,65 @@ pid_t	create_process(void)
 	exit(EXIT_FAILURE);
 }
 
-void	display_prompt(void)
+void	display_prompt(char *envp[])
 {
-	ft_printf("%{cyan}obelouch%{eoc}");
-	ft_printf("%{GREEN}$%{eoc} ");
+	char	curr_dir[500];
+	char	*user;
+	int	i;
+
+	i = -1;
+	user = NULL;
+	while (envp[++i])
+		if (!ft_strncmp(envp[i], "USER=", 5))
+			user = ft_strdup(&(envp[i][5]));
+	if (!user)
+		user = ft_strdup("user");
+	getcwd(curr_dir, 500);
+	ft_printf("%{GREEN}%s%{eoc}", user);
+	ft_printf("%{RED}:%{cyan} %s%{eoc}$ ", curr_dir);
+	free(user);
 }
 
-int	exec_cmd(char *cmd, char *envp[])
+char	**get_paths(char *envp[])
 {
-	char	**tab;
+	char	**tab_path;
+	char	*path;
+	int	i;
+
+	i = -1;
+	while (envp[++i])
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+			path = ft_strdup(&(envp[i][5]));
+	tab_path = ft_strsplit(path, ':');
+	free(path);
+	return (tab_path);
+}
+
+void	exec_cmd(char *cmd, char *envp[])
+{
+	int		i;
+	char		**tab;
+	char		**tab_path;
+	char		*full_path;
+	struct stat	status;
 
 	tab = ft_strsplit(cmd, ' ');
-	ft_printf("\ncommande: %s|size: %d\n", cmd, ft_strlen(cmd));
+	//if (ft_strchr(tab[0], '/'))
+	//	return (cmd_user(cmd, envp));
+	tab_path = get_paths(envp);
+	i = -1;
+	while(tab_path[++i])
+	{
+		full_path = ft_strjoin(tab_path[i], "/");
+		ft_strcombin(&full_path, tab[0]);
+		if (execve(full_path, tab, envp) != -1)
+		{
+			free(full_path);
+			return ;
+		}
+		free(full_path);
+	}
+	ft_printf("%s: commande not found\n", tab[0]);
 	free_tabstr(tab);
 }
 
@@ -45,7 +92,7 @@ int	main(int ac, char **av, char *envp[])
 
 	while (1)
 	{
-		display_prompt();
+		display_prompt(envp);
 		get_next_line(0, &line);
 		cmd = cmdsplit(line);
 		i = -1;

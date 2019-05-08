@@ -161,5 +161,6 @@ char				*ft_strpower(int base, int exponent, int x);
 int					ft_max(int a, int b);
 int					ft_min(int a, int b);
 char				*ft_poslltoa(long long int n);
+void				ft_strcombin(char **s1, const char *s2);
 
 #endif
