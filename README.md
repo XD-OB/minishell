@@ -1,0 +1,2 @@
+# MINISHELL:
+Through the Minishellproject, you will get to the core of theUnixsystem and explorean important part of this system’s API: process creation and synchronisation. Executinga command inside a shell implies creating a new process, which execution and final statewill be monitored by its parent’s process. This set of functions will be the key to successfor yourMinishell, so be sure to code the cleanest, simplest program possible.
