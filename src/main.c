@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/09 17:28:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/09 19:14:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,11 @@ int			main(int ac, char **av, char *envp[])
 	char	*line;
 	char	**cmd;
 	int	i;
+	int	ret;
 
 	(void)av;
 	i = -1;
+	signal(SIGINT, SIG_IGN);
 	while (ac)
 	{
 		display_prompt(envp);
@@ -92,6 +94,8 @@ int			main(int ac, char **av, char *envp[])
 		i = -1;
 		while (cmd[++i])
 		{
+			if (!ft_strcmp(cmd[i], "exit"))
+				exit(0);
 			pid = create_process();
 			(pid == 0) ? exec_cmd(cmd[i], envp) : wait(NULL);
 		}
