@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_user.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/09 16:19:43 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/09 16:32:31 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	div_path(char *cmd, char **dir, char **file)
@@ -85,25 +97,24 @@ static int	fine_file(char *cmd, char *path_dir, char *file)
 	return (check_file(cmd, dirs[i], file));
 }
 
-int	cmd_user(char ***tab, char *envp[])
+int	cmd_user(char **tab, char *envp[])
 {
 	char	*dir;
 	char	*file;
 	int	ret;
 
-	if (ft_strchr((*tab)[0], '/'))
+	if (ft_strchr(tab[0], '/'))
 	{
-		div_path((*tab)[0], &dir, &file);
-		ret = fine_file((*tab)[0], dir, file);
+		div_path(tab[0], &dir, &file);
+		ret = fine_file(tab[0], dir, file);
 		if (ret == -1)
-			ft_printf("%s: file not found\n", (*tab)[0]);
+			ft_printf("%s: file not found\n", tab[0]);
 		else if (ret == -2)
-			ft_printf("%s: Permission denied\n", (*tab)[0]);
+			ft_printf("%s: Permission denied\n", tab[0]);
 		else
-			execve((*tab)[0], *tab, envp);
+			execve(tab[0], tab, envp);
 		free(dir);
 		free(file);
-		free_tabstr(*tab);
 		return (1);
 	}
 	return (0);
