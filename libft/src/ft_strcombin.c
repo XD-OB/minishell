@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strcombin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -26,7 +26,7 @@ void	ft_strcombin(char **s1, char const *s2)
 		len_s2 = ft_strlen(s2);
 		join = (char*)malloc(sizeof(*join) * (len_s1 + len_s2 + 1));
 		if (join == NULL)
-			return (NULL);
+			return ;
 		i = 0;
 		j = 0;
 		while (i < len_s1)

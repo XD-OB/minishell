@@ -6,7 +6,7 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr ft_printhe
 		 ft_strsub ft_strjoin ft_strtrim ft_strsplit ft_itoa ft_itoa_base\
 		 ft_utoa ft_utoa_base ft_putchar ft_putstr ft_putendl get_next_line\
 		 ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd ft_strlen\
-		 ft_strcpy ft_strncpy ft_strcat ft_strncat ft_strlcat ft_strstr\
+		 ft_strcpy ft_strncpy ft_strcat ft_strncat ft_strlcat ft_strstr ft_strcombin\
 		 ft_strnstr ft_strcmp ft_strncmp ft_strchr ft_strrchr ft_strpbrk\
 		 ft_strdup ft_strndup ft_atoi ft_isalpha ft_isdigit ft_isalnum ft_intlen\
 		 ft_isascii ft_isprint ft_toupper ft_tolower ft_lstnew ft_lstdelone\
