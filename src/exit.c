@@ -1,6 +1,11 @@
 #include "minishell.h"
 
-void	ft_exit(char **tab, char *envp[])
+int		ft_exit(char ***tab, char *envp[])
 {
-	ft_printf("EXIT Command\n");
+	int		n;
+
+	n = ((*tab)[1]) ? ft_atoi((*tab)[1]) : 0;
+	free_tabstr(*tab);
+	kill(0, SIGINT);
+	return (n);
 }

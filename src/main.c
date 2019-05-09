@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/09 16:29:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/09 17:28:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int			cmd_mybuilt(char **tab, char *envp[])
 	//else if (!ft_strcmp(tab[0], "env"))
 	//	ft_env(tab, envp);
 	else if (!ft_strcmp(tab[0], "exit"))
-		ft_exit(tab, envp);
+		ft_exit(&tab, envp);
 	//else if (!ft_strcmp(tab[0], "setenv"))
 	//	ft_setenv(tab, envp);
 	//else if (!ft_strcmp(tab[0], "unsetenv"))

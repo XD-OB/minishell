@@ -24,6 +24,6 @@ void			display_prompt(char *envp[]);
 int				cmd_user(char **tab, char *envp[]);
 int				ft_echo(char **tab, char *envp[]);
 void			ft_cd(char **tab, char *envp[]);
-void			ft_exit(char **tab, char *envp[]);
+int				ft_exit(char ***tab, char *envp[]);
 
 #endif
