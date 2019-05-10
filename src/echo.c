@@ -74,16 +74,53 @@ static int		print_var(char *envp[], char *var, int status)
 	return (0);
 }
 
-static int		print_squote(char *str)
+static int		print_squote(char *str, t_echo echo)
 {
+	int			i;
 	int			len;
 
-	len = ft_strlen(str) - 2;
-	write(1, &str[1], len);
-	return (len - 2);
+	if (!echo.e)
+	{
+		len = ft_strlen(str) - 2;
+		write(1, &str[1], len);
+		return (len - 2);
+	}
+	i = 0;
+	len = 0;
+	while (str[++i])
+	{
+		if (str[i] == 92)
+		{
+			i++;
+			if (str[i] == 't')
+				ft_putchar(9);
+			else if (str[i] == 'a')
+				ft_putchar(7);
+			else if (str[i] == 'b')
+				ft_putchar(8);
+			else if (str[i] == 'n')
+				ft_putchar(10);
+			else if (str[i] == 'v')
+				ft_putchar(11);
+			else if (str[i] == 'f')
+				ft_putchar(12);
+			else if (str[i] == 'r')
+				ft_putchar(13);
+			else if (str[i] == 'e')
+				ft_putchar(27);
+			else if (str[i] == 92)
+				ft_putchar(92);
+			else
+				ft_putchar(str[i]);
+		}
+		else
+			ft_putchar(str[i]);
+		len++;
+	}
+	return(len);
 }
 
-static void		quote_affiche(char **tab, int cap_e)
+static void		quote_affiche(char **tab, t_echo echo)
 {
 	char		*str;
 	char		*tmp;
@@ -104,7 +141,7 @@ static void		quote_affiche(char **tab, int cap_e)
 		}
 		free(tmp);
 	}
-	print_squote(str);
+	print_squote(str, echo);
 }
 
 static int		tab_well_quoted(char **tab)
@@ -114,59 +151,33 @@ static int		tab_well_quoted(char **tab)
 	int			s_quote;
 	int			d_quote;
 
-	i = -1;
-	while (tab[++i])
+	i = 0;
+	while (tab[i])
 	{
-		j = -1;
-		while (tab[i][++j])
+		j = 0;
+		while (tab[i][j])
 		{
 			if (tab[i][j] == 34)
 				d_quote++;
 			if (tab[i][j] == 39)
 				s_quote++;
+			j++;
 		}
+		i++;
 	}
 	if (!(d_quote % 2) && !(s_quote % 2))
 		return (1);
 	return (0);
 }
 
-static void	print_not_print(char c)
-{
-	if (c == 7)
-		ft_putstr("\a");
-	else if (c == 8)
-		ft_putstr("\b");
-	else if (c == 9)
-		ft_putstr("\t");
-	else if (c == 10)
-		ft_putstr("\n");
-	else if (c == 11)
-		ft_putstr("\v");
-	else if (c == 12)
-		ft_putstr("\f");
-	else if (c == 13)
-		ft_putstr("\r");
-	else if (c == 27)
-		ft_putstr("\e");
-	else if (c == 92)
-		ft_putstr("\\");
-	else
-		ft_putchar(c);
-}
-
-static void	ft_print_e(char *str, int cap_e)
+static void	ft_print_e(char *str)
 {
 	int		i;
 
-	if (cap_e == 1)
-	{
-		i = 0;
-		while (str[i])
-				print_not_print(str[i++]);
-	}
-	else
-		ft_putstr(str);
+	i = -1;
+	while (str[++i])
+		if (str[i] != 92)
+			ft_putchar(str[i]);
 }
 
 int			ft_echo(char **tab, char *envp[], int status)
@@ -180,8 +191,8 @@ int			ft_echo(char **tab, char *envp[], int status)
 		if (tab[i][0] == 34 || tab[i][0] == 39)
 		{
 			if (!tab_well_quoted(&tab[i]))
-				quote_affiche(&tab[i], (echo.cap_e && !echo.e));
-			else if (print_squote(tab[i]) && tab[i + 1])
+				quote_affiche(&tab[i], echo);
+			if (print_squote(tab[i], echo) && tab[i + 1])
 				ft_putchar(' ');
 		}
 		else if (tab[i][0] == '$')
@@ -190,7 +201,7 @@ int			ft_echo(char **tab, char *envp[], int status)
 				ft_putchar(' ');
 		}
 		else
-			ft_print_e(tab[i], (echo.cap_e && !echo.e));
+			ft_print_e(tab[i]);
 		i++;
 	}
 	if (echo.n)

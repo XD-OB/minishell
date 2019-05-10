@@ -23,9 +23,12 @@ char			**cmdsplit(const char *str);
 void			display_prompt(char *envp[]);
 int				cmd_user(char **tab, char *envp[]);
 int				ft_echo(char **tab, char *envp[], int status);
-void			ft_cd(char **tab, char *envp[]);
+void			ft_cd(char *cmd, char *envp[]);
 char			**ft_split_quote(char *tab);
 char			**ft_split_invquote(char *tab);
 int				well_quoted(char *str);
+void			ft_env(char **envp, char **tab);
+void			ft_setenv(char **envp, char *var, char *val);
+void			ft_unsetenv(char **envp, char *var, char *val);
 
 #endif

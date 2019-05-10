@@ -31,14 +31,6 @@ int			cmd_mybuilt(char **tab, char *envp[], int status)
 {
 	if (!ft_strcmp(tab[0], "echo"))
 		ft_echo(tab, envp, status);
-	else if (!ft_strcmp(tab[0], "cd"))
-		ft_cd(tab, envp);
-	//else if (!ft_strcmp(tab[0], "env"))
-	//	ft_env(tab, envp);
-	//else if (!ft_strcmp(tab[0], "setenv"))
-	//	ft_setenv(tab, envp);
-	//else if (!ft_strcmp(tab[0], "unsetenv"))
-	//	ft_unsetenv(tab, envp);
 	else
 		return (0);
 	return (1);
@@ -91,13 +83,14 @@ int			ret_exit(char *str)
 	return (ret);
 }
 
-int			main(int ac, char **av, char *envp[])
+int			main(int ac, char **av, char **envp)
 {
 	pid_t	pid;
 	char	*line;
 	char	**cmd;
 	int		status;
 	int		i;
+	int		j;
 
 	(void)av;
 	i = -1;
@@ -112,12 +105,26 @@ int			main(int ac, char **av, char *envp[])
 		{
 			if (!ft_strncmp(cmd[i], "exit", 4))
 				exit(ret_exit(cmd[i]));
+			if (!ft_strncmp(cmd[i], "cd", 2))
+			{
+				ft_cd(cmd[i], envp);
+				continue ;
+			}
+			if (!ft_strncmp(cmd[i], "setenv", 6))
+			{
+				ft_putstr("setenv\n");
+				//ft_setenv(envp, cmd[i]);
+				continue ;
+			}
+			if (!ft_strncmp(cmd[i], "unsetenv", 8))
+			{
+				ft_putstr("unsetenv\n");
+				//ft_unsetenv(envp, cmd[i]);
+				continue ;
+			}
 			pid = create_process();
 			if (pid == 0)
-			{
 				exec_cmd(cmd[i], envp, status);
-				exit(0);
-			}
 			else
 				waitpid(pid, &status, 0);
 		}

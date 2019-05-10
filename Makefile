@@ -18,7 +18,7 @@ EOC = \033[1;0m
 
 NAME = minishell
 
-MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user cd echo\
+MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user cd echo env setenv unsetenv\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 
