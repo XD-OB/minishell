@@ -17,6 +17,7 @@ typedef struct	s_echo
 	int			cap_e:1;
 }				t_echo;
 
+void			msg_error(char *msg, int n);
 pid_t			create_process(void);
 void			free_tabstr(char **tab);
 char			**cmdsplit(const char *str);

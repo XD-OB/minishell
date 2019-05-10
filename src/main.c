@@ -27,14 +27,6 @@ char		**get_paths(char *envp[])
 	return (tab_path);
 }
 
-int			cmd_mybuilt(char **tab, char *envp[], int status)
-{
-	if (!ft_strcmp(tab[0], "echo"))
-		ft_echo(tab, envp, status);
-	else
-		return (0);
-	return (1);
-}
 
 void		exec_cmd(char *cmd, char *envp[], int status)
 {
@@ -47,8 +39,11 @@ void		exec_cmd(char *cmd, char *envp[], int status)
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
-	if (cmd_mybuilt(tab, envp, status))
+	if (!ft_strcmp(tab[0], "echo"))
+	{
+		ft_echo(tab, envp, status);
 		exit(0);
+	}
 	if (cmd_user(tab, envp))
 		exit(0);
 	tab_path = get_paths(envp);
@@ -83,6 +78,30 @@ int			ret_exit(char *str)
 	return (ret);
 }
 
+int			cmd_mybuilt(char *cmd, char *envp[])
+{
+	if (!ft_strncmp(cmd, "exit", 4))
+		exit(ret_exit(cmd));
+	if (!ft_strncmp(cmd, "cd", 2))
+	{
+		ft_cd(cmd, envp);
+		return (1);
+	}
+	if (!ft_strncmp(cmd, "setenv", 6))
+	{
+		ft_putstr("setenv\n");
+		//ft_setenv(envp, cmd);
+		return (1);
+	}
+	if (!ft_strncmp(cmd, "unsetenv", 8))
+	{
+		ft_putstr("unsetenv\n");
+		//ft_unsetenv(envp, cmd);
+		return (1);
+	}
+	return (0);
+}
+
 int			main(int ac, char **av, char **envp)
 {
 	pid_t	pid;
@@ -103,25 +122,8 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			if (!ft_strncmp(cmd[i], "exit", 4))
-				exit(ret_exit(cmd[i]));
-			if (!ft_strncmp(cmd[i], "cd", 2))
-			{
-				ft_cd(cmd[i], envp);
+			if (cmd_mybuilt(cmd[i], envp))
 				continue ;
-			}
-			if (!ft_strncmp(cmd[i], "setenv", 6))
-			{
-				ft_putstr("setenv\n");
-				//ft_setenv(envp, cmd[i]);
-				continue ;
-			}
-			if (!ft_strncmp(cmd[i], "unsetenv", 8))
-			{
-				ft_putstr("unsetenv\n");
-				//ft_unsetenv(envp, cmd[i]);
-				continue ;
-			}
 			pid = create_process();
 			if (pid == 0)
 				exec_cmd(cmd[i], envp, status);

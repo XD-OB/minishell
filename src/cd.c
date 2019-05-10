@@ -34,30 +34,28 @@ char	*home_path(char *envp[])
 **	i[3]:	0:i		1:j		2:k
 */
 
-void	rel_to_abs(char **r_path, char *home)
+void	remove_tilda(char **r_path, char *home)
 {
 	char	*a_path;
 	int		len_rpath;
 	int		len_home;
-	int		i;
-	int		j;
-	int		k;
+	int		i[3];
 
 	len_home = ft_strlen(home);
 	len_rpath = ft_strlen(*r_path);
 	a_path = ft_strnew(len_home + len_rpath - 1);
-	k = 0;
-	i = 0;
-	while (i < len_rpath)
+	i[0] = 0;
+	i[2] = 0;
+	while (i[0] < len_rpath)
 	{
-		if ((*r_path)[i] == '~')
+		if ((*r_path)[i[0]] == '~')
 		{
-			i++;
-			j = 0;
-			while(j < len_home)
-				a_path[k++] = home[j++];
+			i[0]++;
+			i[1] = 0;
+			while(i[1] < len_home)
+				a_path[i[2]++] = home[i[1]++];
 		}
-		a_path[k++] = (*r_path)[i++];
+		a_path[i[2]++] = (*r_path)[i[0]++];
 	}
 	free(*r_path);
 	*r_path = a_path;
@@ -73,32 +71,29 @@ int		len_tab(char **tab)
 	return (len);
 }
 
-//char	*parent_path(char *dir)
-//{
-//}
+void	fix_path(char **envp, char **tab)
+{
+	char	*home;
+
+	home = home_path(envp);
+	if (len_tab(tab) == 1)
+		tab[1] = home;
+	//if (is_relative(tab[1]))
+	//	rel_to_abs(&tab[1]);
+	if (ft_strchr(tab[1], '~'))
+		remove_tilda(&tab[1], home);
+	free(home);
+}
 
 void	ft_cd(char *cmd, char **envp)
 {
-	char	*home;
 	char	**tab;
-	//char	*parent;
 
 	tab = ft_strsplit(cmd, ' ');
-	//parent = parent_path(*curr_dir);
-	home = home_path(envp);
 	if (len_tab(tab) > 2)
-	{
-		ft_putstr("cd: too many arguments\n");
-		exit(1);
-	}
-	if (len_tab(tab) == 1)
-		tab[1] = home;
-	if (ft_strchr(tab[1], '~'))
-		rel_to_abs(&tab[1], home);
+		msg_error("cd: too many arguments\n", 1);
+	fix_path(envp, tab);
 	if (chdir(tab[1]) == -1)
-	{
-		ft_putstr("yawraha mhawda\n");
-		exit(1);
-	}
+		msg_error("yawraha mhawda\n", 1);
 	ft_setenv(envp, "PWD", tab[1]);
 }

@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+void	msg_error(char *msg, int n)
+{
+	ft_putstr_fd(msg, 2);
+	exit(n);
+}
+
 void	free_tabstr(char **tab)
 {
 	int	i;
