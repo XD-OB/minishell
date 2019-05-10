@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 19:08:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 22:27:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		exec_cmd(char *cmd, char *envp[], int status)
 		free(full_path);
 	}
 	ft_printf("%s: commande not found\n", tab[0]);
-	free_tabstr(tab_path);
+	free_tabstr(&tab_path);
 	exit (1);
 }
 
@@ -74,7 +74,7 @@ int			ret_exit(char *str)
 		ret = ft_atoi(tab[1]);
 	else
 		ret = 0;
-	free_tabstr(tab);
+	free_tabstr(&tab);
 	return (ret);
 }
 
@@ -89,7 +89,6 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 	}
 	if (!ft_strncmp(cmd, "setenv", 6))
 	{
-		ft_putstr("setenv\n");
 		ft_setenv(envp, cmd);
 		return (1);
 	}
@@ -122,16 +121,16 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			pid = create_process();
-			if (pid == 0)
+			if (!cmd_mybuilt(cmd[i], envp))
 			{
-				if (!cmd_mybuilt(cmd[i], envp))
-					exec_cmd(cmd[i], envp, status);
+				pid = create_process();
+				if (pid == 0)
+						exec_cmd(cmd[i], envp, status);
+				else
+					waitpid(pid, &status, 0);
 			}
-			else
-				waitpid(pid, &status, 0);
 		}
-		free_tabstr(cmd);
+		free_tabstr(&cmd);
 	}
 	return (EXIT_SUCCESS);
 }

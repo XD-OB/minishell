@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 16:19:03 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 22:27:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ void		msg_error(char *msg, int n)
 	exit(n);
 }
 
-void		free_tabstr(char **tab)
+void		free_tabstr(char ***tab)
 {
 	int		i;
 
 	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
+	while ((*tab)[++i])
+		free((*tab)[i]);
+	free(*tab);
 }
 
 int			len_tab(char **tab)
@@ -47,6 +47,13 @@ pid_t		create_process(void)
 		return (child_pid);
 	write(2, "fork: Error\n", 12);
 	exit(EXIT_FAILURE);
+}
+
+void		triple_free(char **s1, char **s2, char **s3)
+{
+	free(*s1);
+	free(*s2);
+	free(*s3);
 }
 
 int			well_quoted(char *str)

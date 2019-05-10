@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/09 22:36:07 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/10 20:31:42 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ EOC = \033[1;0m
 
 NAME = minishell
 
-MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user cd echo env setenv unsetenv\
+MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
+			cd echo env setenv unsetenv tools_env\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 

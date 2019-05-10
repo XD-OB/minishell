@@ -20,7 +20,7 @@ typedef struct	s_echo
 int				len_tab(char **tab);
 void			msg_error(char *msg, int n);
 pid_t			create_process(void);
-void			free_tabstr(char **tab);
+void			free_tabstr(char ***tab);
 char			**cmdsplit(const char *str);
 void			display_prompt(char *envp[]);
 int				cmd_user(char **tab, char *envp[]);
@@ -29,8 +29,10 @@ void			ft_cd(char *cmd, char *envp[]);
 char			**ft_split_quote(char *tab);
 char			**ft_split_invquote(char *tab);
 int				well_quoted(char *str);
+void			show_env(char **envp);
 void			ft_env(char **envp, char **tab);
-void			ft_setenv(char **envp, char *var, char *val);
+void			ft_setenv(char **envp, char *cmd);
 void			ft_unsetenv(char **envp, char *var, char *val);
+void			triple_free(char **s1, char **s2, char **s3);
 
 #endif
