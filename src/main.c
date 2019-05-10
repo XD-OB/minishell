@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 22:30:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 23:33:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ char		**get_paths(char *envp[])
 	int	i;
 
 	i = -1;
+	path = NULL;
 	while (envp[++i])
 		if (!ft_strncmp(envp[i], "PATH=", 5))
 			path = ft_strdup(&(envp[i][5]));
+	if (!path)
+		path = ft_strdup(".");
 	tab_path = ft_strsplit(path, ':');
 	free(path);
 	return (tab_path);
@@ -120,14 +123,17 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			if (!cmd_mybuilt(cmd[i], envp))
-			{
+			//if (!cmd_mybuilt(cmd[i], envp))
+		///	{
 				pid = create_process();
 				if (pid == 0)
-						exec_cmd(cmd[i], envp, status);
+				{
+						if (!cmd_mybuilt(cmd[i], envp))
+							exec_cmd(cmd[i], envp, status);
+				}
 				else
 					waitpid(pid, &status, 0);
-			}
+		//	}
 		}
 		free_tabstr(&cmd);
 	}

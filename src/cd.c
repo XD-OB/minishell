@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 23:15:06 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 23:30:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void	ft_cd(char *cmd, char **envp)
 {
 	char	**tab;
 
-	ft_putstr("\nfsjdkfh\n");
 	tab = ft_strsplit(cmd, ' ');
 	if (len_tab(tab) > 2)
 		msg_error("cd: too many arguments\n", 1);
