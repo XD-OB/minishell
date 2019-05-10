@@ -22,8 +22,10 @@ void			free_tabstr(char **tab);
 char			**cmdsplit(const char *str);
 void			display_prompt(char *envp[]);
 int				cmd_user(char **tab, char *envp[]);
-int				ft_echo(char **tab, char *envp[]);
+int				ft_echo(char **tab, char *envp[], int status);
 void			ft_cd(char **tab, char *envp[]);
-int				ft_exit(char ***tab, char *envp[]);
+char			**ft_split_quote(char *tab);
+char			**ft_split_invquote(char *tab);
+int				well_quoted(char *str);
 
 #endif

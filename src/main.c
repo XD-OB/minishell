@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/09 19:14:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 00:22:18 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,14 @@ char		**get_paths(char *envp[])
 	return (tab_path);
 }
 
-int			cmd_mybuilt(char **tab, char *envp[])
+int			cmd_mybuilt(char **tab, char *envp[], int status)
 {
 	if (!ft_strcmp(tab[0], "echo"))
-		ft_echo(tab, envp);
+		ft_echo(tab, envp, status);
 	else if (!ft_strcmp(tab[0], "cd"))
 		ft_cd(tab, envp);
 	//else if (!ft_strcmp(tab[0], "env"))
 	//	ft_env(tab, envp);
-	else if (!ft_strcmp(tab[0], "exit"))
-		ft_exit(&tab, envp);
 	//else if (!ft_strcmp(tab[0], "setenv"))
 	//	ft_setenv(tab, envp);
 	//else if (!ft_strcmp(tab[0], "unsetenv"))
@@ -46,18 +44,21 @@ int			cmd_mybuilt(char **tab, char *envp[])
 	return (1);
 }
 
-void		exec_cmd(char *cmd, char *envp[])
+void		exec_cmd(char *cmd, char *envp[], int status)
 {
 	char	*full_path;
 	char	**tab_path;
 	char	**tab;
 	int		i;
 
-	tab = ft_strsplit(cmd, ' ');
-	if (cmd_mybuilt(tab, envp))
-		return ;
+	if (well_quoted(cmd))
+		tab = ft_split_quote(cmd);
+	else
+		tab = ft_split_invquote(cmd);
+	if (cmd_mybuilt(tab, envp, status))
+		exit(0);
 	if (cmd_user(tab, envp))
-		return ;
+		exit(0);
 	tab_path = get_paths(envp);
 	i = -1;
 	while(tab_path[++i])
@@ -67,12 +68,27 @@ void		exec_cmd(char *cmd, char *envp[])
 		if (execve(full_path, tab, envp) != -1)
 		{
 			free(full_path);
-			return ;
+			exit(0);
 		}
 		free(full_path);
 	}
 	ft_printf("%s: commande not found\n", tab[0]);
 	free_tabstr(tab_path);
+	exit (1);
+}
+
+int			ret_exit(char *str)
+{
+	char	**tab;
+	int		ret;
+
+	tab = ft_strsplit(str, ' ');
+	if (tab[1])
+		ret = ft_atoi(tab[1]);
+	else
+		ret = 0;
+	free_tabstr(tab);
+	return (ret);
 }
 
 int			main(int ac, char **av, char *envp[])
@@ -80,12 +96,12 @@ int			main(int ac, char **av, char *envp[])
 	pid_t	pid;
 	char	*line;
 	char	**cmd;
-	int	i;
-	int	ret;
+	int		status;
+	int		i;
 
 	(void)av;
 	i = -1;
-	signal(SIGINT, SIG_IGN);
+	status = 0;
 	while (ac)
 	{
 		display_prompt(envp);
@@ -94,10 +110,16 @@ int			main(int ac, char **av, char *envp[])
 		i = -1;
 		while (cmd[++i])
 		{
-			if (!ft_strcmp(cmd[i], "exit"))
-				exit(0);
+			if (!ft_strncmp(cmd[i], "exit", 4))
+				exit(ret_exit(cmd[i]));
 			pid = create_process();
-			(pid == 0) ? exec_cmd(cmd[i], envp) : wait(NULL);
+			if (pid == 0)
+			{
+				exec_cmd(cmd[i], envp, status);
+				exit(0);
+			}
+			else
+				waitpid(pid, &status, 0);
 		}
 		free_tabstr(cmd);
 	}
