@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tools.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/10 16:19:03 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	msg_error(char *msg, int n)
+void		msg_error(char *msg, int n)
 {
 	ft_putstr_fd(msg, 2);
 	exit(n);
 }
 
-void	free_tabstr(char **tab)
+void		free_tabstr(char **tab)
 {
-	int	i;
+	int		i;
 
 	i = -1;
 	while (tab[++i])
@@ -16,7 +28,17 @@ void	free_tabstr(char **tab)
 	free(tab);
 }
 
-pid_t	create_process(void)
+int			len_tab(char **tab)
+{
+	int		len;
+
+	len = 0;
+	while (tab[len])
+		len++;
+	return (len);
+}
+
+pid_t		create_process(void)
 {
 	pid_t	child_pid;
 

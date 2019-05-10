@@ -6,13 +6,40 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 00:32:31 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 18:51:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*home_path(char *envp[])
+void	ft_setpwd(char **envp, char *value)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = NULL;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "PWD=", 4))
+		{
+			new = ft_strjoin("PWD=", value);
+			ft_strclr(envp[i]);
+			ft_strcpy(envp[i], new);
+			break ;
+		}
+		i++;
+	}
+	if (!new)
+	{
+		new = ft_strjoin("PWD=", value);
+		ft_strclr(envp[i]);
+		ft_strcpy(envp[i], new);
+	}
+	free(new);
+}
+
+static char	*home_path(char *envp[])
 {
 	char	*home;
 	int		i;
@@ -31,10 +58,10 @@ char	*home_path(char *envp[])
 }
 
 /*
-**	i[3]:	0:i		1:j		2:k
-*/
+ **	i[3]:	0:i		1:j		2:k
+ */
 
-void	remove_tilda(char **r_path, char *home)
+static void	remove_tilda(char **r_path, char *home)
 {
 	char	*a_path;
 	int		len_rpath;
@@ -61,14 +88,30 @@ void	remove_tilda(char **r_path, char *home)
 	*r_path = a_path;
 }
 
-int		len_tab(char **tab)
+int			is_relative(char *path)
 {
-	int		len;
+	if (ft_strstr(path, "./"))
+		return (1);
+	if (ft_strstr(path, "../"))
+		return (1);
+	if (!ft_strcmp(path, "."))
+		return (1);
+	if (!ft_strcmp(path, ".."))
+		return (1);
+	return (0);
+}
 
-	len = 0;
-	while (tab[len])
-		len++;
-	return (len);
+void		rel_to_abs(char **r_path)
+{
+	int		type;
+	char	*dir;
+	char	*tmp;
+
+	dir = ft_strnew(500);
+	getcwd(dir, 500);
+	tmp = *r_path;
+	*r_path = dir;
+	free(tmp);
 }
 
 void	fix_path(char **envp, char **tab)
@@ -78,8 +121,6 @@ void	fix_path(char **envp, char **tab)
 	home = home_path(envp);
 	if (len_tab(tab) == 1)
 		tab[1] = home;
-	//if (is_relative(tab[1]))
-	//	rel_to_abs(&tab[1]);
 	if (ft_strchr(tab[1], '~'))
 		remove_tilda(&tab[1], home);
 	free(home);
@@ -95,5 +136,7 @@ void	ft_cd(char *cmd, char **envp)
 	fix_path(envp, tab);
 	if (chdir(tab[1]) == -1)
 		msg_error("yawraha mhawda\n", 1);
-	ft_setenv(envp, "PWD", tab[1]);
+	if (is_relative(tab[1]))
+		rel_to_abs(&tab[1]);
+	ft_setpwd(envp, tab[1]);
 }

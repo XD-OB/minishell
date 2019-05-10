@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 00:22:18 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 19:08:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 	if (!ft_strncmp(cmd, "setenv", 6))
 	{
 		ft_putstr("setenv\n");
-		//ft_setenv(envp, cmd);
+		ft_setenv(envp, cmd);
 		return (1);
 	}
 	if (!ft_strncmp(cmd, "unsetenv", 8))
@@ -122,11 +122,12 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			if (cmd_mybuilt(cmd[i], envp))
-				continue ;
 			pid = create_process();
 			if (pid == 0)
-				exec_cmd(cmd[i], envp, status);
+			{
+				if (!cmd_mybuilt(cmd[i], envp))
+					exec_cmd(cmd[i], envp, status);
+			}
 			else
 				waitpid(pid, &status, 0);
 		}
