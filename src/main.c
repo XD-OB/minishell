@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 22:27:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/10 22:30:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,7 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 	}
 	if (!ft_strncmp(cmd, "unsetenv", 8))
 	{
-		ft_putstr("unsetenv\n");
-		//ft_unsetenv(envp, cmd);
+		ft_unsetenv(envp, cmd);
 		return (1);
 	}
 	return (0);

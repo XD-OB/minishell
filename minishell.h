@@ -32,7 +32,7 @@ int				well_quoted(char *str);
 void			show_env(char **envp);
 void			ft_env(char **envp, char **tab);
 void			ft_setenv(char **envp, char *cmd);
-void			ft_unsetenv(char **envp, char *var, char *val);
+void			ft_unsetenv(char **envp, char *cmd);
 void			triple_free(char **s1, char **s2, char **s3);
 
 #endif

@@ -1,30 +1,56 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unsetenv.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/10 23:12:20 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	ft_unsetenv(char **envp, char *var, char *value)
+static int	indice_env(char **envp, char *var, int len_var)
 {
-	char	*tmp;
-	int		len_var;
-	int		start;
 	int		i;
 
 	i = 0;
-	start = -5;
-	len_var = ft_strlen(var);
 	while (envp[i])
 	{
 		if (!ft_strncmp(envp[i], var, len_var))
-		{
-			start = i;
-			break ;
-		}
+			return (i);
 		i++;
 	}
-	if (start == -5)
+	return (-5);
+}
+
+static void	ft_swap_env(char **env1, char **env2)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(*env1);
+	*env1 = ft_strdup(*env2);
+	*env2 = tmp;
+}
+
+void		ft_unsetenv(char **envp, char *cmd)
+{
+	char	**tab;
+	int		len_var;
+	int		found;
+	int		i;
+
+	tab = ft_strsplit(cmd, ' ');
+	if (len_tab(tab) != 2)
 		return ;
-	i = start;
-	while (envp[i])
-	{
-		envp[i] = envp[i + 1];
-		i++;
-	}
+	len_var = ft_strlen(tab[1]);
+	found = indice_env(envp, tab[1], len_var);
+	if (found == -5)
+		return ;
+	i = found - 1;
+	while (envp[++i + 1])
+		ft_swap_env(&envp[i], &envp[i + 1]);
+	envp[i] = NULL;
 }
