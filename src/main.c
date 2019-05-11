@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char		**get_paths(char *envp[])
+char		**get_paths(char **envp)
 {
 	char	**tab_path;
 	char	*path;
@@ -31,7 +31,7 @@ char		**get_paths(char *envp[])
 }
 
 
-void		exec_cmd(char *cmd, char *envp[], int status)
+void		exec_cmd(char *cmd, char **envp, int status)
 {
 	char	*full_path;
 	char	**tab_path;
@@ -45,6 +45,11 @@ void		exec_cmd(char *cmd, char *envp[], int status)
 	if (!ft_strcmp(tab[0], "echo"))
 	{
 		ft_echo(tab, envp, status);
+		exit(0);
+	}
+	if (!ft_strcmp(tab[0], "env"))
+	{
+		ft_env(envp, cmd);
 		exit(0);
 	}
 	if (cmd_user(tab, envp))
@@ -100,6 +105,11 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 		ft_unsetenv(envp, cmd);
 		return (1);
 	}
+	/*if (!ft_strncmp(cmd, "env", 3))
+	{
+		ft_env(envp, cmd);
+		return (1);
+	}*/
 	return (0);
 }
 

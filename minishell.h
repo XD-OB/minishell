@@ -17,6 +17,16 @@ typedef struct	s_echo
 	int			cap_e:1;
 }				t_echo;
 
+typedef struct	s_env
+{
+	int			i:1;
+	int			u:1;
+	int			null:1;
+	int			start_var;
+	int			start_cmd;
+	char		**tab;
+}				t_env;
+
 int				len_tab(char **tab);
 void			msg_error(char *msg, int n);
 pid_t			create_process(void);
@@ -30,9 +40,10 @@ char			**ft_split_quote(char *tab);
 char			**ft_split_invquote(char *tab);
 int				well_quoted(char *str);
 void			show_env(char **envp);
-void			ft_env(char **envp, char **tab);
+void			ft_env(char **envp, char *cmd);
 void			ft_setenv(char **envp, char *cmd);
 void			ft_unsetenv(char **envp, char *cmd);
 void			triple_free(char **s1, char **s2, char **s3);
+void			exec_cmd(char *cmd, char **envp, int status);
 
 #endif
