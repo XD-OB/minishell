@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 23:33:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/11 17:31:31 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int			main(int ac, char **av, char **envp)
 							exec_cmd(cmd[i], envp, status);
 				}
 				else
-					waitpid(pid, &status, 0);
+					waitpid(pid, &status, pid);
 		//	}
 		}
 		free_tabstr(&cmd);

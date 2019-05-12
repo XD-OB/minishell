@@ -59,17 +59,18 @@ int			adv_show_env(char **envp, t_env *env, int len_t)
 void		env_cmd(char **envp, t_env env)
 {
 	char	*cmd;
+	pid_t	pid;
 	int		i;
 
 	cmd = ft_strnew(0);
-	i = env.start_var;
-	if (i != -1)
-	{
-		ft_putstr("remember\n");
+	//i = env.start_var;
+	//if (i != -1)
+	//{
+	//	ft_putstr("remember\n");
 		//while (i < env.start_cmd)
 		//	set_env_cmd(envp, env.tab[i++]);
-	}
-	else
+	//}
+	//else
 		i = env.start_cmd;
 	while (env.tab[i])
 	{
@@ -77,9 +78,16 @@ void		env_cmd(char **envp, t_env env)
 		ft_strcombin(&cmd, " ");
 		i++;
 	}
-	ft_putendl(cmd);
-	exec_cmd(cmd, envp, 0);
-	free(cmd);
+	/*pid = create_process();
+	if (pid == 0)
+	{
+		ft_putendl(cmd);
+		if (!cmd_mybuilt(cmd, envp))
+			exec_cmd(cmd, envp, 0);
+	}
+	else
+		waitpid(pid, NULL, pid);*/
+	//free(cmd);
 }
 
 char		**copy_envp(char **envp)
@@ -113,13 +121,11 @@ void		ft_env(char **envp, char *cmd)
 	len_t = len_tab(env.tab);
 	if (adv_show_env(envp, &env, len_t))
 		return ;
-	if (env.i)
-		env_cmd(new_envp, env);
-	else
+	if (!env.i)
 	{
 		new_envp = copy_envp(envp);
-		env_cmd(new_envp, env);
 		free_tabstr(&new_envp);
 	}
+	env_cmd(new_envp, env);
 	free_tabstr(&(env.tab));
 }

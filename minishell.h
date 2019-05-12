@@ -44,6 +44,7 @@ void			ft_env(char **envp, char *cmd);
 void			ft_setenv(char **envp, char *cmd);
 void			ft_unsetenv(char **envp, char *cmd);
 void			triple_free(char **s1, char **s2, char **s3);
+int				cmd_mybuilt(char *cmd, char **envp);
 void			exec_cmd(char *cmd, char **envp, int status);
 
 #endif
