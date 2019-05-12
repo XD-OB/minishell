@@ -1,5 +1,25 @@
 #include "minishell.h"
 
+char		**copy_char2(char **tab, int start)
+{
+	char	**new;
+	int		len_t;
+	int		i;
+
+	len_t = len_tab(tab);
+	if (!(new = (char**)malloc(sizeof(char*) * (len_t + 1))))
+		return NULL;
+	new[len_t] = NULL;
+	i = start;
+	while (tab[i])
+	{
+		new[i] = ft_strdup(tab[i]);
+		i++;
+	}
+	new[i] = NULL;
+	return (new);
+}
+
 static void	init_env(t_env *env)
 {
 	env->i = 0;
@@ -32,8 +52,8 @@ static void	fill_env(t_env *env, char *cmd)
 	while (tab[i] && ft_strchr(tab[i], '='))
 		i++;
 	env->start_cmd = i;
-	(env->start_var == env->start_cmd) ? env->start_var = -1 : 0;
-	env->tab = tab;
+	env->tab = copy_char2(tab, env->start_var);
+	free_tabstr(&tab);
 }
 
 int			adv_show_env(char **envp, t_env *env, int len_t)
@@ -71,13 +91,14 @@ void		env_cmd(char **envp, t_env env)
 		//	set_env_cmd(envp, env.tab[i++]);
 	//}
 	//else
-		i = env.start_cmd;
+	i = 0;
 	while (env.tab[i])
 	{
 		ft_strcombin(&cmd, env.tab[i]);
 		ft_strcombin(&cmd, " ");
 		i++;
 	}
+	ft_putendl(cmd);
 	/*pid = create_process();
 	if (pid == 0)
 	{
@@ -90,24 +111,6 @@ void		env_cmd(char **envp, t_env env)
 	//free(cmd);
 }
 
-char		**copy_envp(char **envp)
-{
-	char	**new;
-	int		len_t;
-	int		i;
-
-	len_t = len_tab(envp);
-	new = (char**)malloc(sizeof(char*) * (len_t + 1));
-	new[len_t] = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		new[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	new[i] = NULL;
-	return (new);
-}
 
 void		ft_env(char **envp, char *cmd)
 {
@@ -116,16 +119,18 @@ void		ft_env(char **envp, char *cmd)
 	int		len_t;
 	int		i;
 
-	new_envp = NULL;
 	fill_env(&env, cmd);
 	len_t = len_tab(env.tab);
 	if (adv_show_env(envp, &env, len_t))
-		return ;
+		exit(0);
+	//affect_envar(&env);
 	if (!env.i)
 	{
-		new_envp = copy_envp(envp);
+		new_envp = copy_char2(envp, 0);
+		if (env.u)
+			ft_unsetenv(new_envp, env.tab[0]);
 		free_tabstr(&new_envp);
 	}
-	env_cmd(new_envp, env);
-	free_tabstr(&(env.tab));
+	//env_cmd(new_envp, env);
+	//free_tabstr(&(env.tab));
 }

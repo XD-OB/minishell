@@ -47,11 +47,6 @@ void		exec_cmd(char *cmd, char **envp, int status)
 		ft_echo(tab, envp, status);
 		exit(0);
 	}
-	if (!ft_strcmp(tab[0], "env"))
-	{
-		ft_env(envp, cmd);
-		exit(0);
-	}
 	if (cmd_user(tab, envp))
 		exit(0);
 	tab_path = get_paths(envp);
@@ -105,12 +100,21 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 		ft_unsetenv(envp, cmd);
 		return (1);
 	}
-	/*if (!ft_strncmp(cmd, "env", 3))
+	if (!ft_strncmp(cmd, "env", 3))
 	{
 		ft_env(envp, cmd);
 		return (1);
-	}*/
+	}
 	return (0);
+}
+
+void		gest_signal(int status)
+{
+	//ft_putstr("ana hna\n");
+//	if (WIFEXITED(status))
+//		ft_putstr("Terminated normally\n");
+	/*else*/ if (WIFSIGNALED(status))
+		ft_putstr("a Signal end the Processus\n");
 }
 
 int			main(int ac, char **av, char **envp)
@@ -142,7 +146,10 @@ int			main(int ac, char **av, char **envp)
 							exec_cmd(cmd[i], envp, status);
 				}
 				else
-					waitpid(pid, &status, pid);
+				{
+					wait(&status);
+					gest_signal(status);
+				}
 		//	}
 		}
 		free_tabstr(&cmd);
