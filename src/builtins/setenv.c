@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/12 23:55:58 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 03:03:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int			main(int ac, char **av, char **envp)
 		}
 	}
 	add_var_env(&envp[i], &new, var, value);
-	ft_putendl(envp[i]);
 	triple_free(&new, &var, &value);
+	ft_putendl(envp[i]);
 	return (0);
 }
