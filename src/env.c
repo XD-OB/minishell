@@ -112,7 +112,7 @@ void		env_cmd(char **envp, t_env env)
 }
 
 
-void		ft_env(char **envp, char *cmd)
+int		ft_env(char **envp, char *cmd)
 {
 	char	**new_envp;
 	t_env	env;
@@ -122,7 +122,7 @@ void		ft_env(char **envp, char *cmd)
 	fill_env(&env, cmd);
 	len_t = len_tab(env.tab);
 	if (adv_show_env(envp, &env, len_t))
-		exit(0);
+		return(0);
 	//affect_envar(&env);
 	if (!env.i)
 	{
@@ -133,4 +133,5 @@ void		ft_env(char **envp, char *cmd)
 	}
 	//env_cmd(new_envp, env);
 	//free_tabstr(&(env.tab));
+	return (0);
 }

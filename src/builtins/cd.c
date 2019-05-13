@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 void	ft_setpwd(char **envp, char *value)
 {
@@ -126,34 +126,31 @@ int			is_relative(char *path)
 	return (0);
 }
 
-void		rel_to_abs(char **r_path)
+char		*rel_to_abs()
 {
 	int		type;
 	char	*dir;
-	char	*tmp;
 
 	dir = ft_strnew(500);
 	getcwd(dir, 500);
-	tmp = *r_path;
-	*r_path = dir;
-	free(tmp);
+	return (dir);
 }
 
-void	fix_path(char **envp, char **tab)
+void	fix_path(int ac, char **tab, char **envp)
 {
 	char	*home;
 
 	home = home_path(envp);
-	if (len_tab(tab) == 1)
+	if (ac == 1)
 		tab[1] = ft_strdup(home);
 	if (ft_strchr(tab[1], '~'))
 		remove_tilda(&tab[1], home);
 	free(home);
 }
 
-int			cd_minus(char **tab, char **envp, char **prev_cd)
+int			cd_minus(int ac, char **tab, char **envp, char **prev_cd)
 {
-	if (len_tab(tab) == 2 && !ft_strcmp(tab[1], "-"))
+	if (ac == 2 && !ft_strcmp(tab[1], "-"))
 	{
 		if (!*prev_cd)
 		{
@@ -169,26 +166,30 @@ int			cd_minus(char **tab, char **envp, char **prev_cd)
 	return (0);
 }
 
-int			ft_cd(char *cmd, char **envp, char **prev_cd)
+int			main(int ac, char **av, char **envp)
 {
-	char	**tab;
+	char	*tmp;
 
-	tab = ft_strsplit(cmd, ' ');
-	if (len_tab(tab) > 2)
+	if (ac > 2)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
 		return (1);
 	}
-	fix_path(envp, tab);
-	if (cd_minus(tab, envp, prev_cd))
-		return (1);
-	if (chdir(tab[1]) == -1)
+	fix_path(ac, av, envp);
+	//if (cd_minus(av, envp, prev_cd))
+	//	return (1);
+	if (chdir(av[1]) == -1)
 	{
 		ft_putstr_fd("yawraha mhawda\n", 2);
 		return (1);
 	}
-	if (is_relative(tab[1]))
-		rel_to_abs(&tab[1]);
-	ft_setpwd(envp, tab[1]);
+	if (is_relative(av[1]))
+	{
+		tmp = rel_to_abs();
+		ft_setpwd(envp, tmp);
+		free(tmp);
+		return (0);
+	}
+	ft_setpwd(envp, av[1]);
 	return (0);
 }

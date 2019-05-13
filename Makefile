@@ -18,12 +18,18 @@ EOC = \033[1;0m
 
 NAME = minishell
 
+B_PATH = ./src/builtins/
+
+BUILTINS = echo
+
 EXEC = $(addprefix $(B_PATH), $(BUILTINS))
 
 LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
 			cd env echo setenv unsetenv tools_env\
+
+CMD_BUILT = $(B_PATH)echo $(FLAGS) $(LIB) $(B_PATH)echo.c\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 
@@ -36,6 +42,7 @@ all : $(NAME)
 $(NAME) :
 		@make -C ./libft re && make -C ./libft clean
 		@gcc -c $(FLAGS) -I ./ $(SRC)
+		@gcc -o $(CMD_BUILT)
 		@gcc -o $(NAME) $(OBJ) $(LIB)
 		@echo "$(CYAN)The MINISHELL is ready :)$(EOC)"
 

@@ -42,9 +42,9 @@ int			exec_cmd(char *cmd, char **envp, int status)
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
-	if (!ft_strcmp(tab[0], "echo"))
+	if (!ft_strncmp(cmd, "echo", 4))
 	{
-		ft_echo(len_tab(tab), tab, envp, status);
+		ft_echo(len_tab(tab), tab, envp, status);	
 		exit(0);
 	}
 	if (cmd_user(tab, envp))
@@ -64,7 +64,7 @@ int			exec_cmd(char *cmd, char **envp, int status)
 	}
 	ft_printf("obsh: commande not found: %s\n", tab[0]);
 	free_tabstr(&tab_path);
-	return(1);
+	exit(1);
 }
 
 int			ret_exit(char *str)
@@ -88,7 +88,7 @@ int			cmd_mybuilt(char *cmd, char *envp[], char **prev_cd)
 	if (!ft_strncmp(cmd, "cd", 2))
 	{
 		ft_cd(cmd, envp, prev_cd);
-		return (1);
+		return(1);
 	}
 	if (!ft_strncmp(cmd, "setenv", 6))
 	{
@@ -105,7 +105,7 @@ int			cmd_mybuilt(char *cmd, char *envp[], char **prev_cd)
 		ft_env(envp, cmd);
 		return (1);
 	}
-	return (0);
+	return (-1);
 }
 
 void		gest_signal(int status)
@@ -126,6 +126,7 @@ int			main(int ac, char **av, char **envp)
 	int		status;
 	int		i;
 	int		j;
+		int		ret;
 
 	(void)av;
 	i = -1;
@@ -140,19 +141,19 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			pid = create_process();
-			if (pid > 0)
+			if (cmd_mybuilt(cmd[i], envp, &prev_cd) == -1)
 			{
-				wait(&status);
-				gest_signal(status);
-			}
-			if (pid == 0)
-			{
-				if (!cmd_mybuilt(cmd[i], envp, &prev_cd))
+				if ((pid = create_process()) == -1)
+					msg_error("fork: error\n", 1);
+				if (pid == 0)
 					exec_cmd(cmd[i], envp, status);
+				else
+				{
+					ret = waitpid(pid, &status, 0);
+						ft_printf("ret= %d\n", ret);
+					gest_signal(status);
+				}
 			}
-			else
-				exit(-1);
 		}
 		free_tabstr(&cmd);
 	}
