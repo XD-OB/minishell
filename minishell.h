@@ -10,6 +10,8 @@
 # include <signal.h>
 # include "libft/libft.h"
 
+# define PATH_BUILTIN "./src/builtins:"
+
 typedef struct	s_echo
 {
 	int			n:1;

@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/10 20:31:42 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/12 23:57:11 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,16 @@ EOC = \033[1;0m
 
 NAME = minishell
 
+B_PATH = ./src/builtins/
+
+BUILTINS = echo
+
+EXEC = $(addprefix $(B_PATH), $(BUILTINS))
+
+LIB = -L ./libft -lft
+
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
-			cd echo env setenv unsetenv tools_env\
+			cd env setenv unsetenv tools_env\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 
@@ -27,12 +35,16 @@ OBJ = $(addsuffix .o, $(MINISHELL))
 
 FLAGS = 
 
+CMD_BUILT = gcc -o $(B_PATH)echo $(FLAGS) $(LIB) $(B_PATH)echo.c $(B_PATH)print_echo.c && \
+			gcc -o $(B_PATH)setenv $(FLAGS) $(LIB) $(B_PATH)setenv.c $(B_PATH)setenv_tools.c\
+
 all : $(NAME)
 
 $(NAME) :
 		@make -C ./libft re && make -C ./libft clean
-		@gcc -c  $(FLAGS) -I ./ $(SRC)
-		@gcc -o $(NAME) $(OBJ) -L ./libft -lft
+		@gcc -c $(FLAGS) -I ./ $(SRC)
+		@$(CMD_BUILT)
+		@gcc -o $(NAME) $(OBJ) $(LIB)
 		@echo "$(CYAN)The MINISHELL is ready :)$(EOC)"
 
 clean :
@@ -42,6 +54,7 @@ clean :
 fclean : clean
 		@make -C ./libft fclean
 		@/bin/rm -rf $(NAME)
+		@/bin/rm -rf $(EXEC)
 		@echo "$(GREEN)Total Clean MINISHELL$(EOC)"
 
 re : fclean all

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/11 17:31:31 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/12 23:58:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ char		**get_paths(char **envp)
 	int	i;
 
 	i = -1;
-	path = NULL;
+	path = ft_strdup(PATH_BUILTIN);
 	while (envp[++i])
 		if (!ft_strncmp(envp[i], "PATH=", 5))
-			path = ft_strdup(&(envp[i][5]));
+			ft_strcombin(&path, &(envp[i][5]));
 	if (!path)
 		path = ft_strdup(".");
 	tab_path = ft_strsplit(path, ':');
@@ -42,11 +42,6 @@ void		exec_cmd(char *cmd, char **envp, int status)
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
-	if (!ft_strcmp(tab[0], "echo"))
-	{
-		ft_echo(tab, envp, status);
-		exit(0);
-	}
 	if (cmd_user(tab, envp))
 		exit(0);
 	tab_path = get_paths(envp);
@@ -62,7 +57,7 @@ void		exec_cmd(char *cmd, char **envp, int status)
 		}
 		free(full_path);
 	}
-	ft_printf("%s: commande not found\n", tab[0]);
+	ft_printf("obsh: commande not found: %s\n", tab[0]);
 	free_tabstr(&tab_path);
 	exit (1);
 }
@@ -90,11 +85,11 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 		ft_cd(cmd, envp);
 		return (1);
 	}
-	if (!ft_strncmp(cmd, "setenv", 6))
+	/*if (!ft_strncmp(cmd, "setenv", 6))
 	{
 		ft_setenv(envp, cmd);
 		return (1);
-	}
+	}*/
 	if (!ft_strncmp(cmd, "unsetenv", 8))
 	{
 		ft_unsetenv(envp, cmd);
