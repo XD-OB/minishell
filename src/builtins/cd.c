@@ -6,11 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 18:45:20 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 18:45:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 void	ft_setpwd(char **envp, char *value)
 {
@@ -35,7 +35,6 @@ void	ft_setpwd(char **envp, char *value)
 		new = ft_strjoin("PWD=", value);
 		ft_strclr(envp[i]);
 		ft_strcpy(envp[i], new);
-		envp[++i] = NULL;
 	}
 	free(new);
 }
@@ -115,29 +114,39 @@ void		rel_to_abs(char **r_path)
 	free(tmp);
 }
 
-void	fix_path(char **envp, char **tab)
+void	fix_path(int ac, char **av, char **envp)
 {
 	char	*home;
 
 	home = home_path(envp);
-	if (len_tab(tab) == 1)
-		tab[1] = ft_strdup(home);
-	if (ft_strchr(tab[1], '~'))
-		remove_tilda(&tab[1], home);
+	if (ac == 1)
+		av[1] = ft_strdup(home);
+	if (ft_strchr(av[1], '~'))
+		remove_tilda(&av[1], home);
 	free(home);
 }
 
-void	ft_cd(char *cmd, char **envp)
+int		main(int ac, char **av, char **envp)
 {
-	char	**tab;
+		int		i;
 
-	tab = ft_strsplit(cmd, ' ');
-	if (len_tab(tab) > 2)
-		msg_error("cd: too many arguments\n", 1);
-	fix_path(envp, tab);
-	if (chdir(tab[1]) == -1)
-		msg_error("yawraha mhawda\n", 1);
-	if (is_relative(tab[1]))
-		rel_to_abs(&tab[1]);
-	ft_setpwd(envp, tab[1]);
+	if (ac > 2)
+	{
+		ft_putstr_fd("cd: too many arguments\n", 2);
+		return (1);
+	}
+	fix_path(ac, av, envp);
+	if (chdir(av[1]) == -1)
+	{
+		ft_putstr_fd("yawraha mhawda\n", 2);
+		return(1);
+	}
+	if (is_relative(av[1]))
+		rel_to_abs(&av[1]);
+	ft_setpwd(envp, av[1]);
+		i = -1;
+		while (envp[++i])
+			ft_putendl(envp[i]);
+		ft_putstr("\n");
+	return(0);
 }

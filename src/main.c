@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 03:16:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 18:45:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ void		exec_cmd(char *cmd, char **envp, int status)
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
+	if (!ft_strcmp(tab[0], "echo"))
+	{
+		ft_echo(len_tab(tab), tab, envp, status);
+		exit(0);
+	}
 	if (cmd_user(tab, envp))
 		exit(0);
 	tab_path = get_paths(envp);
@@ -78,18 +83,18 @@ int			ret_exit(char *str)
 
 int			cmd_mybuilt(char *cmd, char *envp[])
 {
-	if (!ft_strncmp(cmd, "exit", 4))
-		exit(ret_exit(cmd));
-	if (!ft_strncmp(cmd, "cd", 2))
+	if (!ft_strncmp(cmd, "exit", 5))
+		kill(0, SIGINT);
+	if (!ft_strncmp(cmd, "cd ", 2))
 	{
 		ft_cd(cmd, envp);
 		return (1);
 	}
-	/*if (!ft_strncmp(cmd, "setenv", 6))
+	if (!ft_strncmp(cmd, "setenv", 6))
 	{
 		ft_setenv(envp, cmd);
 		return (1);
-	}*/
+	}
 	if (!ft_strncmp(cmd, "unsetenv", 8))
 	{
 		ft_unsetenv(envp, cmd);
@@ -129,25 +134,23 @@ int			main(int ac, char **av, char **envp)
 		display_prompt(envp);
 		get_next_line(0, &line);
 		cmd = cmdsplit(line);
+		free(line);
 		i = -1;
 		while (cmd[++i])
 		{
-			//if (!cmd_mybuilt(cmd[i], envp))
-		///	{
-				pid = create_process();
-				if (pid == 0)
-				{
-						if (!cmd_mybuilt(cmd[i], envp))
-							exec_cmd(cmd[i], envp, status);
-				}
-				else
-				{
-					wait(&status);
-					gest_signal(status);
-				}
-		//	}
+			ft_putendl(line);
+			pid = create_process();
+			if (pid == 0)
+			{
+					if (!cmd_mybuilt(cmd[i], envp))
+						exec_cmd(cmd[i], envp, status);
+			}
+			else
+			{
+				wait(&status);
+				gest_signal(status);
+			}
 		}
-		free_tabstr(&cmd);
 	}
 	return (EXIT_SUCCESS);
 }

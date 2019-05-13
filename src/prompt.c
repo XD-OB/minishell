@@ -6,15 +6,15 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 17:11:00 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/12 22:00:13 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/13 18:29:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	user_home(char *envp[], int *u, int *h)
+static void		user_home(char *envp[], int *u, int *h)
 {
-	int	i;
+	int			i;
 
 	i = -1;
 	*u = -5;
@@ -32,12 +32,12 @@ static void	user_home(char *envp[], int *u, int *h)
 ** len:		0: len	1: len_a_path	2: len_home
 */
 
-static void	to_relative(char **a_path, char *home)
+static void		to_relative(char **a_path, char *home)
 {
-	char	*r_path;
-	int	len[3];
-	int	i;
-	int	j;
+	char		*r_path;
+	int			len[3];
+	int			i;
+	int			j;
 
 	len[1] = ft_strlen(*a_path);
 	len[2] = ft_strlen(home);
@@ -52,20 +52,20 @@ static void	to_relative(char **a_path, char *home)
 	*a_path = r_path;
 }
 
-void		display_prompt(char *envp[])
+void			display_prompt(char *envp[])
 {
-	char	*curr_dir;
-	char	*user;
-	char	*home;
-	int	u;
-	int	h;
+	char		*curr_dir;
+	char		*user;
+	char		*home;
+	int			u;
+	int			h;
 
 	curr_dir = ft_strnew(500);
 	user_home(envp, &u, &h);
 	user = ft_strdup((u == -5) ? "user" : &envp[u][5]);
 	home = ft_strdup((h == -5) ? "" : &envp[h][5]);
 	getcwd(curr_dir, 500);
-	if (ft_strcmp(home, ""))
+	if (ft_strstr(curr_dir, home))
 		to_relative(&curr_dir, home);
 	ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
 	ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}$ ", curr_dir);
