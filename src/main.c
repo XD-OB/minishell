@@ -19,7 +19,7 @@ char		**get_paths(char **envp)
 	int	i;
 
 	i = -1;
-	path = ft_strdup(PATH_BUILTIN);
+	path = ft_strnew(0);
 	while (envp[++i])
 		if (!ft_strncmp(envp[i], "PATH=", 5))
 			ft_strcombin(&path, &(envp[i][5]));
@@ -31,7 +31,7 @@ char		**get_paths(char **envp)
 }
 
 
-void		exec_cmd(char *cmd, char **envp, int status)
+int			exec_cmd(char *cmd, char **envp, int status)
 {
 	char	*full_path;
 	char	**tab_path;
@@ -58,13 +58,13 @@ void		exec_cmd(char *cmd, char **envp, int status)
 		if (execve(full_path, tab, envp) != -1)
 		{
 			free(full_path);
-			exit(0);
+			return(0);
 		}
 		free(full_path);
 	}
 	ft_printf("obsh: commande not found: %s\n", tab[0]);
 	free_tabstr(&tab_path);
-	exit (1);
+	return(1);
 }
 
 int			ret_exit(char *str)
@@ -81,13 +81,13 @@ int			ret_exit(char *str)
 	return (ret);
 }
 
-int			cmd_mybuilt(char *cmd, char *envp[])
+int			cmd_mybuilt(char *cmd, char *envp[], char **prev_cd)
 {
 	if (!ft_strncmp(cmd, "exit", 5))
 		kill(0, SIGINT);
-	if (!ft_strncmp(cmd, "cd ", 2))
+	if (!ft_strncmp(cmd, "cd", 2))
 	{
-		ft_cd(cmd, envp);
+		ft_cd(cmd, envp, prev_cd);
 		return (1);
 	}
 	if (!ft_strncmp(cmd, "setenv", 6))
@@ -122,6 +122,7 @@ int			main(int ac, char **av, char **envp)
 	pid_t	pid;
 	char	*line;
 	char	**cmd;
+	char	*prev_cd;
 	int		status;
 	int		i;
 	int		j;
@@ -129,6 +130,7 @@ int			main(int ac, char **av, char **envp)
 	(void)av;
 	i = -1;
 	status = 0;
+	prev_cd = NULL;
 	while (ac)
 	{
 		display_prompt(envp);
@@ -138,19 +140,21 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			ft_putendl(line);
 			pid = create_process();
-			if (pid == 0)
-			{
-					if (!cmd_mybuilt(cmd[i], envp))
-						exec_cmd(cmd[i], envp, status);
-			}
-			else
+			if (pid > 0)
 			{
 				wait(&status);
 				gest_signal(status);
 			}
+			if (pid == 0)
+			{
+				if (!cmd_mybuilt(cmd[i], envp, &prev_cd))
+					exec_cmd(cmd[i], envp, status);
+			}
+			else
+				exit(-1);
 		}
+		free_tabstr(&cmd);
 	}
 	return (EXIT_SUCCESS);
 }

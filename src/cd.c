@@ -40,6 +40,30 @@ void	ft_setpwd(char **envp, char *value)
 	free(new);
 }
 
+char		*ft_getpwd(char **envp)
+{
+	char	*path;
+	int		i;
+
+	i = 0;
+	path = NULL;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "PWD=", 4))
+		{
+			path = ft_strdup(&envp[i][4]);
+			break ;
+		}
+		i++;
+	}
+	if (!path)
+	{
+		path = ft_strnew(500);
+		getcwd(path, 500);
+	}
+	return(path);
+}
+
 static char	*home_path(char *envp[])
 {
 	char	*home;
@@ -127,7 +151,7 @@ void	fix_path(char **envp, char **tab)
 	free(home);
 }
 
-void	ft_cd(char *cmd, char **envp)
+void	ft_cd(char *cmd, char **envp, char **prev_cd)
 {
 	char	**tab;
 
@@ -135,6 +159,16 @@ void	ft_cd(char *cmd, char **envp)
 	if (len_tab(tab) > 2)
 		msg_error("cd: too many arguments\n", 1);
 	fix_path(envp, tab);
+	if (len_tab(tab) == 2 && !ft_strcmp(tab[1], "-"))
+	{
+		if (!*prev_cd)
+			msg_error("obsh: cd: OLD PWD not set\n", 1);
+		free(tab[1]);
+		tab[1] = ft_strdup(*prev_cd);
+	}
+	if (*prev_cd)
+		free(*prev_cd);
+	*prev_cd = ft_getpwd(envp);
 	if (chdir(tab[1]) == -1)
 		msg_error("yawraha mhawda\n", 1);
 	if (is_relative(tab[1]))
