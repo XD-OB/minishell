@@ -61,5 +61,9 @@ void			triple_free(char **s1, char **s2, char **s3);
 int				exit_val(int stats);
 void			gest_signal(t_minishell *ms, int ac, char **av);
 void			ft_swap_env(char **env1, char **env2);
+int				fill_env(t_env *env, char *cmd);
+int				adv_show_env(char **envp, t_env *env, int len_t);
+void			ft_setpwd(char **envp, char *value);
+char			*ft_getpwd(char **envp);
 
 #endif

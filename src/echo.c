@@ -19,37 +19,57 @@ static void		init_echo(t_echo *echo)
 	echo->n = 0;
 }
 
-/*
- **	i:		0: i		1: j
- */
+static int		echo_opts(char **tab, t_echo *echo, int i, int j)
+{
+	if (tab[i][j] == 'n')
+		echo->n = 1;
+	else if (tab[i][j] == 'e')
+		echo->e = 1;
+	else if (tab[i][j] == 'E')
+		echo->cap_e = 1;
+	else if (!ft_strcmp(&tab[i][j], "-help"))
+	{
+		ft_printf("usage: echo [-option] [string ...]\n");
+		ft_printf("       echo [--help] [--version]\n");
+		return (-10);
+	}
+	else if (!ft_strcmp(&tab[i][j], "-version"))
+	{
+		ft_printf("-obsh V1.0: all rights are reserved");
+		ft_printf(" to obelouch 2019\n");
+		return (-10);
+	}
+	else
+		return (0);
+	return (1);
+}
 
 static int		fill_echo(int size, char **tab, t_echo *echo)
 {
-	int			i[2];
+	int			i;
+	int			j;
+	int			k;
 
-	i[0] = 0;
+	i = 0;
 	init_echo(echo);
-	while (++i[0] < size && tab[i[0]][0] == '-')
+	while (++i < size && tab[i][0] == '-')
 	{
-		i[1] = 0;
-		while (tab[i[0]][++i[1]])
+		j = 0;
+		while (tab[i][++j])
 		{
-			if (tab[i[0]][i[1]] == 'n')
-				echo->n = 1;
-			else if (tab[i[0]][i[1]] == 'e')
-				echo->e = 1;
-			else if (tab[i[0]][i[1]] == 'E')
-				echo->cap_e = 1;
-			else
+			k = echo_opts(tab, echo, i, j);
+			if (k == 0)
 			{
 				init_echo(echo);
-				ft_putstr(tab[i[0]]);
-				(i[0] < size - 1) ? ft_putchar(' ') : 0;
-				return (i[0]);
+				ft_putstr(tab[i]);
+				(i < size - 1) ? ft_putchar(' ') : 0;
+				return (i);
 			}
+			if (k == -10)
+				return (-10);
 		}
 	}
-	return (i[0] - 1);
+	return (i - 1);
 }
 
 void		ft_print_sbslch(char *str)
@@ -158,10 +178,8 @@ static int		tab_well_quoted(char **tab)
 		d_quote = 0;
 		while (tab[i][++j])
 		{
-			if (tab[i][j] == 34)
-				d_quote++;
-			if (tab[i][j] == 39)
-				s_quote++;
+			(tab[i][j] == 34) ? d_quote++ : 0;
+			(tab[i][j] == 39) ? s_quote++ : 0;
 		}
 		if (!(d_quote % 2) && !(s_quote % 2))
 			return (1);
@@ -174,7 +192,8 @@ int				ft_echo(int ac, char **av, char *envp[], int *last)
 	t_echo		echo;
 	int			i;
 
-	i = fill_echo(ac, av, &echo);
+	if ((i = fill_echo(ac, av, &echo)) == -1)
+		return (0);
 	while (++i < ac)
 	{
 		if (av[i][0] == '$')
@@ -188,11 +207,9 @@ int				ft_echo(int ac, char **av, char *envp[], int *last)
 		}
 		else
 			ft_print_sbslch(av[i]);
-		if (i < ac - 1)
-			ft_putchar(' ');
+		(i < ac - 1) ? ft_putchar(' ') : 0;
 	}
-	if (echo.n)
-		ft_printf("%{YELLOW}%%%{eoc}");
+	(echo.n) ? ft_printf("%{YELLOW}%%%{eoc}") : 0;
 	ft_putchar('\n');
 	*last = 0;
 	return (0);

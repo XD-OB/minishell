@@ -44,22 +44,30 @@ static int		msg_usrerr(char *cmd, int n)
 	return (1);
 }
 
-int				cmd_user(char **tab, char *envp[])
+int				check_fx(char *str)
 {
 	struct stat		stats;
+
+	if (access(str, F_OK))
+		return (msg_usrerr(str, 0));
+	if (stat(str, &stats) == -1)
+		return (msg_usrerr(str, 1));
+	if (!S_ISREG(stats.st_mode))
+		return (msg_type(stats.st_mode, str));
+	if (access(str, X_OK))
+		return (msg_usrerr(str, 2));
+	return (0);
+}
+
+int				cmd_user(char **tab, char *envp[])
+{
 	int				status;
 	pid_t			pid;
 
 	if (ft_strchr(tab[0], '/'))
 	{
-		if (access(tab[0], F_OK))
-			return (msg_usrerr(tab[0], 0));
-		if (stat(tab[0], &stats) == -1)
-			return (msg_usrerr(tab[0], 1));
-		if (!S_ISREG(stats.st_mode))
-			return (msg_type(stats.st_mode, tab[0]));
-		if (access(tab[0], X_OK))
-			return (msg_usrerr(tab[0], 2));
+		if (check_fx(tab[0]))
+			return (1);
 		if ((pid = create_process()) == -1)
 		{
 			ft_dprintf(2, "fork: error\n");

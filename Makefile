@@ -27,7 +27,7 @@ EXEC = $(addprefix $(B_PATH), $(BUILTINS))
 LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
-			cd env echo setenv unsetenv tools_env signals\
+			cd env echo pwd setenv unsetenv show_env signals init_fill_env\
 
 CMD_BUILT = $(B_PATH)echo $(FLAGS) $(LIB) $(B_PATH)echo.c\
 
