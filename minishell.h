@@ -12,6 +12,15 @@
 
 # define PATH_BUILTIN "./src/builtins:"
 
+typedef struct	s_minishell
+{
+	char		**cmd;
+	pid_t		pid;
+	int			status;
+	int			last_ret;
+	int			i;
+}				t_minishell;
+
 typedef struct	s_echo
 {
 	int			n:1;

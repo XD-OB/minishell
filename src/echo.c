@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 17:46:54 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 18:33:34 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static int	is_shell_char(char *str)
 void		print_shell_char(int set)
 {
 	if (set == 1)
-		ft_printf("%d\n", getppid());
+		ft_printf("%d\n", getpid());
 //	else
 //	{
 //	}

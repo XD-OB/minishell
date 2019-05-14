@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 17:40:43 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 18:34:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,22 @@ int			exec_cmd(char *cmd, char **envp, int status)
 	char	**tab;
 	int		i;
 
-	if (well_quoted(cmd))
+	/*if (well_quoted(cmd))
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
 	if (!ft_strcmp(cmd, "echo") || !ft_strncmp(cmd, "echo ", 5))
 	{
 		ft_echo(len_tab(tab), tab, envp, status);
+		free_tabstr(&tab);
+		exit(0);
+	}*/
+	tab = ft_strsplit(cmd, ' ');
+	if (cmd_user(tab, envp))
+	{
+		free_tabstr(&tab);
 		exit(0);
 	}
-	if (cmd_user(tab, envp))
-		exit(0);
 	tab_path = get_paths(envp);
 	i = -1;
 	while(tab_path[++i])
@@ -58,6 +63,7 @@ int			exec_cmd(char *cmd, char **envp, int status)
 		if (execve(full_path, tab, envp) != -1)
 		{
 			free(full_path);
+			free_tabstr(&tab);
 			return(0);
 		}
 		free(full_path);
@@ -65,6 +71,7 @@ int			exec_cmd(char *cmd, char **envp, int status)
 	ft_dprintf(2, "%{red}-obsh%{eoc}: %{CYAN}%s%{eoc}", tab[0]);
 	ft_dprintf(2, ": commande not found\n");
 	free_tabstr(&tab_path);
+	free_tabstr(&tab);
 	exit(1);
 }
 
@@ -84,8 +91,21 @@ int			ret_exit(char *str)
 
 int			cmd_mybuilt(char *cmd, char *envp[])
 {
+	char	**tab;
+	int		status;
+
+	if (well_quoted(cmd))
+		tab = ft_split_quote(cmd);
+	else
+		tab = ft_split_invquote(cmd);
 	if (!ft_strcmp(cmd, "exit") || !ft_strncmp(cmd, "exit ", 5))
 		kill(0, SIGINT);
+	if (!ft_strcmp(cmd, "echo") || !ft_strncmp(cmd, "echo ", 5))
+	{
+		ft_echo(len_tab(tab), tab, envp, status);
+		free_tabstr(&tab);
+		return(1);
+	}
 	if (!ft_strcmp(cmd, "cd") || !ft_strncmp(cmd,  "cd ", 3))
 	{
 		ft_cd(cmd, envp);
@@ -127,44 +147,38 @@ void		gest_signal(int status, int ac, char **av)
 
 int			main(int ac, char **av, char **envp)
 {
-	pid_t	pid;
-	char	*line;
-	char	**cmd;
-	int		status;
-	int		i;
-	int		j;
+	t_minishell		ms;
+	char			*line;
 
-	(void)av;
-	i = -1;
-	status = 0;
 	set_oldpath(&envp, "");
+	ms.status = 0;
 	while (ac)
 	{
 		display_prompt(envp);
 		get_next_line(0, &line);
-		cmd = cmdsplit(line);
+		ms.cmd = cmdsplit(line);
 		free(line);
-		i = -1;
-		while (cmd[++i])
+		ms.i = -1;
+		while (ms.cmd[++(ms.i)])
 		{
-			if (cmd_mybuilt(cmd[i], envp) == -1)
+			if (cmd_mybuilt(ms.cmd[ms.i], envp) == -1)
 			{
-				if ((pid = create_process()) == -1)
+				if ((ms.pid = create_process()) == -1)
 				{
 					ft_dprintf(2, "%{red}-obsh%{eoc}: ");
 					ft_dprintf(2, "%{CYAN}fork%{eoc}: error\n");
 					return(1);
 				}
-				if (pid == 0)
-					exec_cmd(cmd[i], envp, status);
+				if (ms.pid == 0)
+					exec_cmd(ms.cmd[ms.i], envp, ms.status);
 				else
 				{
-					waitpid(pid, &status, 0);
-					gest_signal(status, ac, av);
+					waitpid(ms.pid, &(ms.status), 0);
+					gest_signal(ms.status, ac, av);
 				}
 			}
 		}
-		free_tabstr(&cmd);
+		free_tabstr(&(ms.cmd));
 	}
 	return (EXIT_SUCCESS);
 }
