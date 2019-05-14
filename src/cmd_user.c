@@ -12,109 +12,57 @@
 
 #include "minishell.h"
 
-static void	div_path(char *cmd, char **dir, char **file)
+static void			msg_type(mode_t mode, char *cmd)
 {
-	int	i;
-
-	i = ft_strlen(cmd);
-	while (--i >= 0)
-		if (cmd[i] == '/')
-			break ;
-	if (i > 0)
-	{
-		*dir = ft_strndup(cmd, i);
-		*file = ft_strdup(&cmd[i + 1]);
-	}
+	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+	ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
+	if (S_ISDIR(mode))
+		ft_dprintf(2, "is a Directory\n");
+	else if (S_ISCHR(mode))
+		ft_dprintf(2, "is a Device in character mode\n");
+	else if (S_ISBLK(mode))
+		ft_dprintf(2, "is a Device in block mode\n");
+	else if (S_ISFIFO(mode))
+		ft_dprintf(2, "is a Pipe\n");
+	else if (S_ISSOCK(mode))
+		ft_dprintf(2, "is a Socket\n");
 	else
-		*file = ft_strdup(cmd);
+		ft_dprintf(2, "Unknown\n");	
 }
 
-static char	**tab_dirs(char *path)
+static void			msg_usrerr(char *cmd, int n)
 {
-	char	**dirs;
-	char	*tmp;
-	int	i;
-
-	i = 0;
-	dirs = ft_strsplit(path, '/');
-	while (dirs[++i])
-	{
-		ft_strcombin(&dirs[i - 1], "/");
-		tmp = dirs[i];
-		dirs[i] = ft_strjoin(dirs[i - 1], dirs[i]);
-		free(tmp);
-	}
-	return (dirs);
+	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+	ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
+	if (n == 0)
+		ft_dprintf(2, "file not found\n");
+	else if (n == 1)	
+		ft_dprintf(2, "Unknown error\n");
+	else if (n == 2)	
+		ft_dprintf(2, "Permission denied\n");
 }
 
-static int	check_file(char *cmd, char *dir_exec, char *file)
+int					cmd_user(char **tab, char *envp[])
 {
-	struct dirent	*dir;
-	struct stat	status;
-	DIR		*flux_dir;
-
-	if (!(flux_dir = opendir(dir_exec)))
-		return (-2);
-	while ((dir = readdir(flux_dir)))
-	{
-		if (!ft_strcmp(dir->d_name, file))
-		{
-			stat(cmd, &status);
-			if (!(S_IXUSR & status.st_mode))
-				return (-2);
-			return (0);
-		}
-	}
-	return (-1);
-}
-
-static int	fine_file(char *cmd, char *path_dir, char *file)
-{
-	struct dirent	*dir;
-	struct stat	status;
-	char		**dirs;
-	DIR		*flux_dir;
-	int		i;
-
-	i = -1;
-	dirs = tab_dirs(path_dir);
-	while (dirs[++i + 1])
-	{
-		if (!(flux_dir = opendir(dirs[i])))
-			return (-2);
-		while ((dir = readdir(flux_dir)))
-		{
-			if (!ft_strcmp(dir->d_name, dirs[i + 1])
-				&& dir->d_type == DT_DIR)
-				break ;
-		}
-		stat(cmd, &status);
-		if (!(S_IXUSR & status.st_mode))
-			return (-2);
-		if (!dir)
-			return (-1);
-	}
-	return (check_file(cmd, dirs[i], file));
-}
-
-int	cmd_user(char **tab, char *envp[])
-{
-	char	*dir;
-	char	*file;
-	int	ret;
+	struct stat		status;
+	int				ret;
 
 	if (ft_strchr(tab[0], '/'))
 	{
-		div_path(tab[0], &dir, &file);
-		ret = fine_file(tab[0], dir, file);
-		if (ret == -1)
-			ft_printf("%s: file not found\n", tab[0]);
-		else if (ret == -2)
-			ft_printf("%s: Permission denied\n", tab[0]);
+		if (access(tab[0], F_OK))
+			msg_usrerr(tab[0], 0);
+		else if (stat(tab[0], &status) == -1)
+			msg_usrerr(tab[0], 1);
+		else if (!S_ISREG(status.st_mode))
+			msg_type(status.st_mode, tab[0]);
+		else if (access(tab[0], X_OK))
+			msg_usrerr(tab[0], 2);
 		else
-			execve(tab[0], tab, envp);
-		free(dir);
-		free(file);
+		{
+			if (execve(tab[0], tab, envp) != -1)
+				return (0);
+			ft_printf("%s: Execution error\n", tab[0]);
+		}
 		return (1);
 	}
 	return (0);

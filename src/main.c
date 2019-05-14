@@ -81,13 +81,13 @@ int			ret_exit(char *str)
 	return (ret);
 }
 
-int			cmd_mybuilt(char *cmd, char *envp[], char **prev_cd)
+int			cmd_mybuilt(char *cmd, char *envp[])
 {
 	if (!ft_strncmp(cmd, "exit", 5))
 		kill(0, SIGINT);
 	if (!ft_strncmp(cmd, "cd", 2))
 	{
-		ft_cd(cmd, envp, prev_cd);
+		ft_cd(cmd, envp);
 		return(1);
 	}
 	if (!ft_strncmp(cmd, "setenv", 6))
@@ -117,28 +117,11 @@ void		gest_signal(int status)
 		ft_putstr("a Signal end the Processus\n");
 }
 
-void		set_oldpath(char ***envp, char	*val)
-{
-	int		i;
-
-	i = 0;
-	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
-		i++;
-	if (!(*envp)[i])
-		return ;
-	else
-	{
-		ft_strclr(&(*envp)[i][7]);
-		ft_strcpy(&(*envp)[i][7], val);
-	}
-}
-
 int			main(int ac, char **av, char **envp)
 {
 	pid_t	pid;
 	char	*line;
 	char	**cmd;
-	char	*prev_cd;
 	int		status;
 	int		i;
 	int		j;
@@ -147,7 +130,6 @@ int			main(int ac, char **av, char **envp)
 	(void)av;
 	i = -1;
 	status = 0;
-	prev_cd = NULL;
 	set_oldpath(&envp, "");
 	while (ac)
 	{
@@ -158,10 +140,14 @@ int			main(int ac, char **av, char **envp)
 		i = -1;
 		while (cmd[++i])
 		{
-			if (cmd_mybuilt(cmd[i], envp, &prev_cd) == -1)
+			if (cmd_mybuilt(cmd[i], envp) == -1)
 			{
 				if ((pid = create_process()) == -1)
-					msg_error("fork: error\n", 1);
+				{
+					ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+					ft_dprintf(2, "%{CYAN}fork%{eoc}: error\n");
+					return(1);
+				}
 				if (pid == 0)
 					exec_cmd(cmd[i], envp, status);
 				else

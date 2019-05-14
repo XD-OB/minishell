@@ -21,7 +21,7 @@ static void	affect_chars(char **s1, char **s2, char *val1, char *val2)
 static int	error_len(char **envp, int len_t)
 {
 	if (len_t > 3)
-		return (1);
+		return (2);
 	if (len_t == 1)
 	{
 		show_env(envp);
@@ -35,11 +35,12 @@ static int	set_var_value(char **envp, char *cmd, char **var, char **val)
 	char	**tab;
 	char	**tmp;
 	int		len_t;
+	int 	ret;
 
 	tab = ft_strsplit(cmd, ' ');
 	len_t = len_tab(tab);
-	if (error_len(envp, len_t))
-		return (0);
+	if ((ret = error_len(envp, len_t)))
+		return (ret);
 	if (len_t == 2)
 	{
 		if (ft_strchr(tab[1], '='))
@@ -54,7 +55,7 @@ static int	set_var_value(char **envp, char *cmd, char **var, char **val)
 	else
 		affect_chars(var, val, tab[1], tab[2]);
 	free_tabstr(&tab);
-	return (1);
+	return (0);
 }
 
 static void	add_var_env(char **envp, char **new, char *var, char *value)
@@ -76,10 +77,16 @@ int			ft_setenv(char **envp, char *cmd)
 	int		len_var;
 	int		i;
 
-	i = -1;
 	new = NULL;
-	if (!set_var_value(envp, cmd, &var, &value))
+	if ((i = set_var_value(envp, cmd, &var, &value)))
+	{
+		if (i != 2)
+			return (1);
+		ft_dprintf(2, "setenv: Wrong number of arguments\n");
+		ft_dprintf(2, "usage: setenv [variable[=value]]\n");
 		return (1);
+	}
+	i = -1;
 	len_var = ft_strlen(var);
 	while (envp[++i])
 	{

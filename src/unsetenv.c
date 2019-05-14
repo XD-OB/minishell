@@ -44,7 +44,11 @@ int			ft_unsetenv(char **envp, char *cmd)
 
 	tab = ft_strsplit(cmd, ' ');
 	if (len_tab(tab) != 2)
+	{
+		ft_dprintf(2, "unsetenv: too many arguments\n");
+		ft_dprintf(2, "usage: unsetenv variable\n");
 		return (1);
+	}
 	len_var = ft_strlen(tab[1]);
 	found = indice_env(envp, tab[1], len_var);
 	if (found == -5)

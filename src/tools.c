@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-void		msg_error(char *msg, int n)
-{
-	ft_putstr_fd(msg, 2);
-	exit(n);
-}
-
 void		free_tabstr(char ***tab)
 {
 	int		i;
@@ -76,4 +70,20 @@ int			well_quoted(char *str)
 	if (!(s_quote % 2) && !(d_quote % 2))
 		return (1);
 	return (0);
+}
+
+void		set_oldpath(char ***envp, char	*val)
+{
+	int		i;
+
+	i = 0;
+	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
+		i++;
+	if (!(*envp)[i])
+		return ;
+	else
+	{
+		ft_strclr(&(*envp)[i][7]);
+		ft_strcpy(&(*envp)[i][7], val);
+	}
 }

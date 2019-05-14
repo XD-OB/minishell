@@ -151,42 +151,82 @@ void	fix_path(char **envp, char **tab)
 	free(home);
 }
 
-int			cd_minus(char **tab, char **envp, char **prev_cd)
+static char	*get_oldpwd(char **envp)
 {
+	int		i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "OLDPWD=", 7))
+		{
+			if (envp[i][7] == '\0')
+				return (NULL);
+			return (ft_strdup(&envp[i][7]));
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+int			cd_minus(char **tab, char **envp)
+{
+	char	*oldpwd;
+
+	oldpwd = get_oldpwd(envp);
 	if (len_tab(tab) == 2 && !ft_strcmp(tab[1], "-"))
 	{
-		if (!*prev_cd)
+		if (!oldpwd)
 		{
 			ft_putstr_fd("obsh: cd: OLD PWD not set\n", 2);
 			return (1);
 		}
 		free(tab[1]);
-		tab[1] = ft_strdup(*prev_cd);
+		tab[1] = ft_strdup(oldpwd);
 	}
-	if (*prev_cd)
-		free(*prev_cd);
-	*prev_cd = ft_getpwd(envp);
+	if (oldpwd)
+		free(oldpwd);
+	oldpwd = ft_getpwd(envp);
+	set_oldpath(&envp, oldpwd);
+	free(oldpwd);
 	return (0);
 }
 
-int			ft_cd(char *cmd, char **envp, char **prev_cd)
+int			change_dir(char *path)
+{
+	if (chdir(path) == -1)
+	{
+		ft_dprintf(2, "%{red}-obsh%{eoc}:");
+		ft_dprintf(2, "%{CYAN} cd%{eoc}: ");
+		ft_dprintf(2, "%{CYAN}%s%{eoc}: ", path);
+		if (access(path, F_OK))
+			ft_dprintf(2, "No such file or directory\n");
+		else if (access(path, X_OK))
+			ft_dprintf(2, "Permission denied\n");
+		else
+			ft_dprintf(2, "Unknown error\n");
+		return (1);
+	}
+	return (0);
+}
+
+int			ft_cd(char *cmd, char **envp)
 {
 	char	**tab;
 
 	tab = ft_strsplit(cmd, ' ');
 	if (len_tab(tab) > 2)
 	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
+		ft_dprintf(2, "%{red}-obsh%{eoc}:");
+		ft_dprintf(2, "%{CYAN} cd%{eoc}: ");
+		ft_dprintf(2, "too many arguments\n");
 		return (1);
 	}
 	fix_path(envp, tab);
-	if (cd_minus(tab, envp, prev_cd))
+	if (cd_minus(tab, envp))
 		return (1);
-	if (chdir(tab[1]) == -1)
-	{
-		ft_putstr_fd("yawraha mhawda\n", 2);
+	if (change_dir(tab[1]))
 		return (1);
-	}
 	if (is_relative(tab[1]))
 		rel_to_abs(&tab[1]);
 	ft_setpwd(envp, tab[1]);
