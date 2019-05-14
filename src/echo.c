@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 18:19:20 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 17:46:54 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,35 @@ void		ft_print_sbslch(char *str)
 			ft_putchar(str[i]);
 }
 
+static int	is_shell_char(char *str)
+{
+	if (!ft_strcmp(str, "$"))
+		return (1);
+	//else if (!ft_strcmp(str, "?"))
+	//	return (2);
+	return (0);
+}
+
+void		print_shell_char(int set)
+{
+	if (set == 1)
+		ft_printf("%d\n", getppid());
+//	else
+//	{
+//	}
+}
+
 int			print_var(char **envp, char *var)
 {
 	int		i;
 	int		len;
 
 	i = 0;
+	if ((len = is_shell_char(var)))
+	{
+		print_shell_char(len);
+		return (1);
+	}
 	len = ft_strlen(var);
 	while (envp[i])
 	{
