@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 22:28:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 03:00:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	add_var_env(char **envp, char **new, char *var, char *value)
 	}
 }
 
-void		ft_setenv(char **envp, char *cmd)
+int			ft_setenv(char **envp, char *cmd)
 {
 	char	*new;
 	char	*var;
@@ -79,7 +79,7 @@ void		ft_setenv(char **envp, char *cmd)
 	i = -1;
 	new = NULL;
 	if (!set_var_value(envp, cmd, &var, &value))
-			return ;
+		return (1);
 	len_var = ft_strlen(var);
 	while (envp[++i])
 	{
@@ -94,4 +94,5 @@ void		ft_setenv(char **envp, char *cmd)
 	}
 	add_var_env(&envp[i], &new, var, value);
 	triple_free(&new, &var, &value);
+	return (0);
 }

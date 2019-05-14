@@ -45,8 +45,8 @@ void			show_env(char **envp);
 int				ft_echo(int ac, char **av, char **envp, int status);
 int				ft_cd(char *cmd, char **envp, char **prev_cd);
 int				ft_env(char **envp, char *cmd);
-void			ft_setenv(char **envp, char *cmd);
-void			ft_unsetenv(char **envp, char *cmd);
+int				ft_setenv(char **envp, char *cmd);
+int				ft_unsetenv(char **envp, char *cmd);
 void			triple_free(char **s1, char **s2, char **s3);
 
 #endif

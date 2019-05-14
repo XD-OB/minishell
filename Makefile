@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/13 18:21:45 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/14 03:01:36 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,6 @@ all : $(NAME)
 $(NAME) :
 		@make -C ./libft re && make -C ./libft clean
 		@gcc -c $(FLAGS) -I ./ $(SRC)
-		@gcc -o $(CMD_BUILT)
 		@gcc -o $(NAME) $(OBJ) $(LIB)
 		@echo "$(CYAN)The MINISHELL is ready :)$(EOC)"
 

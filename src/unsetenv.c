@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 23:12:20 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 03:00:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	ft_swap_env(char **env1, char **env2)
 	*env2 = tmp;
 }
 
-void		ft_unsetenv(char **envp, char *cmd)
+int			ft_unsetenv(char **envp, char *cmd)
 {
 	char	**tab;
 	int		len_var;
@@ -44,13 +44,14 @@ void		ft_unsetenv(char **envp, char *cmd)
 
 	tab = ft_strsplit(cmd, ' ');
 	if (len_tab(tab) != 2)
-		return ;
+		return (1);
 	len_var = ft_strlen(tab[1]);
 	found = indice_env(envp, tab[1], len_var);
 	if (found == -5)
-		return ;
+		return (1);
 	i = found - 1;
 	while (envp[++i + 1])
 		ft_swap_env(&envp[i], &envp[i + 1]);
 	envp[i] = NULL;
+	return (0);
 }

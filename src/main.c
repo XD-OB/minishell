@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 18:45:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 02:08:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int			exec_cmd(char *cmd, char **envp, int status)
 		tab = ft_split_invquote(cmd);
 	if (!ft_strncmp(cmd, "echo", 4))
 	{
-		ft_echo(len_tab(tab), tab, envp, status);	
+		ft_echo(len_tab(tab), tab, envp, status);
 		exit(0);
 	}
 	if (cmd_user(tab, envp))
