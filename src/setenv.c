@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 03:00:24 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 20:46:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	add_var_env(char **envp, char **new, char *var, char *value)
 	}
 }
 
-int			ft_setenv(char **envp, char *cmd)
+int			ft_setenv(char **envp, char *cmd, int *last)
 {
 	char	*new;
 	char	*var;
@@ -77,14 +77,15 @@ int			ft_setenv(char **envp, char *cmd)
 	int		len_var;
 	int		i;
 
+	*last = 0;
 	new = NULL;
 	if ((i = set_var_value(envp, cmd, &var, &value)))
 	{
 		if (i != 2)
-			return (1);
+			return ((*last = 1));
 		ft_dprintf(2, "setenv: Wrong number of arguments\n");
 		ft_dprintf(2, "usage: setenv [variable[=value]]\n");
-		return (1);
+		return ((*last = 1));
 	}
 	i = -1;
 	len_var = ft_strlen(var);

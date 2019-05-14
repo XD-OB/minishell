@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/14 03:01:36 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/14 22:15:51 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ EXEC = $(addprefix $(B_PATH), $(BUILTINS))
 LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
-			cd env echo setenv unsetenv tools_env\
+			cd env echo setenv unsetenv tools_env signals\
 
 CMD_BUILT = $(B_PATH)echo $(FLAGS) $(LIB) $(B_PATH)echo.c\
 

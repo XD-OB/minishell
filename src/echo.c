@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 18:33:34 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 21:14:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,37 +62,24 @@ void		ft_print_sbslch(char *str)
 			ft_putchar(str[i]);
 }
 
-static int	is_shell_char(char *str)
-{
-	if (!ft_strcmp(str, "$"))
-		return (1);
-	//else if (!ft_strcmp(str, "?"))
-	//	return (2);
-	return (0);
-}
-
-void		print_shell_char(int set)
-{
-	if (set == 1)
-		ft_printf("%d\n", getpid());
-//	else
-//	{
-//	}
-}
-
-int			print_var(char **envp, char *var)
+int			print_var(char **envp, char *var, int *last)
 {
 	int		i;
 	int		len;
 
-	i = 0;
-	if ((len = is_shell_char(var)))
+	i = -1;
+	if (!ft_strcmp(var, "$"))
 	{
-		print_shell_char(len);
-		return (1);
+		ft_putnbr(getpid());
+		return(1);
+	}
+	else if (!ft_strcmp(var, "?"))
+	{
+		ft_putnbr(*last);
+		return(1);
 	}
 	len = ft_strlen(var);
-	while (envp[i])
+	while (envp[++i])
 	{
 		if (!ft_strncmp(envp[i], var, len) &&
 				envp[i][len] == '=')
@@ -100,7 +87,6 @@ int			print_var(char **envp, char *var)
 			ft_putstr(&envp[i][len + 1]);
 			return (1);
 		}
-		i++;
 	}
 	return (0);
 }
@@ -183,7 +169,7 @@ static int		tab_well_quoted(char **tab)
 	return (0);
 }
 
-int				ft_echo(int ac, char **av, char *envp[], int status)
+int				ft_echo(int ac, char **av, char *envp[], int *last)
 {
 	t_echo		echo;
 	int			i;
@@ -192,7 +178,7 @@ int				ft_echo(int ac, char **av, char *envp[], int status)
 	while (++i < ac)
 	{
 		if (av[i][0] == '$')
-			print_var(envp, &av[i][1]);
+			print_var(envp, &av[i][1], last);
 		else if (av[i][0] == 34 || av[i][0] == 39)
 		{
 			if (!tab_well_quoted(&av[i]))
@@ -208,5 +194,6 @@ int				ft_echo(int ac, char **av, char *envp[], int status)
 	if (echo.n)
 		ft_printf("%{YELLOW}%%%{eoc}");
 	ft_putchar('\n');
+	*last = 0;
 	return (0);
 }

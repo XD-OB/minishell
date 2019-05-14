@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 18:34:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 22:19:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,18 @@ char		**get_paths(char **envp)
 }
 
 
-int			exec_cmd(char *cmd, char **envp, int status)
+int			exec_cmd(char *cmd, char **envp)
 {
 	char	*full_path;
 	char	**tab_path;
 	char	**tab;
 	int		i;
 
-	/*if (well_quoted(cmd))
-		tab = ft_split_quote(cmd);
-	else
-		tab = ft_split_invquote(cmd);
-	if (!ft_strcmp(cmd, "echo") || !ft_strncmp(cmd, "echo ", 5))
-	{
-		ft_echo(len_tab(tab), tab, envp, status);
-		free_tabstr(&tab);
-		exit(0);
-	}*/
 	tab = ft_strsplit(cmd, ' ');
-	if (cmd_user(tab, envp))
+	if ((i = cmd_user(tab, envp)))
 	{
 		free_tabstr(&tab);
-		exit(0);
+		exit(i);
 	}
 	tab_path = get_paths(envp);
 	i = -1;
@@ -89,7 +79,7 @@ int			ret_exit(char *str)
 	return (ret);
 }
 
-int			cmd_mybuilt(char *cmd, char *envp[])
+int			cmd_mybuilt(char *cmd, char *envp[], int *last)
 {
 	char	**tab;
 	int		status;
@@ -99,50 +89,34 @@ int			cmd_mybuilt(char *cmd, char *envp[])
 	else
 		tab = ft_split_invquote(cmd);
 	if (!ft_strcmp(cmd, "exit") || !ft_strncmp(cmd, "exit ", 5))
-		kill(0, SIGINT);
+		exit(ret_exit(cmd));
 	if (!ft_strcmp(cmd, "echo") || !ft_strncmp(cmd, "echo ", 5))
 	{
-		ft_echo(len_tab(tab), tab, envp, status);
+		ft_echo(len_tab(tab), tab, envp, last);
 		free_tabstr(&tab);
 		return(1);
 	}
 	if (!ft_strcmp(cmd, "cd") || !ft_strncmp(cmd,  "cd ", 3))
 	{
-		ft_cd(cmd, envp);
+		ft_cd(cmd, envp, last);
 		return(1);
 	}
 	if (!ft_strcmp(cmd, "setenv") || !ft_strncmp(cmd, "setenv ", 7))
 	{
-		ft_setenv(envp, cmd);
+		ft_setenv(envp, cmd, last);
 		return (1);
 	}
 	if (!ft_strcmp(cmd, "unsetenv") || !ft_strncmp(cmd, "unsetenv ", 8))
 	{
-		ft_unsetenv(envp, cmd);
+		ft_unsetenv(envp, cmd, last);
 		return (1);
 	}
 	if (!ft_strcmp(cmd, "env") || !ft_strncmp(cmd, "env ", 4))
 	{
-		ft_env(envp, cmd);
+		ft_env(envp, cmd, last);
 		return (1);
 	}
 	return (-1);
-}
-
-void		gest_signal(int status, int ac, char **av)
-{
-	if ((ac == 2 || ac == 3) && !ft_strcmp(av[1], "-signals"))
-	{
-		if (ac == 3 && !ft_strcmp(av[2], "-all"))
-		{
-			if (WIFEXITED(status))
-				ft_dprintf(2, "Terminated Normaly\n");
-		}
-		if (WIFSIGNALED(status))
-			ft_dprintf(2, "Killed by The Signal: %d\n", WTERMSIG(status));
-		else if (WIFSTOPPED(status))
-			ft_dprintf(2, "Stoped by The Signal: %d\n", WSTOPSIG(status));
-	}
 }
 
 int			main(int ac, char **av, char **envp)
@@ -152,6 +126,7 @@ int			main(int ac, char **av, char **envp)
 
 	set_oldpath(&envp, "");
 	ms.status = 0;
+	ms.last_ret = 0;
 	while (ac)
 	{
 		display_prompt(envp);
@@ -161,7 +136,7 @@ int			main(int ac, char **av, char **envp)
 		ms.i = -1;
 		while (ms.cmd[++(ms.i)])
 		{
-			if (cmd_mybuilt(ms.cmd[ms.i], envp) == -1)
+			if (cmd_mybuilt(ms.cmd[ms.i], envp, &ms.last_ret) == -1)
 			{
 				if ((ms.pid = create_process()) == -1)
 				{
@@ -170,11 +145,14 @@ int			main(int ac, char **av, char **envp)
 					return(1);
 				}
 				if (ms.pid == 0)
-					exec_cmd(ms.cmd[ms.i], envp, ms.status);
+					exec_cmd(ms.cmd[ms.i], envp);
 				else
 				{
 					waitpid(ms.pid, &(ms.status), 0);
-					gest_signal(ms.status, ac, av);
+					if (ac == 2 && !ft_strcmp(av[1], "signal"))
+						gest_signal(&ms, ac, av);
+					else
+						ms.last_ret = exit_val(ms.status);
 				}
 			}
 		}

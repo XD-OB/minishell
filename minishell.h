@@ -45,18 +45,20 @@ void			display_prompt(char **envp);
 void			free_tabstr(char ***tab);
 char			**cmdsplit(const char *str);
 int				cmd_user(char **tab, char **envp);
-int				cmd_mybuilt(char *cmd, char **envp);
-int				exec_cmd(char *cmd, char **envp, int status);
+int				cmd_mybuilt(char *cmd, char **envp, int *last);
+int				exec_cmd(char *cmd, char **envp);
 char			**ft_split_quote(char *tab);
 char			**ft_split_invquote(char *tab);
 int				well_quoted(char *str);
 void			show_env(char **envp);
 void			set_oldpath(char ***envp, char	*val);
-int				ft_echo(int ac, char **av, char **envp, int status);
-int				ft_cd(char *cmd, char **envp);
-int				ft_env(char **envp, char *cmd);
-int				ft_setenv(char **envp, char *cmd);
-int				ft_unsetenv(char **envp, char *cmd);
+int				ft_echo(int ac, char **av, char **envp, int *last);
+int				ft_cd(char *cmd, char **envp, int *last);
+int				ft_env(char **envp, char *cmd, int *last);
+int				ft_setenv(char **envp, char *cmd, int *last);
+int				ft_unsetenv(char **envp, char *cmd, int *last);
 void			triple_free(char **s1, char **s2, char **s3);
+int				exit_val(int stats);
+void			gest_signal(t_minishell *ms, int ac, char **av);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 18:45:20 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 20:49:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int			change_dir(char *path)
 	return (0);
 }
 
-int			ft_cd(char *cmd, char **envp)
+int			ft_cd(char *cmd, char **envp, int *last)
 {
 	char	**tab;
 
@@ -220,15 +220,15 @@ int			ft_cd(char *cmd, char **envp)
 		ft_dprintf(2, "%{red}-obsh%{eoc}:");
 		ft_dprintf(2, "%{CYAN} cd%{eoc}: ");
 		ft_dprintf(2, "too many arguments\n");
-		return (1);
+		return ((*last = 1));
 	}
 	fix_path(envp, tab);
 	if (cd_minus(tab, envp))
-		return (1);
+		return ((*last = 1));
 	if (change_dir(tab[1]))
-		return (1);
+		return ((*last = 1));
 	if (is_relative(tab[1]))
 		rel_to_abs(&tab[1]);
 	ft_setpwd(envp, tab[1]);
-	return (0);
+	return ((*last = 0));
 }

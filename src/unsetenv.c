@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 03:00:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 20:49:46 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	ft_swap_env(char **env1, char **env2)
 	*env2 = tmp;
 }
 
-int			ft_unsetenv(char **envp, char *cmd)
+int			ft_unsetenv(char **envp, char *cmd, int *last)
 {
 	char	**tab;
 	int		len_var;
@@ -47,15 +47,15 @@ int			ft_unsetenv(char **envp, char *cmd)
 	{
 		ft_dprintf(2, "unsetenv: too many arguments\n");
 		ft_dprintf(2, "usage: unsetenv variable\n");
-		return (1);
+		return ((*last = 1));
 	}
 	len_var = ft_strlen(tab[1]);
 	found = indice_env(envp, tab[1], len_var);
 	if (found == -5)
-		return (1);
+		return ((*last = 1));
 	i = found - 1;
 	while (envp[++i + 1])
 		ft_swap_env(&envp[i], &envp[i + 1]);
 	envp[i] = NULL;
-	return (0);
+	return ((*last = 0));
 }

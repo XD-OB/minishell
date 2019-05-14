@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 02:58:38 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 20:44:38 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,24 +137,19 @@ void		unset_var(char ***envp, char *var)
 	*envp = new_envp;
 }
 
-void		env_cmd(t_env env, char **envp)
+void		env_cmd(t_env env, char **envp, int *last)
 {
-	int		status;
-		int		ret;
 	pid_t	pid;
 
 	pid = create_process();
 	if (pid == 0)
 	{
 		if (env.tab[env.start_cmd])
-			exec_cmd(env.tab[env.start_cmd], envp, status);
+			exec_cmd(env.tab[env.start_cmd], envp);
 		exit(0);
 	}
 	else
-	{
-		ret = waitpid(pid, &status, 0);
-		ft_printf("ret= %d\n", ret);
-	}
+		wait(NULL);
 }
 
 
@@ -212,7 +207,7 @@ char		**modify_env(char **envp, t_env env)
 	return (new_envp);
 }
 
-int		ft_env(char **envp, char *cmd)
+int		ft_env(char **envp, char *cmd, int *last)
 {
 	char	**new_envp;
 	t_env	env;
@@ -220,12 +215,16 @@ int		ft_env(char **envp, char *cmd)
 	int		i;
 
 	if (!fill_env(&env, cmd))
+	{
+		*last = 1;
 		return (1);
+	}
+	*last = 0;
 	len_t = len_tab(env.tab);
 	if (adv_show_env(envp, &env, len_t))
 		return(0);
 	new_envp = modify_env(envp, env);
-	env_cmd(env, new_envp);
+	env_cmd(env, new_envp, last);
 	free_tabstr(&new_envp);
 	return (0);
 }
