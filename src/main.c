@@ -117,6 +117,22 @@ void		gest_signal(int status)
 		ft_putstr("a Signal end the Processus\n");
 }
 
+void		set_oldpath(char ***envp, char	*val)
+{
+	int		i;
+
+	i = 0;
+	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
+		i++;
+	if (!(*envp)[i])
+		return ;
+	else
+	{
+		ft_strclr(&(*envp)[i][7]);
+		ft_strcpy(&(*envp)[i][7], val);
+	}
+}
+
 int			main(int ac, char **av, char **envp)
 {
 	pid_t	pid;
@@ -132,6 +148,7 @@ int			main(int ac, char **av, char **envp)
 	i = -1;
 	status = 0;
 	prev_cd = NULL;
+	set_oldpath(&envp, "");
 	while (ac)
 	{
 		display_prompt(envp);

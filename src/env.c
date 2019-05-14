@@ -80,6 +80,7 @@ static int	fill_env(t_env *env, char *cmd)
 			}
 	}
 	env->start_var = i - 1;
+	(env->u) ? i++ : 0;
 	while (tab[i] && ft_strchr(tab[i], '='))
 		i++;
 	env->start_cmd = i - 1;
@@ -206,7 +207,6 @@ char		**modify_env(char **envp, t_env env)
 	i = env.start_var;
 	if (env.u)
 		unset_var(&new_envp, env.tab[i++]);
-	i = env.start_var;
 	while (env.tab[i] && i < env.start_cmd)
 		add_2_tab(&new_envp, env.tab[i++]);
 	return (new_envp);
@@ -217,20 +217,14 @@ int		ft_env(char **envp, char *cmd)
 	char	**new_envp;
 	t_env	env;
 	int		len_t;
-	pid_t	pid;
-	int		status;
-		int		ret;
 	int		i;
 
 	if (!fill_env(&env, cmd))
 		return (1);
 	len_t = len_tab(env.tab);
-	ft_print_env(env);
-	ft_printf("len_tab: %d\n", len_t);
 	if (adv_show_env(envp, &env, len_t))
 		return(0);
 	new_envp = modify_env(envp, env);
-	show_env(new_envp);
 	env_cmd(env, new_envp);
 	free_tabstr(&new_envp);
 	return (0);
