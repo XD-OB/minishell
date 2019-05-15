@@ -60,5 +60,6 @@ int				ft_unsetenv(char **envp, char *cmd, int *last);
 void			triple_free(char **s1, char **s2, char **s3);
 int				exit_val(int stats);
 void			gest_signal(t_minishell *ms, int ac, char **av);
+void			ft_swap_env(char **env1, char **env2);
 
 #endif

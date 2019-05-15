@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/15 02:31:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 03:28:58 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,29 @@ static int	fill_opts(t_env *env, char c)
 		env->null = 1;
 	else
 	{
-		ft_dprintf(2, "env: illegal option -- %c\n", c);
-		ft_dprintf(2, "usage: env [-i0] [-u name]");
-		ft_dprintf(2, "[name=value ...] [utility [argument ...]]\n");
+		ft_printf("env: illegal option -- %c\n", c);
+		ft_printf("usage: env [-i0] [-u name]");
+		ft_printf("[name=value ...] [utility [argument ...]]\n");
+		return (1);
+	}
+	return (0);
+}
+
+static int	fill_longopts(t_env *env, char *str)
+{
+	if (!str[0] || !ft_strcmp(str, "ignore-environment"))
+		env->i = 1;
+	else if (!ft_strcmp(str, "unset"))
+		env->u = 1;
+	else if (!ft_strcmp(str, "null-separator"))
+		env->null = 1;
+	else
+	{
+		ft_dprintf(2, "env: illegal option -- %s\n", str);
+		ft_dprintf(2, "usage: env [-i0] [-u name]\n");
+		ft_dprintf(2, "options: -   -i  --ignore-environment\n");
+		ft_dprintf(2, "         -0  --null-separator\n");
+		ft_dprintf(2, "         -u  --unset\n");
 		return (1);
 	}
 	return (0);
@@ -53,11 +73,25 @@ static int	fill_env(t_env *env, char *cmd)
 	{
 		j = 0;
 		while (tab[i][++j])
-			if (fill_opts(env, tab[i][j]))
+		{
+			if (tab[i][j] == '-')
 			{
-				free_tabstr(&tab);
-				return (0);
+				if (fill_longopts(env, &tab[i][++j]))
+				{
+					free_tabstr(&tab);
+					return (0);
+				}
+				break;
 			}
+			else
+			{
+				if (fill_opts(env, tab[i][j]))
+				{
+					free_tabstr(&tab);
+					return (0);
+				}
+			}
+		}
 	}
 	env->start_var = i - 1;
 	(env->u) ? i++ : 0;
@@ -117,21 +151,31 @@ void		env_cmd(t_env env, char **envp, int *last)
 	free(cmd);
 }
 
-
-void	ft_print_env(t_env env)
+static int	env_u(char ***envp, t_env env, int i)
 {
-	int		i;
+	int		j;
+	int		k;
 
-	ft_printf("i   : %d\n", env.i);
-	ft_printf("u   : %d\n", env.u);
-	ft_printf("null: %d\n", env.null);
-	ft_printf("start_var= %d\n", env.start_var);
-	ft_printf("start_cmd= %d\n", env.start_cmd);
-	ft_printf("-------------------\n");
-	i = -1;
-	while (env.tab[++i])
-		ft_putendl(env.tab[i]);
-	ft_putstr("-------------------\n");
+	j = -1;
+	while ((*envp)[++j])
+	{
+		if (!ft_strncmp((*envp)[j], env.tab[i], ft_strlen(env.tab[i])))
+		{
+			k = j - 1;
+			while ((*envp)[++k + 1])
+				ft_swap_env(&((*envp)[k]), &((*envp)[k + 1]));
+			(*envp)[k] = NULL;
+			break;
+		}
+	}
+	i++;
+	if (!env.tab[i])
+	{
+		show_env(*envp);
+		free_tabstr(envp);
+		return (1);
+	}
+	return (0);
 }
 
 char		**modify_env(char **envp, t_env env)
@@ -140,6 +184,7 @@ char		**modify_env(char **envp, t_env env)
 	char	*tmp;
 	int		i;
 	int		j;
+	int		k;
 
 	if (env.i)
 	{
@@ -154,42 +199,10 @@ char		**modify_env(char **envp, t_env env)
 		new_envp[i] = ft_strdup(envp[i]);
 	i = env.start_var;
 	if (env.u && env.tab[i])
-	{
-		j = -1;
-		while (new_envp[++j])
-		{
-			if (!ft_strncmp(new_envp[j], env.tab[i], ft_strlen(env.tab[i])))
-			{
-				tmp = new_envp[j];
-				new_envp[j] = ft_strjoin(env.tab[i], "=");
-				free(tmp);
-				break;
-			}
-		}
-		i++;
-		if (!env.tab[i])
-		{
-			show_env(new_envp);
-			free_tabstr(envp);
+		if (env_u(&new_envp, env, i++))
 			return (NULL);
-		}
-	}
 	while (env.tab[i] && i < env.start_cmd)
-	{
-		if (!ft_strchr(env.tab[i], '='))
-		{
-			ft_dprintf(2, "env: illegal affectaion!\n");
-			ft_dprintf(2, "usage: env [-i0] [-u name]");
-			ft_dprintf(2, "[name=value ...] [utility [argument ...]]\n");
-			free_tabstr(&new_envp);
-			return (NULL);
-		}
 		add_2_tab(&new_envp, env.tab[i++]);
-	}
-	j = -1;
-	while (new_envp[++j])
-		ft_printf("%s\n", new_envp[j]);
-	ft_putstr("\n");
 	return (new_envp);
 }
 

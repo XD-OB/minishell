@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 20:49:46 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 02:43:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	indice_env(char **envp, char *var, int len_var)
 	return (-5);
 }
 
-static void	ft_swap_env(char **env1, char **env2)
+void		ft_swap_env(char **env1, char **env2)
 {
 	char	*tmp;
 
