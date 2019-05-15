@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 22:19:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 22:29:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ int			main(int ac, char **av, char **envp)
 				else
 				{
 					waitpid(ms.pid, &(ms.status), 0);
-					if (ac == 2 && !ft_strcmp(av[1], "signal"))
+					if (ac == 2 && !ft_strcmp(av[1], "--signals"))
 						gest_signal(&ms, ac, av);
 					else
 						ms.last_ret = exit_val(ms.status);

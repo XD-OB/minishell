@@ -6,31 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 22:27:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 23:41:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void		free_tabstr(char ***tab)
-{
-	int		i;
-
-	i = -1;
-	while ((*tab)[++i])
-		free((*tab)[i]);
-	free(*tab);
-}
-
-int			len_tab(char **tab)
-{
-	int		len;
-
-	len = 0;
-	while (tab[len])
-		len++;
-	return (len);
-}
 
 pid_t		create_process(void)
 {

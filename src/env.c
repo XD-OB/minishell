@@ -6,31 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 20:44:38 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 02:31:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char		**copy_char2(char **tab, int start)
-{
-	char	**new;
-	int		len_t;
-	int		len;
-	int		i;
-	int		j;
-
-	len_t = len_tab(tab);
-	len = len_t - start;
-	if (!(new = (char**)malloc(sizeof(char*) * (len + 1))))
-		return NULL;
-	new[len] = NULL;
-	j = 0;
-	i = start;
-	while (i < len_t)
-		new[j++] = ft_strdup(tab[i++]);
-	return (new);
-}
 
 static void	init_env(t_env *env)
 {
@@ -52,9 +32,9 @@ static int	fill_opts(t_env *env, char c)
 		env->null = 1;
 	else
 	{
-		ft_printf("env: illegal option -- %c\n", c);
-		ft_printf("usage: env [-i0] [-u name]");
-		ft_printf("[name=value ...] [utility [argument ...]]\n");
+		ft_dprintf(2, "env: illegal option -- %c\n", c);
+		ft_dprintf(2, "usage: env [-i0] [-u name]");
+		ft_dprintf(2, "[name=value ...] [utility [argument ...]]\n");
 		return (1);
 	}
 	return (0);
@@ -111,45 +91,30 @@ int			adv_show_env(char **envp, t_env *env, int len_t)
 	return (0);
 }
 
-void		unset_var(char ***envp, char *var)
-{
-	char	**new_envp;
-	int		len_var;
-	int		len;
-	int		i;
-	int		j;
-
-	ft_strcombin(&var, "=");
-	len_var = ft_strlen(var);
-	len = len_tab(*envp);
-	if(!(new_envp = (char**)malloc(sizeof(char*) * (len + 1))))
-		return ;
-	new_envp[len] = NULL;
-	i = 0;
-	j = 0;
-	while (i < len)
-	{
-		if (ft_strncmp((*envp)[i], var, len_var))
-			new_envp[j++] = ft_strdup((*envp)[i]);
-		i++;
-	}
-	free_tabstr(envp);
-	*envp = new_envp;
-}
-
 void		env_cmd(t_env env, char **envp, int *last)
 {
 	pid_t	pid;
+	int		status;
+	char	*cmd;
 
-	pid = create_process();
-	if (pid == 0)
+	if (!env.tab[env.start_cmd])
+		return ;
+	cmd = join_from_tab(env.tab, env.start_cmd, " ");
+	if (cmd_mybuilt(cmd, envp, last) == -1)
 	{
-		if (env.tab[env.start_cmd])
-			exec_cmd(env.tab[env.start_cmd], envp);
-		exit(0);
+		pid = create_process();
+		if (pid == 0)
+		{
+			exec_cmd(cmd, envp);
+			exit(0);
+		}
+		else
+		{
+			waitpid(pid, &status, 0);
+			*last = exit_val(status);
+		}
 	}
-	else
-		wait(NULL);
+	free(cmd);
 }
 
 
@@ -169,28 +134,12 @@ void	ft_print_env(t_env env)
 	ft_putstr("-------------------\n");
 }
 
-void		add_2_tab(char ***tab, char *elem)
-{
-	char	**new;
-	int		len;
-	int		i;
-
-	len = len_tab(*tab);
-	if (!(new = (char**)malloc(sizeof(char*) * (len + 2))))
-		return ;
-	new[len + 1] = NULL;
-	i = -1;
-	while (++i < len)
-		new[i] = ft_strdup((*tab)[i]);
-	new[len] = ft_strdup(elem);
-	free_tabstr(tab);
-	*tab = new;
-}
-
 char		**modify_env(char **envp, t_env env)
 {
 	char	**new_envp;
+	char	*tmp;
 	int		i;
+	int		j;
 
 	if (env.i)
 	{
@@ -198,12 +147,49 @@ char		**modify_env(char **envp, t_env env)
 		*new_envp = NULL;
 		return (new_envp);
 	}
-	new_envp = copy_char2(envp, 0);
+	new_envp = (char**)malloc(sizeof(char*) * (len_tab(envp) + 1));
+	new_envp[len_tab(envp)] = NULL;
+	i = -1;
+	while (envp[++i])
+		new_envp[i] = ft_strdup(envp[i]);
 	i = env.start_var;
-	if (env.u)
-		unset_var(&new_envp, env.tab[i++]);
+	if (env.u && env.tab[i])
+	{
+		j = -1;
+		while (new_envp[++j])
+		{
+			if (!ft_strncmp(new_envp[j], env.tab[i], ft_strlen(env.tab[i])))
+			{
+				tmp = new_envp[j];
+				new_envp[j] = ft_strjoin(env.tab[i], "=");
+				free(tmp);
+				break;
+			}
+		}
+		i++;
+		if (!env.tab[i])
+		{
+			show_env(new_envp);
+			free_tabstr(envp);
+			return (NULL);
+		}
+	}
 	while (env.tab[i] && i < env.start_cmd)
+	{
+		if (!ft_strchr(env.tab[i], '='))
+		{
+			ft_dprintf(2, "env: illegal affectaion!\n");
+			ft_dprintf(2, "usage: env [-i0] [-u name]");
+			ft_dprintf(2, "[name=value ...] [utility [argument ...]]\n");
+			free_tabstr(&new_envp);
+			return (NULL);
+		}
 		add_2_tab(&new_envp, env.tab[i++]);
+	}
+	j = -1;
+	while (new_envp[++j])
+		ft_printf("%s\n", new_envp[j]);
+	ft_putstr("\n");
 	return (new_envp);
 }
 
@@ -224,7 +210,13 @@ int		ft_env(char **envp, char *cmd, int *last)
 	if (adv_show_env(envp, &env, len_t))
 		return(0);
 	new_envp = modify_env(envp, env);
+	if (!new_envp)
+	{
+		free_tabstr(&(env.tab));
+		return (1);
+	}
 	env_cmd(env, new_envp, last);
+	free_tabstr(&(env.tab));
 	free_tabstr(&new_envp);
 	return (0);
 }

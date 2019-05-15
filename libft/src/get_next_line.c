@@ -6,85 +6,58 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 18:19:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/03 02:45:18 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/14 23:24:43 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_gnl		*node_search(t_gnl *list, int fd)
+static	unsigned int	ft_linelen(char *tab)
 {
-	t_gnl	*curr;
+	unsigned int	i;
 
-	curr = list;
-	while (curr)
+	i = 0;
+	while (tab[i] != '\n' && tab[i] != '\0')
+		i++;
+	return (i);
+}
+
+static	char			*ft_line(char *tab)
+{
+	if (ft_strchr(tab, '\n'))
 	{
-		if (curr->fd == fd)
-			return (curr);
-		curr = curr->next;
+		ft_strcpy(tab, ft_strchr(tab, '\n') + 1);
+		return (tab);
+	}
+	if (ft_linelen(tab) > 0)
+	{
+		ft_strcpy(tab, ft_strchr(tab, '\0'));
+		return (tab);
 	}
 	return (NULL);
 }
 
-int			ft_linelen(char *str)
+int						get_next_line(int const fd, char **line)
 {
-	int		len;
+	char			*tmp;
+	char			buff[BUFF_SIZE + 1];
+	static char		*tab[256];
+	int				ret;
 
-	len = 0;
-	while (str[len] != '\0' && str[len] != '\n')
-		len++;
-	return (len);
-}
-
-int			prepare_next(t_gnl *node)
-{
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	if (!(node->content[ft_linelen(node->content)]))
+	if (fd < 0 || BUFF_SIZE < 1 || !line || read(fd, buff, 0) < 0)
+		return (-1);
+	if (!(tab[fd]) && (tab[fd] = ft_strnew(0)) == NULL)
+		return (-1);
+	while (!(ft_strchr(tab[fd], '\n')) && (ret = read(fd, buff, BUFF_SIZE)) > 0)
+	{
+		buff[ret] = '\0';
+		tmp = tab[fd];
+		tab[fd] = ft_strnjoin(tmp, buff, ret);
+		free(tmp);
+	}
+	*line = ft_strsub(tab[fd], 0, ft_linelen(tab[fd]));
+	if (ft_line(tab[fd]) == NULL)
 		return (0);
-	tmp = node->content;
-	while (tmp[i] != '\n' && tmp[i])
-		i++;
-	node->content = ft_strdup(&tmp[++i]);
-	free(tmp);
 	return (1);
 }
 
-void		join_content(t_gnl **node, char *buff, int size)
-{
-	char	*tmp;
-
-	buff[size] = '\0';
-	tmp = (*node)->content;
-	(*node)->content = ft_strnjoin(tmp, buff, size);
-	free(tmp);
-}
-
-int			get_next_line(const int fd, char **line)
-{
-	char			buff[BUFF_SIZE + 1];
-	static t_gnl	*list = NULL;
-	t_gnl			*node;
-	int				ret;
-
-	if (fd < 0 || BUFF_SIZE < 1 || !line
-			|| read(fd, buff, 0) < 0)
-		return (-1);
-	node = node_search(list, fd);
-	if (!list || !node)
-	{
-		node = (t_gnl*)malloc(sizeof(t_gnl));
-		node->content = ft_strnew(0);
-		node->fd = fd;
-		node->next = list;
-		list = node;
-	}
-	while (!(ft_strchr(node->content, '\n'))
-			&& (ret = read(fd, buff, BUFF_SIZE)) > 0)
-		join_content(&node, buff, ret);
-	*line = ft_strsub(node->content, 0,
-			ft_linelen(node->content));
-	return (prepare_next(node));
-}

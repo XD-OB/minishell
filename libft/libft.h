@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/03 02:41:12 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 00:04:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@
 # include <limits.h>
 # include "ft_printf.h"
 # define BUFF_SIZE 1000
-
-typedef struct		s_gnl
-{
-	int				fd;
-	char			*content;
-	struct s_gnl	*next;
-}					t_gnl;
 
 typedef struct		s_mult
 {
@@ -162,5 +155,10 @@ int					ft_max(int a, int b);
 int					ft_min(int a, int b);
 char				*ft_poslltoa(long long int n);
 void				ft_strcombin(char **s1, const char *s2);
+int					len_tab(char **tab);
+void				free_tabstr(char ***tab);
+void				add_2_tab(char ***tab, char *elem);
+char				*join_from_tab(char **tab, int start, char *sep);
+char				**copy_char2(char **tab, int start);
 
 #endif
