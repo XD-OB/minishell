@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 22:29:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 19:12:59 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ char		**get_paths(char **envp)
 	return (tab_path);
 }
 
-
 int			exec_cmd(char *cmd, char **envp)
 {
 	char	*full_path;
@@ -50,11 +49,23 @@ int			exec_cmd(char *cmd, char **envp)
 	{
 		full_path = ft_strjoin(tab_path[i], "/");
 		ft_strcombin(&full_path, tab[0]);
-		if (execve(full_path, tab, envp) != -1)
+		if (!access(full_path, F_OK))
 		{
+			if (!access(full_path, X_OK))
+			{
+				if (execve(full_path, tab, envp) != -1)
+				{
+					free(full_path);
+					free_tabstr(&tab);
+					return(0);
+				}
+			}
+			ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+			ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
+			ft_dprintf(2, "Permission denied\n");
 			free(full_path);
 			free_tabstr(&tab);
-			return(0);
+			return (1);
 		}
 		free(full_path);
 	}
@@ -123,10 +134,12 @@ int			main(int ac, char **av, char **envp)
 {
 	t_minishell		ms;
 	char			*line;
+	sighandler_t	old;
 
 	set_oldpath(&envp, "");
 	ms.status = 0;
 	ms.last_ret = 0;
+	old = signal(SIGINT, SIG_IGN);
 	while (ac)
 	{
 		display_prompt(envp);
@@ -145,7 +158,10 @@ int			main(int ac, char **av, char **envp)
 					return(1);
 				}
 				if (ms.pid == 0)
+				{
+					signal(SIGINT, old);
 					exec_cmd(ms.cmd[ms.i], envp);
+				}
 				else
 				{
 					waitpid(ms.pid, &(ms.status), 0);

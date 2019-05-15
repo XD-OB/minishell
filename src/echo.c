@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 21:14:37 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/15 18:04:40 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void		print_ee(char *str, t_echo echo)
 	}
 }
 
-static void		quote_affiche(char **tab, t_echo echo)
+static int		quote_affiche(char **tab, t_echo echo)
 {
 	char		*str;
 	char		*tmp;
@@ -151,6 +151,8 @@ static void		quote_affiche(char **tab, t_echo echo)
 	{
 		ft_putstr((q == 2) ? "dquote> " : "quote> ");
 		get_next_line(0, &tmp);
+		if (!ft_strchr(tmp, 3))
+			return(1);
 		ft_strcombin(&str, "\n");
 		ft_strcombin(&str, tmp);
 		if (ft_strchr(tmp, (q == 2) ? 34 : 39))
@@ -161,6 +163,7 @@ static void		quote_affiche(char **tab, t_echo echo)
 		free(tmp);
 	}
 	print_ee(str, echo);
+	return (0);
 }
 
 static int		tab_well_quoted(char **tab)
@@ -201,7 +204,13 @@ int				ft_echo(int ac, char **av, char *envp[], int *last)
 		else if (av[i][0] == 34 || av[i][0] == 39)
 		{
 			if (!tab_well_quoted(&av[i]))
-				quote_affiche(&av[i], echo);
+			{
+				if (quote_affiche(&av[i], echo))
+				{
+					*last = 1;
+					return (1);
+				}
+			}
 			else
 				print_ee(av[i], echo);
 		}

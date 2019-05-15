@@ -12,6 +12,8 @@
 
 # define PATH_BUILTIN "./src/builtins:"
 
+typedef void (*sighandler_t)(int);
+
 typedef struct	s_minishell
 {
 	char		**cmd;
@@ -65,5 +67,6 @@ int				fill_env(t_env *env, char *cmd);
 int				adv_show_env(char **envp, t_env *env, int len_t);
 void			ft_setpwd(char **envp, char *value);
 char			*ft_getpwd(char **envp);
+int				check_fx(char *str);
 
 #endif
