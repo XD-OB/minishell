@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 07:42:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 21:23:42 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void				handler_sigint(int sig)
 		user = ft_strdup((!user) ? "user" : user);
 		ft_putchar('\n');
 		ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
-		ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}$ ", pwd);
+		ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}", pwd);
+		ft_printf("%{RED}$%{eoc} ");
 		free(user);
 		free(pwd);
 	}
@@ -78,6 +79,7 @@ int					main(int ac, char **av, char **envp)
 	{
 		display_prompt(envp);
 		get_next_line(0, &line);
+		ft_trimstr(&line);
 		ms.cmd = cmdsplit(line);
 		free(line);
 		ms.i = -1;

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 07:43:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 21:27:57 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,15 @@ typedef struct		s_env
 	char			**tab;
 }					t_env;
 
+typedef struct		s_printenv
+{
+	char			**tab;
+	int				null:1;
+	int				found;
+	int				ret;
+	int				j;
+}					t_printenv;
+
 int					len_tab(char **tab);
 void				msg_error(char *msg, int n);
 pid_t				create_process(void);
@@ -74,6 +83,8 @@ int					ft_cd(char *cmd, char **envp, int *last);
 int					ft_env(char **envp, char *cmd, int *last);
 int					ft_setenv(char **envp, char *cmd, int *last);
 int					ft_unsetenv(char **envp, char *cmd, int *last);
+int					ft_printenv(char **envp, char *cmd, int *last);
+int					ft_dollarenv(char **envp, char *cmd, int *last);
 int					exit_val(int stats);
 void				gest_signal(t_minishell *ms);
 void				ft_swap_env(char **env1, char **env2);

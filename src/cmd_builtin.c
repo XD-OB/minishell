@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 07:40:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 21:28:18 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ int					cmd_builtin(char *cmd, char *envp[], int *last)
 		ft_unsetenv(envp, cmd, last);
 	else if (!ft_strcmp(cmd, "env") || !ft_strncmp(cmd, "env ", 4))
 		ft_env(envp, cmd, last);
+	else if (!ft_strcmp(cmd, "printenv") || !ft_strncmp(cmd, "printenv ", 9))
+		ft_printenv(envp, cmd, last);
+	else if (cmd[0] == '$' && cmd[1])
+		ft_dollarenv(envp, cmd, last);
 	else
 		return (-1);
 	return (1);
