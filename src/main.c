@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/15 19:12:59 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 00:59:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,39 @@ int			cmd_mybuilt(char *cmd, char *envp[], int *last)
 	return (-1);
 }
 
+void		handler_sigint(int sig)
+{
+	char	*user;
+	char	*pwd;
+	int		is_freable_user;
+
+	if (sig == SIGINT)
+	{
+		is_freable_user = 0;
+		pwd = getenv("PWD");
+		if (!pwd)
+		{
+			pwd = ft_strnew(500);
+			getcwd(pwd, 500);
+		}
+		else
+			pwd = ft_strdup(pwd);
+		to_relative(&pwd, getenv("HOME"));
+		user = getenv("USER");
+		if (!user)
+		{
+			is_freable_user = 1;
+			user = ft_strdup("user");
+		}
+		ft_putchar('\n');
+		ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
+		ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}$ ", pwd);
+		if (is_freable_user)
+			free(user);
+		free(pwd);
+	}
+}
+
 int			main(int ac, char **av, char **envp)
 {
 	t_minishell		ms;
@@ -139,7 +172,7 @@ int			main(int ac, char **av, char **envp)
 	set_oldpath(&envp, "");
 	ms.status = 0;
 	ms.last_ret = 0;
-	old = signal(SIGINT, SIG_IGN);
+	old = signal(SIGINT, handler_sigint);
 	while (ac)
 	{
 		display_prompt(envp);

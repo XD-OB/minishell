@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/16 02:01:34 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdlib.h>
@@ -8,6 +20,7 @@
 # include <sys/wait.h>
 # include <dirent.h>
 # include <signal.h>
+# include <readline/readline.h>
 # include "libft/libft.h"
 
 # define PATH_BUILTIN "./src/builtins:"
@@ -68,5 +81,14 @@ int				adv_show_env(char **envp, t_env *env, int len_t);
 void			ft_setpwd(char **envp, char *value);
 char			*ft_getpwd(char **envp);
 int				check_fx(char *str);
+void			to_relative(char **a_path, char *home);
+void			fix_path(char **envp, char **tab);
+int				is_relative(char *path);
+void			rel_to_abs(char **r_path);
+void			ft_print_sbslch(char *str);
+int				print_var(char **envp, char *var, int *last);
+void			print_ee(char *str, t_echo echo);
+int				quote_affiche(char **tab, t_echo echo);
+
 
 #endif

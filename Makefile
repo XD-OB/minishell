@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/14 22:15:51 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/16 01:59:23 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
 			cd env echo pwd setenv unsetenv show_env signals init_fill_env\
+			rel_path print_echo\
 
 CMD_BUILT = $(B_PATH)echo $(FLAGS) $(LIB) $(B_PATH)echo.c\
 
@@ -42,7 +43,7 @@ all : $(NAME)
 $(NAME) :
 		@make -C ./libft re && make -C ./libft clean
 		@gcc -c $(FLAGS) -I ./ $(SRC)
-		@gcc -o $(NAME) $(OBJ) $(LIB)
+		@gcc -o $(NAME) $(OBJ) $(LIB) -lreadline
 		@echo "$(CYAN)The MINISHELL is ready :)$(EOC)"
 
 clean :

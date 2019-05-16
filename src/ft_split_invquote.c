@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/09 22:37:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 02:14:32 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,35 +19,36 @@ static	int		ft_not_blank(char ch)
 	return (1);
 }
 
+/*
+**	v:	0: i	1: j	2: n	qt: quote
+*/
+
 static	int		ft_count_w(const char *str)
 {
-	int		quote;
-	int		i;
-	int		j;
-	int		n;
+	int		qt;
+	int		v[3];
 
-	i = 0;
-	j = 0;
-	n = 0;
-	quote = 0;
-	while (str[i] != '\0')
+	v[1] = 0;
+	v[2] = 0;
+	qt = 0;
+	v[0] = -1;
+	while (str[++v[0]] != '\0')
 	{
-		if ((str[i] == 34 || str[i] == 39) && !quote)
-			quote = 1;
-		if ((str[i] == 34 || str[i] == 39) && quote)
-			quote = 0;
-		if (ft_not_blank(str[i]) == 0 && !quote)
-			if (j == 1)
-				j = 0;
-		if (ft_not_blank(str[i]) == 1 && !quote)
-			if (j == 0)
+		if ((str[v[0]] == 34 || str[v[0]] == 39) && !qt)
+			qt = 1;
+		if ((str[v[0]] == 34 || str[v[0]] == 39) && qt)
+			qt = 0;
+		if (ft_not_blank(str[v[0]]) == 0 && !qt)
+			if (v[1] == 1)
+				v[1] = 0;
+		if (ft_not_blank(str[v[0]]) == 1 && !qt)
+			if (v[1] == 0)
 			{
-				n++;
-				j = 1;
+				v[2]++;
+				v[1] = 1;
 			}
-		i++;
 	}
-	return (n);
+	return (v[2]);
 }
 
 static	int		ft_size_w(const char *str, int ind)

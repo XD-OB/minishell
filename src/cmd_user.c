@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 16:19:43 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/15 18:07:04 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 01:51:09 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int		msg_type(mode_t mode, char *cmd)
 		ft_dprintf(2, "is a Socket\n");
 	else
 		ft_dprintf(2, "Unknown\n");
-	return(1);	
+	return (1);
 }
 
 static int		msg_usrerr(char *cmd, int n)
@@ -37,9 +37,9 @@ static int		msg_usrerr(char *cmd, int n)
 	ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
 	if (n == 0)
 		ft_dprintf(2, "file not found\n");
-	else if (n == 1)	
+	else if (n == 1)
 		ft_dprintf(2, "Unknown error\n");
-	else if (n == 2)	
+	else if (n == 2)
 		ft_dprintf(2, "Permission denied\n");
 	return (1);
 }
@@ -71,19 +71,19 @@ int				cmd_user(char **tab, char *envp[])
 		if ((pid = create_process()) == -1)
 		{
 			ft_dprintf(2, "fork: error\n");
-			return(-1);
+			return (-1);
 		}
 		if (pid == 0)
 		{
 			if (execve(tab[0], tab, envp) == -1)
 				ft_printf("%s: Execution error\n", tab[0]);
 		}
-		else;
+		else
 		{
 			waitpid(pid, &status, 0);
-			return(exit_val(status));
+			return (exit_val(status));
 		}
 		return (1);
 	}
-	return(0);
+	return (0);
 }

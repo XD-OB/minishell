@@ -6,17 +6,17 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/15 03:28:58 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 02:07:16 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		env_cmd(t_env env, char **envp, int *last)
+static void		env_cmd(t_env env, char **envp, int *last)
 {
-	pid_t	pid;
-	int		status;
-	char	*cmd;
+	pid_t		pid;
+	int			status;
+	char		*cmd;
 
 	if (!env.tab[env.start_cmd])
 		return ;
@@ -38,10 +38,10 @@ void		env_cmd(t_env env, char **envp, int *last)
 	free(cmd);
 }
 
-static int	env_u(char ***envp, t_env env, int i)
+static int		env_u(char ***envp, t_env env, int i)
 {
-	int		j;
-	int		k;
+	int			j;
+	int			k;
 
 	j = -1;
 	while ((*envp)[++j])
@@ -52,7 +52,7 @@ static int	env_u(char ***envp, t_env env, int i)
 			while ((*envp)[++k + 1])
 				ft_swap_env(&((*envp)[k]), &((*envp)[k + 1]));
 			(*envp)[k] = NULL;
-			break;
+			break ;
 		}
 	}
 	if (!env.tab[++i])
@@ -64,13 +64,13 @@ static int	env_u(char ***envp, t_env env, int i)
 	return (0);
 }
 
-char		**modify_env(char **envp, t_env env)
+static char		**modify_env(char **envp, t_env env)
 {
-	char	**new_envp;
-	char	*tmp;
-	int		i;
-	int		j;
-	int		k;
+	char		**new_envp;
+	char		*tmp;
+	int			i;
+	int			j;
+	int			k;
 
 	if (env.i)
 	{
@@ -92,12 +92,12 @@ char		**modify_env(char **envp, t_env env)
 	return (new_envp);
 }
 
-int		ft_env(char **envp, char *cmd, int *last)
+int				ft_env(char **envp, char *cmd, int *last)
 {
-	char	**new_envp;
-	t_env	env;
-	int		len_t;
-	int		i;
+	char		**new_envp;
+	t_env		env;
+	int			len_t;
+	int			i;
 
 	if (!fill_env(&env, cmd))
 	{
@@ -107,7 +107,7 @@ int		ft_env(char **envp, char *cmd, int *last)
 	*last = 0;
 	len_t = len_tab(env.tab);
 	if (adv_show_env(envp, &env, len_t))
-		return(0);
+		return (0);
 	new_envp = modify_env(envp, env);
 	if (!new_envp)
 	{

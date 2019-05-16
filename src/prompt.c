@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 17:11:00 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/13 18:29:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 00:13:46 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void		user_home(char *envp[], int *u, int *h)
 ** len:		0: len	1: len_a_path	2: len_home
 */
 
-static void		to_relative(char **a_path, char *home)
+void			to_relative(char **a_path, char *home)
 {
 	char		*r_path;
 	int			len[3];
