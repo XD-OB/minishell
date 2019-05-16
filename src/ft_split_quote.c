@@ -6,56 +6,51 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/09 21:34:42 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 07:31:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	int		ft_not_blank(char ch)
+/*
+**	v:	0: i	1: j	2: n	3: s_quote	  4: d_quote
+*/
+
+static void		init_v(int *v)
 {
-	if (ch == ' ')
-		return (0);
-	return (1);
+	v[1] = 0;
+	v[2] = 0;
+	v[0] = -1;
+	v[3] = 0;
+	v[4] = 0;
 }
 
 static	int		ft_count_w(const char *str)
 {
-	int		d_quote;
-	int		s_quote;
-	int		i;
-	int		j;
-	int		n;
+	int		v[5];
 
-	i = 0;
-	j = 0;
-	n = 0;
-	d_quote = 0;
-	s_quote = 0;
-	while (str[i] != '\0')
+	init_v(v);
+	while (str[++v[0]] != '\0')
 	{
-		if (str[i] == 34 && !d_quote)
-			d_quote = 1;
-		else if (str[i] == 39 && !s_quote)
-			s_quote = 1;
-		else if (str[i] == 34 && d_quote)
-			d_quote = 0;
-		else if (str[i] == 39 && s_quote)
-			s_quote = 0;
-		if (ft_not_blank(str[i]) == 0 && !d_quote && !s_quote)
-			if (j == 1)
-				j = 0;
-		if (ft_not_blank(str[i]) == 1 && !d_quote && !s_quote)
-			if (j == 0)
-			{
-				n++;
-				j = 1;
-			}
-		i++;
+		if (str[v[0]] == 34 && !v[4])
+			v[4] = 1;
+		else if (str[v[0]] == 39 && !v[3])
+			v[3] = 1;
+		else if (str[v[0]] == 34 && v[4])
+			v[4] = 0;
+		else if (str[v[0]] == 39 && v[3])
+			v[3] = 0;
+		if (str[v[0]] == ' ' && !v[4] && !v[3] && v[1])
+			v[1] = 0;
+		if (str[v[0]] != ' ' && !v[4] && !v[3] && !v[1])
+		{
+			v[2]++;
+			v[1] = 1;
+		}
 	}
-	if (d_quote || s_quote)
+	if (v[3] || v[4])
 		return (-10);
-	return (n);
+	return (v[2]);
 }
 
 static	int		ft_size_w(const char *str, int ind)
@@ -77,7 +72,7 @@ static	int		ft_size_w(const char *str, int ind)
 			i++;
 		return (i + 1 - ind);
 	}
-	while (ft_not_blank(str[i]) == 1 && str[i])
+	while (str[i] != ' ' && str[i])
 		i++;
 	return (i - ind);
 }
@@ -100,7 +95,7 @@ static	int		ft_position(const char *str, int *pt)
 	}
 	while (str[*pt])
 	{
-		if (ft_not_blank(str[*pt]) == 1)
+		if (str[*pt] != ' ')
 			break ;
 		(*pt)++;
 	}

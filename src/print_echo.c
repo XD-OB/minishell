@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:56:20 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 03:05:16 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 07:26:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void			print_ee(char *str, t_echo echo)
 	int			len;
 
 	q = str[0];
-	i = (q == 39 || q == 34) ? 1 : 0;
+	i = (q == 39 || q == 34) ? 0 : -1;
 	len = ft_strlen(str) - i;
-	while (str[i] && str[i] != q)
+	while (str[++i] && str[i] != q)
 	{
 		if ((!echo.cap_e || echo.e) && str[i] == 92
 				&& ft_strchr("tabnvfre\\", str[++i]))
@@ -80,22 +80,6 @@ void			print_ee(char *str, t_echo echo)
 		}
 		else
 			ft_putchar(str[i]);
-		i++;
-	}
-}
-
-void			print_qaff(char *str)
-{
-	char		q;
-	int			i;
-
-	q = str[0];
-	ft_putendl(&q);
-	i = 1;
-	while (str[i] && str[i] != q)
-	{
-		ft_putchar(str[i]);
-		i++;
 	}
 }
 
@@ -115,7 +99,6 @@ int				quote_affiche(char **tab, t_echo echo)
 		ft_strcombin(&str, tmp);
 		if (ft_strchr(tmp, (q == 2) ? 34 : 39))
 		{
-			
 			free(tmp);
 			break ;
 		}

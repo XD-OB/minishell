@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 22:12:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 22:24:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 06:58:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		gest_signal(t_minishell *ms, int ac, char **av)
+void		gest_signal(t_minishell *ms)
 {
 	if (WIFEXITED(ms->status))
 	{
@@ -45,5 +45,5 @@ int			exit_val(int stats)
 		return (WTERMSIG(stats));
 	if (WIFSTOPPED(stats))
 		return (WSTOPSIG(stats));
-	return(1);
+	return (1);
 }

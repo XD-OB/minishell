@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:02:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 01:04:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 07:00:08 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ static char		*home_path(char *envp[])
 }
 
 /*
- ***	i[3]:	0:i		1:j		2:k
- **/
+**	i:	0:i		1:j		2:k
+*/
 
 static void		remove_tilda(char **r_path, char *home)
 {
@@ -88,7 +88,6 @@ int				is_relative(char *path)
 
 void			rel_to_abs(char **r_path)
 {
-	int			type;
 	char		*dir;
 	char		*tmp;
 

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 20:24:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/10 20:26:30 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 05:46:30 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,3 @@ int			adv_show_env(char **envp, t_env *env, int len_t)
 		return (1);
 	return (0);
 }
-

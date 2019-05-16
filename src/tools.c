@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 23:41:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 06:02:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,6 @@ pid_t		create_process(void)
 		return (child_pid);
 	write(2, "fork: Error\n", 12);
 	exit(EXIT_FAILURE);
-}
-
-void		triple_free(char **s1, char **s2, char **s3)
-{
-	free(*s1);
-	free(*s2);
-	free(*s3);
 }
 
 int			well_quoted(char *str)
@@ -52,7 +45,7 @@ int			well_quoted(char *str)
 	return (0);
 }
 
-void		set_oldpath(char ***envp, char	*val)
+void		set_oldpath(char ***envp, char *val)
 {
 	int		i;
 
@@ -66,4 +59,10 @@ void		set_oldpath(char ***envp, char	*val)
 		ft_strclr(&(*envp)[i][7]);
 		ft_strcpy(&(*envp)[i][7], val);
 	}
+}
+
+void		affect_chars(char **s1, char **s2, char *val1, char *val2)
+{
+	*s1 = ft_strdup(val1);
+	*s2 = ft_strdup(val2);
 }

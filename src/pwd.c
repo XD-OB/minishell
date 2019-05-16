@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/16 06:03:43 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/16 06:03:52 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void		ft_setpwd(char **envp, char *value)
@@ -49,5 +61,5 @@ char		*ft_getpwd(char **envp)
 		path = ft_strnew(500);
 		getcwd(path, 500);
 	}
-	return(path);
+	return (path);
 }

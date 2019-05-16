@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 02:07:16 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 07:34:40 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void		env_cmd(t_env env, char **envp, int *last)
 	if (!env.tab[env.start_cmd])
 		return ;
 	cmd = join_from_tab(env.tab, env.start_cmd, " ");
-	if (cmd_mybuilt(cmd, envp, last) == -1)
+	if (cmd_builtin(cmd, envp, last) == -1)
 	{
 		pid = create_process();
 		if (pid == 0)
@@ -67,10 +67,7 @@ static int		env_u(char ***envp, t_env env, int i)
 static char		**modify_env(char **envp, t_env env)
 {
 	char		**new_envp;
-	char		*tmp;
 	int			i;
-	int			j;
-	int			k;
 
 	if (env.i)
 	{
@@ -97,7 +94,6 @@ int				ft_env(char **envp, char *cmd, int *last)
 	char		**new_envp;
 	t_env		env;
 	int			len_t;
-	int			i;
 
 	if (!fill_env(&env, cmd))
 	{

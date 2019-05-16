@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 18:19:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 23:24:43 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 07:44:36 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,3 @@ int						get_next_line(int const fd, char **line)
 		return (0);
 	return (1);
 }
-
