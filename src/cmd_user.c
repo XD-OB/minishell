@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 16:19:43 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 02:13:23 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 18:16:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ int				cmd_user(char ***tab, char **envp, char **full_path)
 
 	cmd = (full_path) ? *full_path : (*tab)[0];
 	if (check_fx(cmd))
+	{
+		free_tabstr(tab);
 		return (1);
+	}
 	if (execve(cmd, *tab, envp) == -1)
 	{
 		ft_printf("%s: Execution error\n", cmd);

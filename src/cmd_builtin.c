@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:41:58 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 18:35:42 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int			cmd_lancher(int ac, char **av, t_minishell *ms, char ***envp)
 		if (ms->pid == 0)
 		{
 			signal(SIGINT, ms->old);
-			exec_cmd(ms->cmd[ms->i], *envp);
+			exit(exec_cmd(ms->cmd[ms->i], *envp));
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:50:21 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 18:39:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void			init_minishell(t_minishell *ms, char **envp)
 {
 	ms->envp = copy_2_char(envp);
+	ms->cmd = NULL;
 	ms->status = 0;
 	ms->last_ret = 0;
 	ms->sig_int = 0;
@@ -51,6 +52,7 @@ int					main(int ac, char **av, char **envp)
 				return (1);
 			}
 		free_tabstr(&(ms.cmd));
+		ms.cmd = NULL;
 	}
 	free_ms(&ms);
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:07:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:32:37 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 20:24:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	fill_opts(t_env *env, char c)
 
 static int	fill_longopts(t_env *env, char *str)
 {
-	if (!str[0] || !ft_strcmp(str, "ignore-environment"))
+	if (!ft_strcmp(str, "ignore-environment"))
 		env->i = 1;
 	else if (!ft_strcmp(str, "unset"))
 		env->u = 1;
@@ -97,7 +97,7 @@ int			fill_env(t_env *env, char *cmd)
 	{
 		k = opts_env(env, &tab, i);
 		if (k == 2)
-			break ;
+			continue ;
 		if (k == 0)
 			return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:53:17 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 19:05:19 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int				cd_minus(char **tab, char ***envp)
 			ft_putstr_fd("obsh: cd: OLD PWD not set\n", 2);
 			return (1);
 		}
+		ft_putendl(oldpwd);
 		free(tab[1]);
 		tab[1] = ft_strdup(oldpwd);
 	}
@@ -49,8 +50,6 @@ int				cd_minus(char **tab, char ***envp)
 		free(oldpwd);
 	oldpwd = ft_getpwd(*envp);
 	set_oldpath(envp, oldpwd);
-	//ft_putendl(oldpwd);
-	free(oldpwd);
 	return (0);
 }
 
@@ -70,7 +69,6 @@ int				change_dir(char ***tab)
 		free_tabstr(tab);
 		return (1);
 	}
-	free_tabstr(tab);
 	return (0);
 }
 
@@ -107,7 +105,7 @@ int				ft_cd(char ***envp, char *cmd, int *last)
 		free_tabstr(&tab);
 		return ((*last = 1));
 	}
-	fix_path(*envp, tab);
+	fix_path(*envp, &tab);
 	if (cd_minus(tab, envp))
 	{
 		free_tabstr(&tab);

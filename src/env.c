@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 05:44:31 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 20:28:50 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ static void		env_cmd(t_env env, char **envp, int *last)
 	{
 		pid = create_process();
 		if (pid == 0)
+		{
 			exec_cmd(cmd, envp);
+			exit(1);
+		}
 		else
 		{
 			waitpid(pid, &status, 0);

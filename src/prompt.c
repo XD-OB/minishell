@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 17:11:00 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 05:10:14 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 18:22:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void			to_relative(char **a_path, char *home)
 	*a_path = r_path;
 }
 
-void			display_prompt(char *envp[])
+void			display_prompt(char **envp)
 {
 	char		*curr_dir;
 	char		*user;

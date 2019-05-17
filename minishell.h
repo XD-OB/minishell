@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:43:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 19:02:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void				ft_setpwd(char ***envp, char *value);
 char				*ft_getpwd(char **envp);
 int					check_fx(char *str);
 void				to_relative(char **a_path, char *home);
-void				fix_path(char **envp, char **tab);
+void				fix_path(char **envp, char ***tab);
 int					is_relative(char *path);
 void				rel_to_abs(char **r_path);
 void				ft_print_sbslch(char *str);
