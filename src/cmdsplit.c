@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/01 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 01:52:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 23:32:06 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ static	int		ft_count_w(const char *str)
 		if (ft_not_c(str[i]) == 1)
 			if (j == 0)
 			{
-				if (str[i + 1] && str[i + 1] != '&')
-					n++;
 				j = 1;
+				n++;
 			}
 		i++;
 	}

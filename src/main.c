@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 21:23:42 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 01:52:36 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,11 @@ static int			cmd_lancher(int ac, char **av, t_minishell *ms, char **envp)
 			if (ac == 2 && !ft_strcmp(av[1], "--signals"))
 				gest_signal(ms);
 			else
+			{
+				if (WIFSIGNALED(ms->status))
+					ms->sig_int = 1;
 				ms->last_ret = exit_val(ms->status);
+			}
 		}
 	}
 	return (0);
@@ -74,10 +78,13 @@ int					main(int ac, char **av, char **envp)
 	set_oldpath(&envp, "");
 	ms.status = 0;
 	ms.last_ret = 0;
+	ms.sig_int = 0;
 	ms.old = signal(SIGINT, handler_sigint);
 	while (ac)
 	{
-		display_prompt(envp);
+		if (!ms.sig_int)
+			display_prompt(envp);
+		ms.sig_int = 0;
 		get_next_line(0, &line);
 		ft_trimstr(&line);
 		ms.cmd = cmdsplit(line);

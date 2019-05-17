@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 01:05:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 00:56:36 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,27 @@ int				change_dir(char *path)
 	return (0);
 }
 
+void			isnt_complete(char **str)
+{
+	char		*new;
+	int			len;
+	int			i;
+
+	len = ft_strlen(*str) + 2;
+	new = (char*)malloc(sizeof(char) * (len + 1));
+	new[len] = '\0';
+	new[0] = '.';
+	new[1] = '/';
+	i = 0;
+	while ((*str)[i])
+	{
+		new[i + 2] = (*str)[i];
+		i++;
+	}
+	free(*str);
+	*str = new;
+}
+
 int				ft_cd(char *cmd, char **envp, int *last)
 {
 	char		**tab;
@@ -88,6 +109,8 @@ int				ft_cd(char *cmd, char **envp, int *last)
 		return ((*last = 1));
 	if (change_dir(tab[1]))
 		return ((*last = 1));
+	if (!ft_strchr(tab[1], '/'))
+		isnt_complete(&tab[1]);
 	if (is_relative(tab[1]))
 		rel_to_abs(&tab[1]);
 	ft_setpwd(envp, tab[1]);

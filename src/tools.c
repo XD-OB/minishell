@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 06:02:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 00:58:41 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,21 @@ int			well_quoted(char *str)
 
 void		set_oldpath(char ***envp, char *val)
 {
+	char	*new;
 	int		i;
 
 	i = 0;
+	new = ft_strjoin("OLDPWD=", val);
 	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
 		i++;
 	if (!(*envp)[i])
-		return ;
-	else
 	{
-		ft_strclr(&(*envp)[i][7]);
-		ft_strcpy(&(*envp)[i][7], val);
+		(*envp)[i] = new;
+		(*envp)[i + 1] = NULL;
+		return ;
 	}
+	else
+		(*envp)[i] = new;
 }
 
 void		affect_chars(char **s1, char **s2, char *val1, char *val2)

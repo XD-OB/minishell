@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:02:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 07:00:08 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 23:12:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char		*home_path(char *envp[])
 		i++;
 	}
 	if (!home)
-		exit(1);
+		return (ft_strdup("invalid home"));
 	return (home);
 }
 
@@ -68,7 +68,7 @@ void			fix_path(char **envp, char **tab)
 	home = home_path(envp);
 	if (len_tab(tab) == 1)
 		tab[1] = ft_strdup(home);
-	if (ft_strchr(tab[1], '~'))
+	if (ft_strchr(tab[1], '~') && !access(home, F_OK))
 		remove_tilda(&tab[1], home);
 	free(home);
 }

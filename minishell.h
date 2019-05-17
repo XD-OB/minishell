@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 21:27:57 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 01:23:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct		s_minishell
 	pid_t			pid;
 	int				status;
 	int				last_ret;
+	int				sig_int;
 	int				i;
 }					t_minishell;
 
@@ -69,7 +70,7 @@ pid_t				create_process(void);
 void				display_prompt(char **envp);
 void				free_tabstr(char ***tab);
 char				**cmdsplit(const char *str);
-int					cmd_user(char **tab, char **envp);
+int					cmd_user(char ***tab, char **envp, char **fullpath);
 int					cmd_builtin(char *cmd, char **envp, int *last);
 int					exec_cmd(char *cmd, char **envp);
 char				**ft_split_quote(char *tab);

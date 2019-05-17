@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 06:03:43 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 06:03:52 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 00:51:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void		ft_setpwd(char **envp, char *value)
 		if (!ft_strncmp(envp[i], "PWD=", 4))
 		{
 			new = ft_strjoin("PWD=", value);
-			ft_strclr(envp[i]);
-			ft_strcpy(envp[i], new);
+			envp[i] = new;
 			break ;
 		}
 		i++;
@@ -33,11 +32,9 @@ void		ft_setpwd(char **envp, char *value)
 	if (!new)
 	{
 		new = ft_strjoin("PWD=", value);
-		ft_strclr(envp[i]);
-		ft_strcpy(envp[i], new);
+		envp[i] = new;
 		envp[++i] = NULL;
 	}
-	free(new);
 }
 
 char		*ft_getpwd(char **envp)

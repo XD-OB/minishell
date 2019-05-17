@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 17:11:00 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 20:49:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/16 22:51:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void			display_prompt(char *envp[])
 	user = ft_strdup((u == -5) ? "user" : &envp[u][5]);
 	home = ft_strdup((h == -5) ? "" : &envp[h][5]);
 	getcwd(curr_dir, 500);
-	if (ft_strstr(curr_dir, home))
+	if (ft_strstr(curr_dir, home) && h != -5)
 		to_relative(&curr_dir, home);
 	ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
 	ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}", curr_dir);
