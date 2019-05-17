@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 01:23:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:43:25 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef void		(*t_sighandler)(int);
 
 typedef struct		s_minishell
 {
+	char			**envp;
 	t_sighandler	old;
 	char			**cmd;
 	pid_t			pid;
@@ -64,14 +65,16 @@ typedef struct		s_printenv
 	int				j;
 }					t_printenv;
 
-int					len_tab(char **tab);
+void				handler_sigint(int sig);
 void				msg_error(char *msg, int n);
 pid_t				create_process(void);
 void				display_prompt(char **envp);
 void				free_tabstr(char ***tab);
 char				**cmdsplit(const char *str);
+int					cmd_lancher(int ac, char **av, t_minishell *ms,
+							char ***envp);
 int					cmd_user(char ***tab, char **envp, char **fullpath);
-int					cmd_builtin(char *cmd, char **envp, int *last);
+int					cmd_builtin(char ***envp, char *cmd, int *last);
 int					exec_cmd(char *cmd, char **envp);
 char				**ft_split_quote(char *tab);
 char				**ft_split_invquote(char *tab);
@@ -80,10 +83,10 @@ void				show_env(char **envp);
 void				affect_chars(char **s1, char **s2, char *val1, char *val2);
 void				set_oldpath(char ***envp, char	*val);
 int					ft_echo(int ac, char **av, char **envp, int *last);
-int					ft_cd(char *cmd, char **envp, int *last);
+int					ft_cd(char ***envp, char *cmd, int *last);
 int					ft_env(char **envp, char *cmd, int *last);
-int					ft_setenv(char **envp, char *cmd, int *last);
-int					ft_unsetenv(char **envp, char *cmd, int *last);
+int					ft_setenv(char ***envp, char *cmd, int *last);
+int					ft_unsetenv(char ***envp, char *cmd, int *last);
 int					ft_printenv(char **envp, char *cmd, int *last);
 int					ft_dollarenv(char **envp, char *cmd, int *last);
 int					exit_val(int stats);
@@ -91,7 +94,7 @@ void				gest_signal(t_minishell *ms);
 void				ft_swap_env(char **env1, char **env2);
 int					fill_env(t_env *env, char *cmd);
 int					adv_show_env(char **envp, t_env *env, int len_t);
-void				ft_setpwd(char **envp, char *value);
+void				ft_setpwd(char ***envp, char *value);
 char				*ft_getpwd(char **envp);
 int					check_fx(char *str);
 void				to_relative(char **a_path, char *home);
@@ -102,5 +105,7 @@ void				ft_print_sbslch(char *str);
 int					print_var(char **envp, char *var, int *last);
 void				print_ee(char *str, t_echo echo);
 int					quote_affiche(char **tab, t_echo echo);
+void				usage_env(void);
+int					found_env(char **envp, char *var);
 
 #endif

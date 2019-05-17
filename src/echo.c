@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 03:05:18 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 02:28:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static int		tab_well_quoted(char **tab)
 	return (0);
 }
 
-int				ft_echo(int ac, char **av, char *envp[], int *last)
+int				ft_echo(int ac, char **av, char **envp, int *last)
 {
 	t_echo		echo;
 	int			i;

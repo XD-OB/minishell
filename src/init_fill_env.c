@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:07:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 07:07:31 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:32:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ static int	fill_opts(t_env *env, char c)
 		env->null = 1;
 	else
 	{
-		ft_printf("env: illegal option -- %c\n", c);
-		ft_printf("usage: env [-i0] [-u name]");
-		ft_printf("[name=value ...] [utility [argument ...]]\n");
+		ft_dprintf(2, "env: illegal option -- %c\n", c);
+		usage_env();
 		return (1);
 	}
 	return (0);
@@ -51,10 +50,7 @@ static int	fill_longopts(t_env *env, char *str)
 	else
 	{
 		ft_dprintf(2, "env: illegal option -- %s\n", str);
-		ft_dprintf(2, "usage: env [-i0] [-u name]\n");
-		ft_dprintf(2, "options: -   -i  --ignore-environment\n");
-		ft_dprintf(2, "         -0  --null-separator\n");
-		ft_dprintf(2, "         -u  --unset\n");
+		usage_env();
 		return (1);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 00:58:41 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:14:19 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,28 @@ void		set_oldpath(char ***envp, char *val)
 	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
 		i++;
 	if (!(*envp)[i])
-	{
-		(*envp)[i] = new;
-		(*envp)[i + 1] = NULL;
-		return ;
-	}
+		add_2_tab(envp, new);
 	else
+	{
+		free((*envp)[i]);
 		(*envp)[i] = new;
+	}
+}
+
+int			found_env(char **envp, char *var)
+{
+	int		len;
+	int		i;
+
+	i = 0;
+	len = ft_strlen(var);
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], var, len))
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 void		affect_chars(char **s1, char **s2, char *val1, char *val2)

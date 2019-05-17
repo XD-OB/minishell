@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/01 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 23:32:06 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:45:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static	int		ft_size_w(const char *str, int ind)
 	i = ind;
 	while (str[i] && ft_not_c(str[i]) == 1)
 		i++;
-	while (str[i - 1] == ' ')
+	while (str[i - 1] == ' ' || str[i - 1] == '\t')
 		i--;
 	return (i - ind);
 }
@@ -62,7 +62,8 @@ static	int		ft_position(const char *str, int *pt)
 {
 	while (str[*pt])
 	{
-		if (ft_not_c(str[*pt]) == 1 && str[*pt] != ' ')
+		if (ft_not_c(str[*pt]) == 1 &&
+			str[*pt] != ' ' && str[*pt] != '\t')
 			break ;
 		(*pt)++;
 	}

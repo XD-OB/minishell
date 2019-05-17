@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 19:13:19 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 20:25:28 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:49:18 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	ft_strlen_trim(char *str)
 		len++;
 		i++;
 	}
-	while (is_blank(str[--i]))
+	while (is_blank(str[--i]) && len > 0)
 		len--;
 	return (len);
 }

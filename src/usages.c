@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_2_tab.c                                        :+:      :+:    :+:   */
+/*   usages.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/14 23:47:04 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 04:25:23 by obelouch         ###   ########.fr       */
+/*   Created: 2019/05/17 07:31:50 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/17 07:32:16 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void		add_2_tab(char ***tab, char *elem)
+void		usage_env(void)
 {
-	char	**new;
-	int		len;
-	int		i;
-
-	len = len_tab(*tab);
-	if (!(new = (char**)malloc(sizeof(char*) * (len + 2))))
-		return ;
-	new[len + 1] = NULL;
-	i = -1;
-	while (++i < len)
-		new[i] = ft_strdup((*tab)[i]);
-	new[len] = ft_strdup(elem);
-	free_tabstr(tab);
-	*tab = new;
+	ft_dprintf(2, "usage: env [-i0] [-u name]\n");
+	ft_dprintf(2, "options: -   -i  --ignore-environment\n");
+	ft_dprintf(2, "         -0  --null-separator\n");
+	ft_dprintf(2, "         -u  --unset\n");
 }

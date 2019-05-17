@@ -6,35 +6,34 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 06:03:43 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 00:51:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:12:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_setpwd(char **envp, char *value)
+void		ft_setpwd(char ***envp, char *value)
 {
 	char	*new;
 	int		i;
 
 	i = 0;
-	new = NULL;
-	while (envp[i])
+	new = ft_strjoin("PWD=", value);
+	if (found_env(*envp, "PWD"))
 	{
-		if (!ft_strncmp(envp[i], "PWD=", 4))
+		while ((*envp)[i])
 		{
-			new = ft_strjoin("PWD=", value);
-			envp[i] = new;
-			break ;
+			if (!ft_strncmp((*envp)[i], "PWD=", 4))
+			{
+				free((*envp)[i]);
+				(*envp)[i] = new;
+				return ;
+			}
+			i++;
 		}
-		i++;
 	}
-	if (!new)
-	{
-		new = ft_strjoin("PWD=", value);
-		envp[i] = new;
-		envp[++i] = NULL;
-	}
+	add_2_tab(envp, new);
+	free(new);
 }
 
 char		*ft_getpwd(char **envp)

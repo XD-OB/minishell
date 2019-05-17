@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:02:03 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 01:25:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 05:05:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,15 @@ int					exec_cmd(char *cmd, char **envp)
 	if (!access(tab[0], F_OK))
 		return (cmd_user(&tab, envp, NULL));
 	tab_path = get_paths(envp);
-	i = -1;
-	while (tab_path[++i])
+	i = 0;
+	while (tab_path[i])
 	{
 		full_path = ft_strjoin(tab_path[i], "/");
 		ft_strcombin(&full_path, tab[0]);
 		if (!access(full_path, F_OK))
 			return (cmd_user(&tab, envp, &full_path));
 		free(full_path);
+		i++;
 	}
 	msg_cmd_nfound(tab[0]);
 	free_tabstr(&tab_path);

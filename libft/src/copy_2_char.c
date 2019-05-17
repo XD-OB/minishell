@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_2_tab.c                                        :+:      :+:    :+:   */
+/*   copy_2_char.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/14 23:47:04 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 04:25:23 by obelouch         ###   ########.fr       */
+/*   Created: 2019/05/17 07:35:34 by obelouch          #+#    #+#             */
+/*   Updated: 2019/05/17 07:36:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void		add_2_tab(char ***tab, char *elem)
+char			**copy_2_char(char **envp)
 {
-	char	**new;
-	int		len;
-	int		i;
+	char		**tab;
+	int			len;
+	int			i;
 
-	len = len_tab(*tab);
-	if (!(new = (char**)malloc(sizeof(char*) * (len + 2))))
-		return ;
-	new[len + 1] = NULL;
-	i = -1;
-	while (++i < len)
-		new[i] = ft_strdup((*tab)[i]);
-	new[len] = ft_strdup(elem);
-	free_tabstr(tab);
-	*tab = new;
+	i = 0;
+	len = len_tab(envp);
+	tab = (char**)malloc(sizeof(char*) * (len + 1));
+	tab[len] = NULL;
+	while (envp[i])
+	{
+		tab[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	return (tab);
 }

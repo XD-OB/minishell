@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 00:56:36 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:53:17 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ static char		*get_oldpwd(char **envp)
 	return (NULL);
 }
 
-int				cd_minus(char **tab, char **envp)
+int				cd_minus(char **tab, char ***envp)
 {
 	char		*oldpwd;
 
-	oldpwd = get_oldpwd(envp);
+	oldpwd = get_oldpwd(*envp);
 	if (len_tab(tab) == 2 && !ft_strcmp(tab[1], "-"))
 	{
 		if (!oldpwd)
@@ -47,27 +47,30 @@ int				cd_minus(char **tab, char **envp)
 	}
 	if (oldpwd)
 		free(oldpwd);
-	oldpwd = ft_getpwd(envp);
-	set_oldpath(&envp, oldpwd);
+	oldpwd = ft_getpwd(*envp);
+	set_oldpath(envp, oldpwd);
+	//ft_putendl(oldpwd);
 	free(oldpwd);
 	return (0);
 }
 
-int				change_dir(char *path)
+int				change_dir(char ***tab)
 {
-	if (chdir(path) == -1)
+	if (chdir((*tab)[1]) == -1)
 	{
 		ft_dprintf(2, "%{red}-obsh%{eoc}:");
 		ft_dprintf(2, "%{CYAN} cd%{eoc}: ");
-		ft_dprintf(2, "%{CYAN}%s%{eoc}: ", path);
-		if (access(path, F_OK))
+		ft_dprintf(2, "%{CYAN}%s%{eoc}: ", (*tab)[1]);
+		if (access((*tab)[1], F_OK))
 			ft_dprintf(2, "No such file or directory\n");
-		else if (access(path, X_OK))
+		else if (access((*tab)[1], X_OK))
 			ft_dprintf(2, "Permission denied\n");
 		else
 			ft_dprintf(2, "Unknown error\n");
+		free_tabstr(tab);
 		return (1);
 	}
+	free_tabstr(tab);
 	return (0);
 }
 
@@ -92,27 +95,31 @@ void			isnt_complete(char **str)
 	*str = new;
 }
 
-int				ft_cd(char *cmd, char **envp, int *last)
+int				ft_cd(char ***envp, char *cmd, int *last)
 {
 	char		**tab;
 
 	tab = ft_strsplit(cmd, ' ');
 	if (len_tab(tab) > 2)
 	{
-		ft_dprintf(2, "%{red}-obsh%{eoc}:");
-		ft_dprintf(2, "%{CYAN} cd%{eoc}: ");
-		ft_dprintf(2, "too many arguments\n");
+		ft_dprintf(2, "%{red}-obsh%{eoc}:%{CYAN} cd%{eoc}:");
+		ft_dprintf(2, " too many arguments\n");
+		free_tabstr(&tab);
 		return ((*last = 1));
 	}
-	fix_path(envp, tab);
+	fix_path(*envp, tab);
 	if (cd_minus(tab, envp))
+	{
+		free_tabstr(&tab);
 		return ((*last = 1));
-	if (change_dir(tab[1]))
+	}
+	if (change_dir(&tab))
 		return ((*last = 1));
 	if (!ft_strchr(tab[1], '/'))
 		isnt_complete(&tab[1]);
 	if (is_relative(tab[1]))
 		rel_to_abs(&tab[1]);
 	ft_setpwd(envp, tab[1]);
+	free_tabstr(&tab);
 	return ((*last = 0));
 }

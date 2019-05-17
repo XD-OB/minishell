@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 21:24:15 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 21:29:32 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:31:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char			*ft_clean_parthes(char *cmd)
 
 int					ft_dollarenv(char **envp, char *cmd, int *last)
 {
-	char			*clean_cmd;
+	char			*cl_cmd;
 	char			*var;
 	int				i;
 
@@ -71,18 +71,18 @@ int					ft_dollarenv(char **envp, char *cmd, int *last)
 		return ((*last = 1));
 	}
 	i = -1;
-	clean_cmd = ft_clean_parthes(cmd);
-	var = ft_strjoin(clean_cmd, "=");
+	cl_cmd = ft_clean_parthes(cmd);
+	var = ft_strjoin(cl_cmd, "=");
 	while (envp[++i])
 		if (!ft_strncmp(envp[i], var, ft_strlen(var)))
 		{
 			ft_putendl(&envp[i][ft_strlen(var)]);
-			free(clean_cmd);
 			free(var);
+			free(cl_cmd);
 			return ((*last = 0));
 		}
+	ft_dprintf(2, "%{red}%s: not found%{eoc}\n", cl_cmd);
 	free(var);
-	ft_dprintf(2, "%{red}%s: not found%{eoc}\n", clean_cmd);
-	free(clean_cmd);
+	free(cl_cmd);
 	return ((*last = 1));
 }

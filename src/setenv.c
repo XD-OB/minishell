@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 06:03:01 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:15:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	error_len(char **envp, int len_t)
+static int		error_len(char **envp, int len_t)
 {
 	if (len_t > 3)
 		return (2);
@@ -24,18 +24,19 @@ static int	error_len(char **envp, int len_t)
 	return (0);
 }
 
-static int	set_var_value(char **envp, char *cmd, char **var, char **val)
+static int		set_var_value(char **envp, char *cmd, char **var, char **val)
 {
 	char	**tab;
 	char	**tmp;
-	int		len_t;
 	int		ret;
 
 	tab = ft_strsplit(cmd, ' ');
-	len_t = len_tab(tab);
-	if ((ret = error_len(envp, len_t)))
+	if ((ret = error_len(envp, len_tab(tab))))
+	{
+		free_tabstr(&tab);
 		return (ret);
-	if (len_t == 2)
+	}
+	if (len_tab(tab) == 2)
 	{
 		if (ft_strchr(tab[1], '='))
 		{
@@ -52,18 +53,7 @@ static int	set_var_value(char **envp, char *cmd, char **var, char **val)
 	return (0);
 }
 
-static void	add_var_env(char **envp, char **new, char *var, char *value)
-{
-	if (!*new)
-	{
-		*new = ft_strjoin(var, "=");
-		ft_strcombin(new, value);
-		envp[0] = ft_strdup(*new);
-		envp[1] = NULL;
-	}
-}
-
-int			set_before_ret(int *last, int i)
+static int		set_before_ret(int *last, int i)
 {
 	*last = 1;
 	if (i == 2)
@@ -74,28 +64,52 @@ int			set_before_ret(int *last, int i)
 	return (1);
 }
 
-int			ft_setenv(char **envp, char *cmd, int *last)
+static char		**modify_var(char **envp, char *var, char *value)
 {
-	char	*new;
+	char		**new_envp;
+	char		*new;
+	int			len_var;
+	int			len;
+	int			i;
+
+	len = len_tab(envp);
+	len_var = ft_strlen(var);
+	new = ft_strjoin(var, value);
+	new_envp = (char**)malloc(sizeof(char*) * (len + 1));
+	new_envp[len] = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], var, len_var))
+			new_envp[i] = ft_strdup(envp[i]);
+		else
+			new_envp[i] = new;
+		i++;
+	}
+	return (new_envp);
+}
+
+int				ft_setenv(char ***envp, char *cmd, int *last)
+{
+	char	**new_envp;
 	char	*var;
 	char	*value;
-	int		len_var;
 	int		i;
 
-	new = NULL;
-	if ((i = set_var_value(envp, cmd, &var, &value)))
+	if ((i = set_var_value(*envp, cmd, &var, &value)))
 		return (set_before_ret(last, i));
-	i = -1;
-	len_var = ft_strlen(var);
-	while (envp[++i])
-		if (!ft_strncmp(envp[i], var, len_var))
-		{
-			new = ft_strjoin(var, "=");
-			ft_strcombin(&new, value);
-			envp[i] = new;
-			break ;
-		}
-	add_var_env(&envp[i], &new, var, value);
+	ft_strcombin(&var, "=");
+	if (!found_env(*envp, var))
+	{
+		ft_strcombin(&var, value);
+		add_2_tab(envp, var);
+	}
+	else
+	{
+		new_envp = modify_var(*envp, var, value);
+		free(*envp);
+		*envp = new_envp;
+	}
 	free(value);
 	free(var);
 	return ((*last = 0));

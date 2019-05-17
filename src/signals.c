@@ -6,11 +6,38 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 22:12:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 06:58:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 07:39:42 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		handler_sigint(int sig)
+{
+	char	*user;
+	char	*pwd;
+
+	if (sig == SIGINT)
+	{
+		pwd = getenv("PWD");
+		if (!pwd)
+		{
+			pwd = ft_strnew(500);
+			getcwd(pwd, 500);
+		}
+		else
+			pwd = ft_strdup(pwd);
+		to_relative(&pwd, getenv("HOME"));
+		user = getenv("USER");
+		user = ft_strdup((!user) ? "user" : user);
+		ft_putchar('\n');
+		ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
+		ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}", pwd);
+		ft_printf("%{RED}$%{eoc} ");
+		free(user);
+		free(pwd);
+	}
+}
 
 void		gest_signal(t_minishell *ms)
 {

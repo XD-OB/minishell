@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 23:39:47 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/14 23:40:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 02:03:36 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,5 @@ void		free_tabstr(char ***tab)
 	while ((*tab)[++i])
 		free((*tab)[i]);
 	free(*tab);
+	*tab = NULL;
 }

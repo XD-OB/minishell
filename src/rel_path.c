@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:02:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/16 23:12:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/17 05:11:28 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char		*home_path(char *envp[])
 		i++;
 	}
 	if (!home)
-		return (ft_strdup("invalid home"));
+		return (ft_strdup("/Users/user"));
 	return (home);
 }
 
