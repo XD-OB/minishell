@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/19 08:46:48 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 09:40:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 09:54:42 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	epur_len(char *str)
 		}
 		i++;
 	}
-	return  (len);
+	return (len);
 }
 
 void		ft_epurstr(char **str)

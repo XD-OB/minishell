@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 09:40:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 09:55:45 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ int					main(int ac, char **av, char **envp)
 	init_minishell(&ms, envp, ac, av);
 	while (ac)
 	{
-		if (!ms.sig_int)
-			display_prompt(ms.envp);
+		(!ms.sig_int) ? display_prompt(ms.envp) : 0;
 		ms.sig_int = 0;
 		ms.tab_cmd = get_tab_cmd();
 		i = -1;
