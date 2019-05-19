@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:02:03 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 20:30:22 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 23:23:30 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,53 @@ static char		**get_paths(char **envp)
 	return (tab_path);
 }
 
-static void		msg_cmd_nfound(char *str)
+int				check_fx(char *str)
 {
-	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
-	ft_dprintf(2, "%{CYAN}%s%{eoc}", str);
-	ft_dprintf(2, ": command not found\n");
+	struct stat		stats;
+
+	if (stat(str, &stats) == -1)
+		return (msg_usrerr(str, 0));
+	if (!S_ISREG(stats.st_mode))
+		return (msg_type(stats.st_mode, str));
+	if (access(str, X_OK))
+		return (msg_usrerr(str, 1));
+	return (0);
 }
 
-int				exec_cmd(char *cmd, char **envp)
+int				cmd_user(char ***tab, char **envp, char **full_path)
+{
+	char		*cmd;
+
+	cmd = (full_path) ? *full_path : (*tab)[0];
+	if (check_fx(cmd))
+	{
+		free_tabstr(tab);
+		return (1);
+	}
+	if (execve(cmd, *tab, envp) == -1)
+	{
+		ft_printf("%s: Execution error\n", cmd);
+		free_tabstr(tab);
+		return (1);
+	}
+	if (full_path)
+		free(*full_path);
+	free_tabstr(tab);
+	return (0);
+}
+
+int				exec_cmd(t_minishell *ms)
 {
 	char		*full_path;
 	char		**tab_path;
 	char		**tab;
 	int			i;
 
-	tab = ft_strsplit(cmd, ' ');
+	tab = ft_strsplit(ms->cmd, ' ');
 	if (!access(tab[0], F_OK))
-		return (cmd_user(&tab, envp, NULL));
+		return (cmd_user(&tab, ms->envp, NULL));
 	i = -1;
-	tab_path = get_paths(envp);
+	tab_path = get_paths(ms->envp);
 	while (tab_path[++i])
 	{
 		full_path = ft_strjoin(tab_path[i], "/");
@@ -56,7 +84,7 @@ int				exec_cmd(char *cmd, char **envp)
 		if (!access(full_path, F_OK))
 		{
 			free_tabstr(&tab_path);
-			return (cmd_user(&tab, envp, &full_path));
+			return (cmd_user(&tab, ms->envp, &full_path));
 		}
 		free(full_path);
 	}

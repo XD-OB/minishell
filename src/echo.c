@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 02:28:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:29:00 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int		echo_opts(char **tab, t_echo *echo, int i, int j)
 	return (1);
 }
 
-static int		fill_echo(int size, char **tab, t_echo *echo)
+static int		fill_echo(int len_t, char **tab, t_echo *echo)
 {
 	int			i;
 	int			j;
@@ -52,7 +52,7 @@ static int		fill_echo(int size, char **tab, t_echo *echo)
 
 	i = 0;
 	init_echo(echo);
-	while (++i < size && tab[i][0] == '-')
+	while (++i < len_t && tab[i][0] == '-')
 	{
 		j = 0;
 		while (tab[i][++j])
@@ -62,7 +62,7 @@ static int		fill_echo(int size, char **tab, t_echo *echo)
 			{
 				init_echo(echo);
 				ft_putstr(tab[i]);
-				(i < size - 1) ? ft_putchar(' ') : 0;
+				(i < len_t - 1) ? ft_putchar(' ') : 0;
 				return (i);
 			}
 			if (k == -10)
@@ -96,30 +96,31 @@ static int		tab_well_quoted(char **tab)
 	return (0);
 }
 
-int				ft_echo(int ac, char **av, char **envp, int *last)
+int				ft_echo(char **tab, t_minishell *ms)
 {
 	t_echo		echo;
+	int			len_t;
 	int			i;
 
-	if ((i = fill_echo(ac, av, &echo)) == -1)
+	len_t = len_tab(tab);
+	if ((i = fill_echo(len_t, tab, &echo)) == -1)
 		return (0);
-	while (++i < ac)
+	while (++i < len_t)
 	{
-		if (av[i][0] == '$')
-			print_var(envp, &av[i][1], last);
-		else if (av[i][0] == 34 || av[i][0] == 39)
+		if (tab[i][0] == '$')
+			print_var(ms->envp, &tab[i][1], ms->last);
+		else if (tab[i][0] == 34 || tab[i][0] == 39)
 		{
-			if (!tab_well_quoted(&av[i]) && !quote_affiche(&av[i], echo))
-				return ((*last = 1));
+			if (!tab_well_quoted(&tab[i]) && !quote_affiche(&tab[i], echo))
+				return (1);
 			else
-				print_ee(av[i], echo);
+				print_ee(tab[i], echo);
 		}
 		else
-			ft_print_sbslch(av[i]);
-		(i < ac - 1) ? ft_putchar(' ') : 0;
+			ft_print_sbslch(tab[i]);
+		(i < len_t - 1) ? ft_putchar(' ') : 0;
 	}
 	(echo.n) ? ft_printf("%{YELLOW}%%%{eoc}") : 0;
 	ft_putchar('\n');
-	*last = 0;
 	return (0);
 }

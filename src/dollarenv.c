@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 21:24:15 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:31:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 07:25:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,31 @@ static char			*ft_clean_parthes(char *cmd)
 	return (new);
 }
 
-int					ft_dollarenv(char **envp, char *cmd, int *last)
+int					ft_dollarenv(t_minishell *ms)
 {
 	char			*cl_cmd;
 	char			*var;
 	int				i;
 
-	if (!cmd[1] || (cmd[1] == '(' && !fnd2parth(cmd)) || cmd[1] == ')'
-			|| (fndspace(cmd) && !fnd2parth(cmd)))
+	if (!ms->cmd[1] || (ms->cmd[1] == '(' && !fnd2parth(ms->cmd)) ||
+		ms->cmd[1] == ')' || (fndspace(ms->cmd) && !fnd2parth(ms->cmd)))
 	{
 		ft_dprintf(2, "usage: $var or $(var)\n");
-		return ((*last = 1));
+		return (1);
 	}
 	i = -1;
-	cl_cmd = ft_clean_parthes(cmd);
+	cl_cmd = ft_clean_parthes(ms->cmd);
 	var = ft_strjoin(cl_cmd, "=");
-	while (envp[++i])
-		if (!ft_strncmp(envp[i], var, ft_strlen(var)))
+	while (ms->envp[++i])
+		if (!ft_strncmp(ms->envp[i], var, ft_strlen(var)))
 		{
-			ft_putendl(&envp[i][ft_strlen(var)]);
+			ft_putendl(&(ms->envp)[i][ft_strlen(var)]);
 			free(var);
 			free(cl_cmd);
-			return ((*last = 0));
+			return (0);
 		}
 	ft_dprintf(2, "%{red}%s: not found%{eoc}\n", cl_cmd);
 	free(var);
 	free(cl_cmd);
-	return ((*last = 1));
+	return (1);
 }

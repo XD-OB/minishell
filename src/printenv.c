@@ -6,71 +6,81 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 18:49:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:26:53 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 20:48:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int			usage_printenv(int *last, char *str)
+static void			usage_printenv(char *str)
 {
-	*last = 2;
 	ft_dprintf(2, "printenv: illegal option -- %s\n", str);
 	ft_dprintf(2, "usage: printenv [-option] [variable]\n");
 	ft_dprintf(2, "       option: 	-0  --null\n");
-	return (2);
 }
 
-static void			search_env(char **envp, t_printenv *pv)
+static int			search_env(char **envp, t_printenv *pv, char *var)
 {
-	char			*var;
+	char			*new;
+	int				p_detail;
 	int				i;
 
 	i = -1;
-	pv->found = 0;
-	var = ft_strjoin(pv->tab[pv->j], "=");
+	new = ft_strjoin(var, "=");
+	p_detail = (len_tab(pv->tab) > 2) ? 1 : 0;
 	while (envp[++i])
 	{
-		if (!ft_strncmp(envp[i], var, ft_strlen(var)))
+		if (!ft_strncmp(envp[i], new, ft_strlen(new)))
 		{
+			if (p_detail)
+				ft_printf("* %{CYAN}%s%{eoc}:\n", var);
 			if (!pv->null)
-				ft_putendl(&envp[i][ft_strlen(var)]);
+				ft_putendl(&envp[i][ft_strlen(new)]);
 			else
-				ft_putstr(&envp[i][ft_strlen(var)]);
-			pv->found = 1;
+				ft_putstr(&envp[i][ft_strlen(new)]);
+			return (0);
 		}
 	}
-	free(var);
-	if (!pv->found)
-		pv->ret = 1;
-	pv->j++;
+	free(new);
+	return (1);
 }
 
-int					ft_printenv(char **envp, char *cmd, int *last)
+static int			init_pv(t_printenv *pv, t_minishell *ms)
+{
+	pv->ret = 0;
+	pv->null = 0;
+	pv->tab = clean_cmds(ms->cmd);
+	if (len_tab(pv->tab) == 1)
+	{
+		show_env(ms->envp);
+		free_tabstr(&pv->tab);
+		return (0);
+	}
+	return (1);
+}
+
+int					ft_printenv(t_minishell *ms)
 {
 	t_printenv		pv;
+	int				i;
 
-	pv.ret = 0;
-	pv.tab = ft_strsplit(cmd, ' ');
-	(!pv.tab[1]) ? show_env(envp) : 0;
-	if (pv.tab[1])
+	if (!init_pv(&pv, ms))
+		return (0);
+	i = 0;
+	while (pv.tab[++i][0] == '-')
 	{
-		pv.j = 0;
-		while (pv.tab[++pv.j][0] == '-')
+		if (!ft_strcmp(&pv.tab[i][1], "0") ||
+			!ft_strcmp(&pv.tab[i][1], "-null"))
+			pv.null = 1;
+		else
 		{
-			if (!ft_strcmp(&pv.tab[pv.j][1], "0") ||
-				!ft_strcmp(&pv.tab[pv.j][1], "-null"))
-				pv.null = 1;
-			else
-			{
-				pv.ret = usage_printenv(last, &pv.tab[pv.j][1]);
-				free_tabstr(&pv.tab);
-				return ((*last = pv.ret));
-			}
+			usage_printenv(&pv.tab[i][1]);
+			free_tabstr(&pv.tab);
+			return (1);
 		}
-		while (pv.tab[pv.j])
-			search_env(envp, &pv);
 	}
+	while (pv.tab[i])
+		pv.ret = ft_max(search_env(ms->envp, &pv, pv.tab[i++]), pv.ret);
 	free_tabstr(&pv.tab);
-	return ((*last = pv.ret));
+	return (pv.ret);
 }

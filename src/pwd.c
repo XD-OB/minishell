@@ -6,11 +6,29 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 06:03:43 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 17:49:29 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 23:28:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		set_oldpath(char ***envp, char *val)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = ft_strjoin("OLDPWD=", val);
+	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
+		i++;
+	if (!(*envp)[i])
+		add_2_tab(envp, new);
+	else
+	{
+		free((*envp)[i]);
+		(*envp)[i] = new;
+	}
+}
 
 void		ft_setpwd(char ***envp, char *value)
 {

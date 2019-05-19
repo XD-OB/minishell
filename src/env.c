@@ -6,62 +6,52 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 20:28:50 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:28:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void		env_cmd(t_env env, char **envp, int *last)
+static int		env_cmd(t_minishell *ms, t_env env)
 {
-	pid_t		pid;
-	int			status;
-	char		*cmd;
-
+	ms->cmd = join_from_tab(env.tab, env.start_cmd, " ");
 	if (!env.tab[env.start_cmd])
-		return ;
-	cmd = join_from_tab(env.tab, env.start_cmd, " ");
-	if (cmd_builtin(&envp, cmd, last) == -1)
+		return (0);
+	if (builtin_parent(ms))
+		return (0);
+	if ((ms->pid = create_process()) == -1)
+		return (fork_error());
+	if (ms->pid == 0)
 	{
-		pid = create_process();
-		if (pid == 0)
-		{
-			exec_cmd(cmd, envp);
-			exit(1);
-		}
+		if (builtin_child(ms))
+			exit(ms->last);
 		else
-		{
-			waitpid(pid, &status, 0);
-			*last = exit_val(status);
-		}
+			exit(exec_cmd(ms));
 	}
-	free(cmd);
+	else
+	{
+		waitpid(ms->pid, &ms->status, 0);
+		return (exit_val(ms->status));
+	}
 }
 
-static char		**env_u(char **envp, t_env env, int *k)
+static char		**env_u(char **envp, char *var)
 {
 	char		**new_envp;
 	int			i;
 	int			j;
 
-	if (env.tab[*k])
+	new_envp = (char**)malloc(sizeof(char*) * (len_tab(envp)));
+	new_envp[len_tab(envp) - 1] = NULL;
+	i = 0;
+	j = 0;
+	while (envp[i])
 	{
-		new_envp = (char**)malloc(sizeof(char*) * (len_tab(envp)));
-		new_envp[len_tab(envp) - 1] = NULL;
-		i = 0;
-		j = 0;
-		while (envp[i])
-		{
-			if (ft_strncmp(envp[i], env.tab[*k], ft_strlen(env.tab[*k])))
-				new_envp[j++] = ft_strdup(envp[i]);
-			i++;
-		}
-		(*k)++;
-		return (new_envp);
+		if (ft_strncmp(envp[i], var, ft_strlen(var)))
+			new_envp[j++] = ft_strdup(envp[i]);
+		i++;
 	}
-	ft_dprintf(2, "env: argument for unset not found\n");
-	usage_env();
-	return (NULL);
+	return (new_envp);
 }
 
 static char		**modify_env(char **envp, t_env env)
@@ -78,8 +68,13 @@ static char		**modify_env(char **envp, t_env env)
 	k = env.start_var;
 	if (env.u)
 	{
-		if (!(new_envp = env_u(envp, env, &k)))
-			return (NULL);
+		if (env.start_var >= len_tab(env.tab))
+		{
+			usage_env("env: argument for unset not found");
+			new_envp = NULL;
+			return (new_envp);
+		}
+		new_envp = env_u(envp, env.tab[k++]);
 	}
 	else
 		new_envp = copy_2_char(envp);
@@ -88,29 +83,29 @@ static char		**modify_env(char **envp, t_env env)
 	return (new_envp);
 }
 
-int				ft_env(char **envp, char *cmd, int *last)
+static int		free_envtab_ret(char ***tab, int ret)
 {
-	char		**new_envp;
-	t_env		env;
-	int			len_t;
+	free_tabstr(tab);
+	return (ret);
+}
 
-	if (!fill_env(&env, cmd))
-		return ((*last = 1));
-	*last = 0;
+int				ft_env(t_minishell *ms)
+{
+	t_minishell		new_ms;
+	t_env			env;
+	int				len_t;
+
+	fill_new_ms(&new_ms, *ms);
+	if (!fill_env(&env, ms->cmd))
+		return (1);
 	len_t = len_tab(env.tab);
-	if (adv_show_env(envp, &env, len_t))
-	{
-		free_tabstr(&(env.tab));
-		return ((*last = 0));
-	}
-	new_envp = modify_env(envp, env);
-	if (!new_envp)
-	{
-		free_tabstr(&(env.tab));
-		return ((*last = 1));
-	}
-	env_cmd(env, new_envp, last);
+	if (adv_show_env(ms->envp, &env, len_t))
+		return (free_envtab_ret(&(env.tab), 0));
+	new_ms.envp = modify_env(ms->envp, env);
+	if (!new_ms.envp)
+		return (free_envtab_ret(&(env.tab), 1));
+	new_ms.last = env_cmd(&new_ms, env);
 	free_tabstr(&(env.tab));
-	free_tabstr(&new_envp);
-	return ((*last = 0));
+	free_ms(&new_ms, ms->cmd);
+	return (new_ms.last);
 }

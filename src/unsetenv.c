@@ -6,15 +6,16 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 06:25:41 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 07:15:15 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char		**new_env(char **envp, char *var, int len_var)
+static char		**new_env(char **envp, char *var)
 {
 	char	**new_envp;
+	int		len_var;
 	int		len;
 	int		i;
 	int		j;
@@ -22,6 +23,7 @@ static char		**new_env(char **envp, char *var, int len_var)
 	i = 0;
 	j = 0;
 	len = len_tab(envp);
+	len_var = ft_strlen(var);
 	new_envp = (char**)malloc(sizeof(char*) * len);
 	new_envp[len - 1] = NULL;
 	while (envp[i])
@@ -33,31 +35,38 @@ static char		**new_env(char **envp, char *var, int len_var)
 	return (new_envp);
 }
 
-int				ft_unsetenv(char ***envp, char *cmd, int *last)
+static int		wrong_arg(char ***tab)
 {
-	char	**new_envp;
-	char	**tab;
-	char	*var;
-
-	tab = ft_strsplit(cmd, ' ');
-	if (len_tab(tab) != 2)
+	if (len_tab(*tab) != 2)
 	{
 		ft_dprintf(2, "unsetenv: too many arguments\n");
 		ft_dprintf(2, "usage: unsetenv variable\n");
-		free_tabstr(&tab);
-		return ((*last = 1));
+		free_tabstr(tab);
+		return (1);
 	}
+	return (0);
+}
+
+int				ft_unsetenv(t_minishell *ms)
+{
+	char		**new_envp;
+	char		**tab;
+	char		*var;
+
+	tab = clean_cmds(ms->cmd);
+	if (wrong_arg(&tab))
+		return (1);
 	var = ft_strjoin(tab[1], "=");
-	if (!found_env(*envp, var))
+	if (!found_env(ms->envp, var))
 	{
 		free(var);
 		free_tabstr(&tab);
-		return ((*last = 0));
+		return (0);
 	}
-	new_envp = new_env(*envp, var, ft_strlen(var));
+	new_envp = new_env(ms->envp, var);
 	free(var);
 	free_tabstr(&tab);
-	free_tabstr(envp);
-	*envp = new_envp;
-	return ((*last = 0));
+	free_tabstr(&ms->envp);
+	ms->envp = new_envp;
+	return (0);
 }

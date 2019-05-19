@@ -6,54 +6,49 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 18:39:22 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 23:45:45 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void			init_minishell(t_minishell *ms, char **envp)
+static char			**get_tab_cmd(void)
 {
-	ms->envp = copy_2_char(envp);
-	ms->cmd = NULL;
-	ms->status = 0;
-	ms->last_ret = 0;
-	ms->sig_int = 0;
-	ms->old = signal(SIGINT, handler_sigint);
-}
+	char			**tab_cmd;
+	char			*line;
 
-void				free_ms(t_minishell *ms)
-{
-	if (ms->cmd)
-		free_tabstr(&(ms->cmd));
-	free_tabstr(&(ms->envp));
+	get_next_line(0, &line);
+	ft_trimstr(&line);
+	tab_cmd = cmdsplit(line);
+	free(line);
+	return (tab_cmd);
 }
 
 int					main(int ac, char **av, char **envp)
 {
 	t_minishell		ms;
-	char			*line;
+	int				i;
 
-	init_minishell(&ms, envp);
+	init_minishell(&ms, envp, ac, av);
 	while (ac)
 	{
 		if (!ms.sig_int)
 			display_prompt(ms.envp);
 		ms.sig_int = 0;
-		get_next_line(0, &line);
-		ft_trimstr(&line);
-		ms.cmd = cmdsplit(line);
-		free(line);
-		ms.i = -1;
-		while (ms.cmd[++(ms.i)])
-			if (cmd_lancher(ac, av, &ms, &(ms.envp)))
+		ms.tab_cmd = get_tab_cmd();
+		i = -1;
+		while (ms.tab_cmd[++i])
+		{
+			ms.cmd = ms.tab_cmd[i];
+			if (cmd_lancher(&ms))
 			{
-				free_ms(&ms);
+				free_ms(&ms, NULL);
 				return (1);
 			}
-		free_tabstr(&(ms.cmd));
-		ms.cmd = NULL;
+		}
+		free_tabstr(&(ms.tab_cmd));
+		ft_printf("----------last-ret [%d]---------\n", ms.last);
 	}
-	free_ms(&ms);
+	free_ms(&ms, NULL);
 	return (EXIT_SUCCESS);
 }

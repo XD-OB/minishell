@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:15:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 23:32:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int		error_len(char **envp, int len_t)
 {
 	if (len_t > 3)
-		return (2);
+		return (1);
 	if (len_t == 1)
 	{
 		show_env(envp);
@@ -24,17 +24,17 @@ static int		error_len(char **envp, int len_t)
 	return (0);
 }
 
-static int		set_var_value(char **envp, char *cmd, char **var, char **val)
+static int		set_var_value(t_minishell *ms, char **var, char **val)
 {
 	char	**tab;
 	char	**tmp;
 	int		ret;
 
-	tab = ft_strsplit(cmd, ' ');
-	if ((ret = error_len(envp, len_tab(tab))))
+	tab = clean_cmds(ms->cmd);
+	if ((ret = error_len(ms->envp, len_tab(tab))))
 	{
 		free_tabstr(&tab);
-		return (ret);
+		return (1);
 	}
 	if (len_tab(tab) == 2)
 	{
@@ -53,9 +53,8 @@ static int		set_var_value(char **envp, char *cmd, char **var, char **val)
 	return (0);
 }
 
-static int		set_before_ret(int *last, int i)
+static int		aff_before(int i)
 {
-	*last = 1;
 	if (i == 2)
 	{
 		ft_dprintf(2, "setenv: Wrong number of arguments\n");
@@ -89,28 +88,28 @@ static char		**modify_var(char **envp, char *var, char *value)
 	return (new_envp);
 }
 
-int				ft_setenv(char ***envp, char *cmd, int *last)
+int				ft_setenv(t_minishell *ms)
 {
 	char	**new_envp;
 	char	*var;
 	char	*value;
 	int		i;
 
-	if ((i = set_var_value(*envp, cmd, &var, &value)))
-		return (set_before_ret(last, i));
+	if ((i = set_var_value(ms, &var, &value)))
+		return (aff_before(i));
 	ft_strcombin(&var, "=");
-	if (!found_env(*envp, var))
+	if (!found_env(ms->envp, var))
 	{
 		ft_strcombin(&var, value);
-		add_2_tab(envp, var);
+		add_2_tab(&ms->envp, var);
 	}
 	else
 	{
-		new_envp = modify_var(*envp, var, value);
-		free(*envp);
-		*envp = new_envp;
+		new_envp = modify_var(ms->envp, var, value);
+		free(ms->envp);
+		ms->envp = new_envp;
 	}
 	free(value);
 	free(var);
-	return ((*last = 0));
+	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/17 07:32:50 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/18 23:49:32 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,10 @@ NAME = minishell
 
 LIB = -L ./libft -lft
 
-MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit cmd_user\
+MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit\
 			cd env echo pwd setenv unsetenv printenv dollarenv show_env usages\
-			init_fill_env rel_path print_echo exec_cmd cmd_builtin signals\
+			init_fill_env rel_path print_echo exec_cmd launcher signals\
+			clean_quote ms_tools\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 

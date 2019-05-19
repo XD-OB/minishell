@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 19:05:19 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:28:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,31 +93,31 @@ void			isnt_complete(char **str)
 	*str = new;
 }
 
-int				ft_cd(char ***envp, char *cmd, int *last)
+int				ft_cd(t_minishell *ms)
 {
 	char		**tab;
 
-	tab = ft_strsplit(cmd, ' ');
+	tab = clean_cmds(ms->cmd);
 	if (len_tab(tab) > 2)
 	{
 		ft_dprintf(2, "%{red}-obsh%{eoc}:%{CYAN} cd%{eoc}:");
 		ft_dprintf(2, " too many arguments\n");
 		free_tabstr(&tab);
-		return ((*last = 1));
+		return (1);
 	}
-	fix_path(*envp, &tab);
-	if (cd_minus(tab, envp))
+	fix_path(ms->envp, &tab);
+	if (cd_minus(tab, &ms->envp))
 	{
 		free_tabstr(&tab);
-		return ((*last = 1));
+		return (1);
 	}
 	if (change_dir(&tab))
-		return ((*last = 1));
+		return (1);
 	if (!ft_strchr(tab[1], '/'))
 		isnt_complete(&tab[1]);
 	if (is_relative(tab[1]))
 		rel_to_abs(&tab[1]);
-	ft_setpwd(envp, tab[1]);
+	ft_setpwd(&ms->envp, tab[1]);
 	free_tabstr(&tab);
-	return ((*last = 0));
+	return (0);
 }

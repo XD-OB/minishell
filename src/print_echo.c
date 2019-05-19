@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:56:20 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 03:59:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:09:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void			ft_print_sbslch(char *str)
 	}
 }
 
-int				print_var(char **envp, char *var, int *last)
+int				print_var(char **envp, char *var, int last)
 {
 	int			i;
 	int			len;
@@ -38,7 +38,7 @@ int				print_var(char **envp, char *var, int *last)
 	}
 	else if (!ft_strcmp(var, "?"))
 	{
-		ft_putnbr(*last);
+		ft_putnbr(last);
 		return (1);
 	}
 	len = ft_strlen(var);
@@ -91,6 +91,7 @@ int				quote_affiche(char **tab, t_echo echo)
 
 	str = ft_strdup(tab[0]);
 	q = (tab[0][0] == 34) ? 2 : 1;
+	signal(SIGINT, SIG_DFL);
 	while (1)
 	{
 		ft_putstr((q == 2) ? "dquote> " : "quote> ");
@@ -104,6 +105,7 @@ int				quote_affiche(char **tab, t_echo echo)
 		}
 		free(tmp);
 	}
+	signal(SIGINT, handler_sigint);
 	print_ee(str, echo);
 	ft_putchar('\n');
 	free(str);

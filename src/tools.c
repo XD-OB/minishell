@@ -6,11 +6,27 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 16:18:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:14:19 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:40:28 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		init_env(t_env *env)
+{
+	env->i = 0;
+	env->u = 0;
+	env->null = 0;
+	env->start_var = 0;
+	env->start_cmd = 0;
+	env->tab = NULL;
+}
+
+void		affect_chars(char **s1, char **s2, char *val1, char *val2)
+{
+	*s1 = ft_strdup(val1);
+	*s2 = ft_strdup(val2);
+}
 
 pid_t		create_process(void)
 {
@@ -19,8 +35,8 @@ pid_t		create_process(void)
 	child_pid = fork();
 	if (child_pid != -1)
 		return (child_pid);
-	write(2, "fork: Error\n", 12);
-	exit(EXIT_FAILURE);
+	ft_dprintf(2, "%{red}-obsh%{CYAN}fork%{eoc}: error\n");
+	return (-1);
 }
 
 int			well_quoted(char *str)
@@ -45,24 +61,6 @@ int			well_quoted(char *str)
 	return (0);
 }
 
-void		set_oldpath(char ***envp, char *val)
-{
-	char	*new;
-	int		i;
-
-	i = 0;
-	new = ft_strjoin("OLDPWD=", val);
-	while ((*envp)[i] && ft_strncmp((*envp)[i], "OLDPWD=", 7))
-		i++;
-	if (!(*envp)[i])
-		add_2_tab(envp, new);
-	else
-	{
-		free((*envp)[i]);
-		(*envp)[i] = new;
-	}
-}
-
 int			found_env(char **envp, char *var)
 {
 	int		len;
@@ -77,10 +75,4 @@ int			found_env(char **envp, char *var)
 		i++;
 	}
 	return (0);
-}
-
-void		affect_chars(char **s1, char **s2, char *val1, char *val2)
-{
-	*s1 = ft_strdup(val1);
-	*s2 = ft_strdup(val2);
 }

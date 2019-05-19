@@ -6,21 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:07:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 20:24:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 00:41:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	init_env(t_env *env)
-{
-	env->i = 0;
-	env->u = 0;
-	env->null = 0;
-	env->start_var = 0;
-	env->start_cmd = 0;
-	env->tab = NULL;
-}
 
 static int	fill_opts(t_env *env, char c)
 {
@@ -33,7 +23,7 @@ static int	fill_opts(t_env *env, char c)
 	else
 	{
 		ft_dprintf(2, "env: illegal option -- %c\n", c);
-		usage_env();
+		usage_env(NULL);
 		return (1);
 	}
 	return (0);
@@ -50,7 +40,7 @@ static int	fill_longopts(t_env *env, char *str)
 	else
 	{
 		ft_dprintf(2, "env: illegal option -- %s\n", str);
-		usage_env();
+		usage_env(NULL);
 		return (1);
 	}
 	return (0);
@@ -84,29 +74,41 @@ static int	opts_env(t_env *env, char ***tab, int i)
 	return (1);
 }
 
+static void	affect_egal(t_env *env, char ***tab, int *i)
+{
+	env->start_var = *i - 1;
+	if (env->u)
+		(*i)++;
+	while ((*tab)[*i] && ft_strchr((*tab)[*i], '='))
+		(*i)++;
+	env->start_cmd = *i - 1;
+	env->tab = copy_char2(*tab, 1);
+	free_tabstr(tab);
+}
+
 int			fill_env(t_env *env, char *cmd)
 {
 	char	**tab;
+	int		fail;
 	int		i;
 	int		k;
 
 	init_env(env);
-	tab = ft_strsplit(cmd, ' ');
+	if ((fail = fail_qtest(cmd)))
+		return (0);
+	tab = clean_cmds(cmd);
 	i = 0;
 	while (tab[++i] && tab[i][0] == '-')
 	{
 		k = opts_env(env, &tab, i);
 		if (k == 2)
 			continue ;
-		if (k == 0)
+		if (k == 0 || fail)
+		{
+			free_tabstr(&tab);
 			return (0);
+		}
 	}
-	env->start_var = i - 1;
-	(env->u) ? i++ : 0;
-	while (tab[i] && ft_strchr(tab[i], '='))
-		i++;
-	env->start_cmd = i - 1;
-	env->tab = copy_char2(tab, 1);
-	free_tabstr(&tab);
+	affect_egal(env, &tab, &i);
 	return (1);
 }

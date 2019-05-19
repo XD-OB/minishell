@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 22:12:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:39:42 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/18 02:04:29 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,8 @@ void		handler_sigint(int sig)
 
 	if (sig == SIGINT)
 	{
-		pwd = getenv("PWD");
-		if (!pwd)
-		{
-			pwd = ft_strnew(500);
-			getcwd(pwd, 500);
-		}
-		else
-			pwd = ft_strdup(pwd);
+		pwd = ft_strnew(500);
+		getcwd(pwd, 500);
 		to_relative(&pwd, getenv("HOME"));
 		user = getenv("USER");
 		user = ft_strdup((!user) ? "user" : user);
@@ -43,7 +37,7 @@ void		gest_signal(t_minishell *ms)
 {
 	if (WIFEXITED(ms->status))
 	{
-		ms->last_ret = WEXITSTATUS(ms->status);
+		ms->last = WEXITSTATUS(ms->status);
 		ft_dprintf(2, "Terminated Normaly: ");
 		ft_dprintf(2, "%d\n", WEXITSTATUS(ms->status));
 	}
@@ -51,13 +45,13 @@ void		gest_signal(t_minishell *ms)
 	{
 		if (WIFSIGNALED(ms->status))
 		{
-			ms->last_ret = WTERMSIG(ms->status);
+			ms->last = WTERMSIG(ms->status);
 			ft_dprintf(2, "Killed by The Signal: ");
 			ft_dprintf(2, "%d\n", WTERMSIG(ms->status));
 		}
 		else if (WIFSTOPPED(ms->status))
 		{
-			ms->last_ret = WSTOPSIG(ms->status);
+			ms->last = WSTOPSIG(ms->status);
 			ft_dprintf(2, "Stoped by The Signal: ");
 			ft_dprintf(2, "%d\n", WSTOPSIG(ms->status));
 		}
