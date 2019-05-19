@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:29:00 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 01:18:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int				ft_echo(char **tab, t_minishell *ms)
 		else if (tab[i][0] == 34 || tab[i][0] == 39)
 		{
 			if (!tab_well_quoted(&tab[i]) && !quote_affiche(&tab[i], echo))
-				return (1);
+				return (0);
 			else
 				print_ee(tab[i], echo);
 		}

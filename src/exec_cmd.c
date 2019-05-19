@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:02:03 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 23:23:30 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 02:10:53 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,5 @@ int				exec_cmd(t_minishell *ms)
 	msg_cmd_nfound(tab[0]);
 	free_tabstr(&tab_path);
 	free_tabstr(&tab);
-	return (1);
+	return (127);
 }

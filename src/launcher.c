@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:27:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 02:18:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int			builtin_child(t_minishell *ms)
 
 int			cmd_lancher(t_minishell *ms)
 {
+	if (!ft_strcmp("false", ms->cmd) || ft_exec(ms))
+		return (1);
 	if (builtin_parent(ms))
 		return (0);
 	if ((ms->pid = create_process()) == -1)
@@ -89,10 +91,7 @@ int			cmd_lancher(t_minishell *ms)
 	if (ms->pid == 0)
 	{
 		signal(SIGINT, ms->old);
-		if (builtin_child(ms))
-			exit(ms->last);
-		else
-			exit(exec_cmd(ms));
+		exit((builtin_child(ms)) ? ms->last : exec_cmd(ms));
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:40:52 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 02:04:54 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int					ft_setenv(t_minishell *ms);
 int					ft_unsetenv(t_minishell *ms);
 int					ft_printenv(t_minishell *ms);
 int					ft_dollarenv(t_minishell *ms);
+int					ft_exec(t_minishell *ms);
 /*
 **		 usages:    ----------------------------------------------------
 */
