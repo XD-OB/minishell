@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
+#    By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/19 01:56:24 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/19 07:53:22 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ LIB = -L ./libft -lft
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit\
 			cd env echo pwd setenv unsetenv printenv dollarenv show_env usages\
 			init_fill_env rel_path print_echo exec_cmd launcher signals\
-			clean_quote ms_tools exec\
+			clean_quote ms_tools env_tools exec\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 01:20:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 09:40:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char			**get_tab_cmd(void)
 	char			*line;
 
 	get_next_line(0, &line);
-	ft_trimstr(&line);
+	ft_epurstr(&line);
 	tab_cmd = cmdsplit(line);
 	free(line);
 	return (tab_cmd);
@@ -40,6 +40,8 @@ int					main(int ac, char **av, char **envp)
 		while (ms.tab_cmd[++i])
 		{
 			ms.cmd = ms.tab_cmd[i];
+			if (!ft_strcmp(ms.cmd, ""))
+				continue ;
 			if (cmd_lancher(&ms))
 			{
 				free_ms(&ms, NULL);

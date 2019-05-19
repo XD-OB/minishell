@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unsetenv.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 22:33:11 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 07:15:15 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:23:19 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int				ft_unsetenv(t_minishell *ms)
 	char		**tab;
 	char		*var;
 
-	tab = clean_cmds(ms->cmd);
+	tab = clean_cmds(ms->cmd, 1);
 	if (wrong_arg(&tab))
 		return (1);
 	var = ft_strjoin(tab[1], "=");

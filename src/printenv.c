@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   printenv.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 18:49:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 20:48:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:23:34 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int			init_pv(t_printenv *pv, t_minishell *ms)
 {
 	pv->ret = 0;
 	pv->null = 0;
-	pv->tab = clean_cmds(ms->cmd);
+	pv->tab = clean_cmds(ms->cmd, 1);
 	if (len_tab(pv->tab) == 1)
 	{
 		show_env(ms->envp);

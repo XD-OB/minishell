@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   print_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:56:20 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:09:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:23:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			ft_print_sbslch(char *str)
+void			print_sbslch(char *str)
 {
 	int			i;
 
@@ -81,33 +81,4 @@ void			print_ee(char *str, t_echo echo)
 		else
 			ft_putchar(str[i]);
 	}
-}
-
-int				quote_affiche(char **tab, t_echo echo)
-{
-	char		*str;
-	char		*tmp;
-	int			q;
-
-	str = ft_strdup(tab[0]);
-	q = (tab[0][0] == 34) ? 2 : 1;
-	signal(SIGINT, SIG_DFL);
-	while (1)
-	{
-		ft_putstr((q == 2) ? "dquote> " : "quote> ");
-		get_next_line(0, &tmp);
-		ft_strcombin(&str, "\n");
-		ft_strcombin(&str, tmp);
-		if (ft_strchr(tmp, (q == 2) ? 34 : 39))
-		{
-			free(tmp);
-			break ;
-		}
-		free(tmp);
-	}
-	signal(SIGINT, handler_sigint);
-	print_ee(str, echo);
-	ft_putchar('\n');
-	free(str);
-	return (0);
 }

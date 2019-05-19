@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 02:04:54 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 07:56:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct		s_echo
 	int				n:1;
 	int				e:1;
 	int				cap_e:1;
+	char			**tab;
 }					t_echo;
 
 typedef struct		s_env
@@ -64,17 +65,12 @@ typedef struct		s_printenv
 	int				ret;
 }					t_printenv;
 
-void				handler_sigint(int sig);
-void				msg_error(char *msg, int n);
-pid_t				create_process(void);
-void				display_prompt(char **envp);
+/*
+**        splits:   ---------------------------------------------------
+*/
 char				**cmdsplit(const char *str);
 char				**ft_split_quote(char *tab);
 char				**ft_split_invquote(char *tab);
-int					well_quoted(char *str);
-void				show_env(char **envp);
-void				affect_chars(char **s1, char **s2, char *val1, char *val2);
-void				set_oldpath(char ***envp, char	*val);
 /*
 **  exec command:   ---------------------------------------------------
 */
@@ -86,7 +82,7 @@ int					cmd_user(char ***tab, char **envp, char **fullpath);
 /*
 **		builtins:   ---------------------------------------------------
 */
-int					ft_echo(char **av, t_minishell *ms);
+int					ft_echo(t_minishell *ms);
 int					ft_cd(t_minishell *ms);
 int					ft_env(t_minishell *ms);
 int					ft_setenv(t_minishell *ms);
@@ -103,9 +99,6 @@ void				msg_cmd_nfound(char *str);
 int					msg_usrerr(char *cmd, int n);
 int					msg_type(mode_t mode, char *cmd);
 /*
-**                  ----------------------------------------------------
-*/
-/*
 **		ms tools:   ----------------------------------------------------
 */
 void				init_minishell(t_minishell *ms, char **envp,
@@ -113,29 +106,40 @@ void				init_minishell(t_minishell *ms, char **envp,
 void				fill_new_ms(t_minishell *new_ms, t_minishell ms);
 void				free_ms(t_minishell *ms, char *cmd);
 /*
-**                  ----------------------------------------------------
+**       prints:    ----------------------------------------------------
 */
-int					exit_val(int stats);
-void				gest_signal(t_minishell *ms);
-void				ft_swap_env(char **env1, char **env2);
-int					fill_env(t_env *env, char *cmd);
-int					adv_show_env(char **envp, t_env *env, int len_t);
-void				ft_setpwd(char ***envp, char *value);
-char				*ft_getpwd(char **envp);
-int					check_fx(char *str);
-void				to_relative(char **a_path, char *home);
-void				fix_path(char **envp, char ***tab);
-int					is_relative(char *path);
-void				rel_to_abs(char **r_path);
-void				ft_print_sbslch(char *str);
+void				print_sbslch(char *str);
 int					print_var(char **envp, char *var, int last);
 void				print_ee(char *str, t_echo echo);
-int					quote_affiche(char **tab, t_echo echo);
-int					found_env(char **envp, char *var);
-void				qclean_tab(char **tab);
-char				**clean_cmds(char *cmd);
-int					fail_qtest(char *cmd);
-void				free_ms(t_minishell *ms, char *str);
+/*
+**          env:    ----------------------------------------------------
+*/
 void				init_env(t_env *env);
+int					fill_env(t_env *env, char *cmd);
+int					found_env(char **envp, char *var);
+int					adv_show_env(char **envp, t_env *env, int len_t);
+void				show_env(char **envp);
+/*
+**                  ----------------------------------------------------
+*/
+void				set_oldpath(char ***envp, char	*val);
+void				ft_setpwd(char ***envp, char *value);
+char				*ft_getpwd(char **envp);
+int					exit_val(int stats);
+pid_t				create_process(void);
+int					check_fx(char *str);
+void				fix_path(char **envp, char ***tab);
+void				to_relative(char **a_path, char *home);
+int					is_relative(char *path);
+void				rel_to_abs(char **r_path);
+int					fail_qtest(char *cmd);
+void				handler_sigint(int sig);
+void				gest_signal(t_minishell *ms);
+void				msg_error(char *msg, int n);
+void				display_prompt(char **envp);
+int					tab_well_quoted(char **tab);
+int					well_quoted(char *str);
+void				affect_chars(char **s1, char **s2, char *v1, char *v2);
+char				**clean_cmds(char *cmd, int mode);
 
 #endif

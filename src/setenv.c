@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setenv.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 18:53:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 23:32:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:23:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int		set_var_value(t_minishell *ms, char **var, char **val)
 	char	**tmp;
 	int		ret;
 
-	tab = clean_cmds(ms->cmd);
+	tab = clean_cmds(ms->cmd, 1);
 	if ((ret = error_len(ms->envp, len_tab(tab))))
 	{
 		free_tabstr(&tab);

@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 01:18:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 07:57:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,55 +72,45 @@ static int		fill_echo(int len_t, char **tab, t_echo *echo)
 	return (i - 1);
 }
 
-static int		tab_well_quoted(char **tab)
+static int		core_echo(t_minishell *ms, t_echo *echo, int len_t, int i)
 {
-	int			d_quote;
-	int			s_quote;
-	int			i;
-	int			j;
-
-	i = -1;
-	while (tab[++i])
+	if (echo->tab[i][0] == '$')
+		print_var(ms->envp, &echo->tab[i][1], ms->last);
+	else if (echo->tab[i][0] == 34 || echo->tab[i][0] == 39)
 	{
-		j = -1;
-		s_quote = 0;
-		d_quote = 0;
-		while (tab[i][++j])
+		if (!tab_well_quoted(&echo->tab[i]))
 		{
-			(tab[i][j] == 34) ? d_quote++ : 0;
-			(tab[i][j] == 39) ? s_quote++ : 0;
-		}
-		if (!(d_quote % 2) && !(s_quote % 2))
+			print_ee(echo->tab[i], *echo);
+			free_tabstr(&echo->tab);
 			return (1);
+		}
+		else
+			print_ee(echo->tab[i], *echo);
 	}
+	else
+		print_sbslch(echo->tab[i]);
+	(i < len_t - 1) ? ft_putchar(' ') : 0;
 	return (0);
 }
 
-int				ft_echo(char **tab, t_minishell *ms)
+int				ft_echo(t_minishell *ms)
 {
 	t_echo		echo;
 	int			len_t;
 	int			i;
 
-	len_t = len_tab(tab);
-	if ((i = fill_echo(len_t, tab, &echo)) == -1)
-		return (0);
-	while (++i < len_t)
+	echo.tab = clean_cmds(ms->cmd, 0);
+	len_t = len_tab(echo.tab);
+	if ((i = fill_echo(len_t, echo.tab, &echo)) == -1)
 	{
-		if (tab[i][0] == '$')
-			print_var(ms->envp, &tab[i][1], ms->last);
-		else if (tab[i][0] == 34 || tab[i][0] == 39)
-		{
-			if (!tab_well_quoted(&tab[i]) && !quote_affiche(&tab[i], echo))
-				return (0);
-			else
-				print_ee(tab[i], echo);
-		}
-		else
-			ft_print_sbslch(tab[i]);
-		(i < len_t - 1) ? ft_putchar(' ') : 0;
+		free_tabstr(&echo.tab);
+		return (0);
 	}
+	while (++i < len_t)
+		if (core_echo(ms, &echo, len_t, i))
+			return (0);
 	(echo.n) ? ft_printf("%{YELLOW}%%%{eoc}") : 0;
 	ft_putchar('\n');
+	free_tabstr(&echo.tab);
 	return (0);
 }

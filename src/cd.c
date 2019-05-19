@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:28:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:23:12 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int				ft_cd(t_minishell *ms)
 {
 	char		**tab;
 
-	tab = clean_cmds(ms->cmd);
+	tab = clean_cmds(ms->cmd, 1);
 	if (len_tab(tab) > 2)
 	{
 		ft_dprintf(2, "%{red}-obsh%{eoc}:%{CYAN} cd%{eoc}:");

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/17 07:37:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 09:12:17 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,6 @@ char				*join_from_tab(char **tab, int start, char *sep);
 char				**copy_char2(char **tab, int start);
 void				ft_trimstr(char **str);
 char				**copy_2_char(char **envp);
+void				ft_epurstr(char **str);
 
 #endif

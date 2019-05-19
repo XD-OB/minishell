@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_buitin.c                                       :+:      :+:    :+:   */
+/*   launcher.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 02:18:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:22:40 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,9 @@ int			builtin_parent(t_minishell *ms)
 
 int			builtin_child(t_minishell *ms)
 {
-	char	**tab;
-
 	if (!ft_strcmp(ms->cmd, "echo") ||
 		!ft_strncmp(ms->cmd, "echo ", 5))
-	{
-		tab = (well_quoted(ms->cmd)) ? ft_split_quote(ms->cmd)
-									: ft_split_invquote(ms->cmd);
-		ms->last = ft_echo(tab, ms);
-		free_tabstr(&tab);
-	}
+		ms->last = ft_echo(ms);
 	else if (!ft_strcmp(ms->cmd, "env") ||
 			!ft_strncmp(ms->cmd, "env ", 4))
 		ms->last = ft_env(ms);

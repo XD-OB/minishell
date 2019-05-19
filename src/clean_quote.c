@@ -3,39 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   clean_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 22:29:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 23:42:43 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:18:12 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			fail_qtest(char *cmd)
+static void		infinte_read(char **str, char q)
 {
-	int		i;
-
-	i = 0;
-	while (cmd[i] && cmd[i + 1])
-	{
-		if ((cmd[i] == 34 || cmd[i] == 39) && cmd[i + 1] == '-')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void		infinte_read(char **str, char q)
-{
-	char	*line;
-	int		len;
+	char		*line;
+	int			len;
 
 	while (1)
 	{
-		if (q == '"')
-			ft_printf("%{CYAN}dquote%{YELLOW}> %{eoc}");
-		else
+		(q == '"') ?
+			ft_printf("%{CYAN}dquote%{YELLOW}> %{eoc}") :
 			ft_printf("%{CYAN}quote%{YELLOW}> %{eoc}");
 		if (get_next_line(0, &line) == -1)
 			break ;
@@ -46,15 +31,17 @@ void		infinte_read(char **str, char q)
 				len--;
 			line[len] = '\0';
 			ft_strcombin(str, line);
+			ft_strcombin(str, "\n");
 			free(line);
 			break ;
 		}
 		ft_strcombin(str, line);
+		ft_strcombin(str, "\n");
 		free(line);
 	}
 }
 
-static void	from_secondchar(char **str)
+static void		from_secondchar(char **str)
 {
 	char		*tmp;
 
@@ -63,12 +50,12 @@ static void	from_secondchar(char **str)
 	free(tmp);
 }
 
-void		qclean_tab(char **tab)
+static void		qclean_tab(char **tab)
 {
-	char			*tmp;
-	int				len;
-	char			q;
-	int				i;
+	char		*tmp;
+	int			len;
+	char		q;
+	int			i;
 
 	i = 0;
 	while (tab[i])
@@ -92,14 +79,45 @@ void		qclean_tab(char **tab)
 	}
 }
 
-char		**clean_cmds(char *cmd)
+static void		sqclean_tab(char **tab)
 {
-	char	**tab;
+	char		*tmp;
+	int			len;
+	char		q;
+	int			i;
+
+	i = 0;
+	while (tab[i])
+	{
+		q = -1;
+		if (tab[i][0] == '"' || tab[i][0] == '\'')
+		{
+			q = tab[i][0];
+			len = ft_strlen(tab[i]);
+			if (tab[i][len - 1] != q)
+				infinte_read(&tab[i], q);
+			else
+			{
+				tmp = tab[i];
+				tab[i] = ft_strdup(tab[i]);
+				free(tmp);
+			}
+		}
+		i++;
+	}
+}
+
+char			**clean_cmds(char *cmd, int mode)
+{
+	char		**tab;
 
 	if (well_quoted(cmd))
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
-	qclean_tab(tab);
+	if (mode == 0)
+		sqclean_tab(tab);
+	else
+		qclean_tab(tab);
 	return (tab);
 }

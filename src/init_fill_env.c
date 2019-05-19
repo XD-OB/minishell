@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_fill_env.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:07:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 00:41:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:22:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int			fill_env(t_env *env, char *cmd)
 	init_env(env);
 	if ((fail = fail_qtest(cmd)))
 		return (0);
-	tab = clean_cmds(cmd);
+	tab = clean_cmds(cmd, 1);
 	i = 0;
 	while (tab[++i] && tab[i][0] == '-')
 	{

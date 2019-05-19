@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:02:03 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 02:10:53 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 08:27:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int				exec_cmd(t_minishell *ms)
 	char		**tab;
 	int			i;
 
-	tab = ft_strsplit(ms->cmd, ' ');
+	tab = clean_cmds(ms->cmd, 1);
 	if (!access(tab[0], F_OK))
 		return (cmd_user(&tab, ms->envp, NULL));
 	i = -1;
