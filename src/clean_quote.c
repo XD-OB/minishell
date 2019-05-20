@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 22:29:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 20:20:55 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:57:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static void		infinte_read(char **str, char q)
 				len--;
 			line[len] = '\0';
 			ft_strcombin(str, line);
-			ft_strcombin(str, "\n");
 			free(line);
 			break ;
 		}

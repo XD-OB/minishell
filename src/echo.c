@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 07:57:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:58:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ static int		core_echo(t_minishell *ms, t_echo *echo, int len_t, int i)
 		if (!tab_well_quoted(&echo->tab[i]))
 		{
 			print_ee(echo->tab[i], *echo);
+			ft_putchar('\n');
 			free_tabstr(&echo->tab);
 			return (1);
 		}
