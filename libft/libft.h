@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 09:12:17 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 06:52:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,9 @@ char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 int					ft_strequ(char const *s1, char const *s2);
 int					ft_strnequ(char const *s1, char const *s2, size_t n);
 char				*ft_strsub(char const *s, unsigned int start, size_t len);
+char				*ft_strfreejoin(char **s1, char **s2, int fmode);
 char				*ft_strjoin(char const *s1, char const *s2);
+void				ft_trimstr(char **str);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
 char				*ft_itoa(long long int n);
@@ -160,7 +162,6 @@ void				free_tabstr(char ***tab);
 void				add_2_tab(char ***tab, char *elem);
 char				*join_from_tab(char **tab, int start, char *sep);
 char				**copy_char2(char **tab, int start);
-void				ft_trimstr(char **str);
 char				**copy_2_char(char **envp);
 void				ft_epurstr(char **str);
 

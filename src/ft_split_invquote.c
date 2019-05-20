@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:22:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 20:21:50 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static	int		ft_not_blank(char ch)
 {
-	if (ch == ' ')
+	if (ch == ' ' || ch == '\t')
 		return (0);
 	return (1);
 }

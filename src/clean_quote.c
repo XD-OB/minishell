@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 22:29:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:18:12 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 20:20:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,18 @@ static void		sqclean_tab(char **tab)
 char			**clean_cmds(char *cmd, int mode)
 {
 	char		**tab;
+	int			i;
 
 	if (well_quoted(cmd))
 		tab = ft_split_quote(cmd);
 	else
 		tab = ft_split_invquote(cmd);
-	if (mode == 0)
+	if (!mode)
 		sqclean_tab(tab);
 	else
 		qclean_tab(tab);
+	i = -1;
+	while (tab[++i])
+		ft_trimstr(&tab[i]);
 	return (tab);
 }

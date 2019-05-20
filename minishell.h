@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 07:56:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 07:23:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ typedef struct		s_minishell
 {
 	char			**envp;
 	char			**tab_cmd;
-	t_sighandler	old;
+	int				cmd_freable;
 	char			*cmd;
 	pid_t			pid;
+	t_sighandler	old;
 	int				status;
 	int				last;
 	int				sig_int;
@@ -104,7 +105,8 @@ int					msg_type(mode_t mode, char *cmd);
 void				init_minishell(t_minishell *ms, char **envp,
 							int ac, char **av);
 void				fill_new_ms(t_minishell *new_ms, t_minishell ms);
-void				free_ms(t_minishell *ms, char *cmd);
+int					free_ms(t_minishell *ms, char *cmd);
+void				free_mscmd(t_minishell *ms);
 /*
 **       prints:    ----------------------------------------------------
 */
@@ -120,7 +122,20 @@ int					found_env(char **envp, char *var);
 int					adv_show_env(char **envp, t_env *env, int len_t);
 void				show_env(char **envp);
 /*
-**                  ----------------------------------------------------
+**     wildcard:     ----------------------------------------------------
+*/
+int					ft_wildcard(char **str, char *path);
+void				wildcard(t_minishell *ms);
+int					manage_mid(char **str, char **b_star, char **a_star);
+void				new_verify(char ***tab, char *str);
+int					is_fine_a(char *str, char *after);
+int					is_fine_b(char *str, char *before);
+void				join_tab_snull(char ***tab, char **str);
+int					is_allstar(char *str);
+char				*first_w(char *str);
+char				*last_w(char *str);
+/*
+**					-----------------------------------------------------
 */
 void				set_oldpath(char ***envp, char	*val);
 void				ft_setpwd(char ***envp, char *value);

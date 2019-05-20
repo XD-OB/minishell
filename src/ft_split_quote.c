@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/07 20:45:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:22:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/19 20:25:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static	int		ft_count_w(const char *str)
 			v[4] = 0;
 		else if (str[v[0]] == 39 && v[3])
 			v[3] = 0;
-		if (str[v[0]] == ' ' && !v[4] && !v[3] && v[1])
+		if ((str[v[0]] == ' ' || str[v[0]] == '\t') && !v[4] && !v[3] && v[1])
 			v[1] = 0;
-		if (str[v[0]] != ' ' && !v[4] && !v[3] && !v[1])
+		if (str[v[0]] != ' ' && str[v[0]] != '\t' && !v[4] && !v[3] && !v[1])
 		{
 			v[2]++;
 			v[1] = 1;
@@ -72,7 +72,7 @@ static	int		ft_size_w(const char *str, int ind)
 			i++;
 		return (i + 1 - ind);
 	}
-	while (str[i] != ' ' && str[i])
+	while (str[i] != ' ' && str[i] != '\t' && str[i])
 		i++;
 	return (i - ind);
 }
@@ -95,7 +95,7 @@ static	int		ft_position(const char *str, int *pt)
 	}
 	while (str[*pt])
 	{
-		if (str[*pt] != ' ')
+		if (str[*pt] != ' ' && str[*pt] != '\t')
 			break ;
 		(*pt)++;
 	}
