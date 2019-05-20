@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:22:40 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 22:30:17 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int			cmd_lancher(t_minishell *ms)
 {
 	if (!ft_strcmp("false", ms->cmd) || ft_exec(ms))
 		return (1);
+	if (!ft_strcmp("obsh --version", ms->cmd))
+		return (obsh_version());
 	if (builtin_parent(ms))
 		return (0);
 	if ((ms->pid = create_process()) == -1)

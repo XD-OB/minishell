@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:07:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:22:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 21:48:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,20 @@ static int	opts_env(t_env *env, char ***tab, int i)
 			if (fill_longopts(env, &((*tab)[i][++j])))
 			{
 				free_tabstr(tab);
-				return (0);
+				exit(1);
 			}
-			return (2);
+			return (0);
 		}
 		else
 		{
 			if (fill_opts(env, (*tab)[i][j]))
 			{
 				free_tabstr(tab);
-				return (0);
+				exit(1);
 			}
 		}
 	}
-	return (1);
+	return (0);
 }
 
 static void	affect_egal(t_env *env, char ***tab, int *i)
@@ -91,24 +91,19 @@ int			fill_env(t_env *env, char *cmd)
 	char	**tab;
 	int		fail;
 	int		i;
-	int		k;
 
-	init_env(env);
+	env->i = 0;
+	env->u = 0;
+	env->null = 0;
+	env->start_var = 0;
+	env->start_cmd = 0;
+	env->tab = NULL;
 	if ((fail = fail_qtest(cmd)))
 		return (0);
 	tab = clean_cmds(cmd, 1);
 	i = 0;
 	while (tab[++i] && tab[i][0] == '-')
-	{
-		k = opts_env(env, &tab, i);
-		if (k == 2)
-			continue ;
-		if (k == 0 || fail)
-		{
-			free_tabstr(&tab);
-			return (0);
-		}
-	}
+		opts_env(env, &tab, i);
 	affect_egal(env, &tab, &i);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:23:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 21:47:03 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int				ft_env(t_minishell *ms)
 	t_env			env;
 	int				len_t;
 
-	fill_new_ms(&new_ms, *ms);
 	if (!fill_env(&env, ms->cmd))
 		return (1);
+	fill_new_ms(&new_ms, *ms);
 	len_t = len_tab(env.tab);
 	if (adv_show_env(ms->envp, &env, len_t))
 		return (free_envtab_ret(&(env.tab), 0));

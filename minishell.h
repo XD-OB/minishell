@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 08:23:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 22:11:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int					ft_exec(t_minishell *ms);
 /*
 **		 usages:    ----------------------------------------------------
 */
+int					obsh_version(void);
 void				usage_env(char *f_msg);
 int					fork_error(void);
 void				msg_cmd_nfound(char *str);
@@ -116,7 +117,6 @@ void				print_ee(char *str, t_echo echo);
 /*
 **          env:    ----------------------------------------------------
 */
-void				init_env(t_env *env);
 int					fill_env(t_env *env, char *cmd);
 int					found_env(char **envp, char *var);
 int					adv_show_env(char **envp, t_env *env, int len_t);
