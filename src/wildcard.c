@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/19 20:27:55 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 08:10:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:30:45 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,38 +67,45 @@ int					ft_wildcard(char **str, char *path)
 	return (0);
 }
 
-static void			free_wildvar(char ***tab, char **pwd, char **tmp)
+static void			free_wildvar(t_minishell *ms, char ***tab,
+							char **pwd, int ret)
 {
+	ms->cmd = join_from_tab(*tab, 0, " ");
+	ms->cmd_freable = 1;
 	free_tabstr(tab);
 	free(*pwd);
-	free(*tmp);
+	if (ret == 1)
+	{
+		ft_dprintf(2, "%{RED}-obsh%{eoc}: No matches found\n");
+		(ms->cmd_freable) ? free_mscmd(ms) : 0;
+	}
 }
 
-void				wildcard(t_minishell *ms)
+int					wildcard(t_minishell *ms)
 {
 	char			*pwd;
-	char			*tmp;
 	char			**tab;
+	int				ret;
 	int				i;
 
-	if (!ft_strchr(ms->cmd, '*'))
-		return ;
-	if (!ft_strchr(ms->cmd, '"') && !ft_strchr(ms->cmd, '\''))
-	{
-		tab = ft_strsplit(ms->cmd, ' ');
-		pwd = ft_strnew(100);
-		pwd = getcwd(pwd, 100);
-		i = -1;
-		while (tab[++i])
-			if (ft_strchr(tab[i], '*'))
+	if (!ft_strchr(ms->cmd, '*') ||
+		ft_strchr(ms->cmd, '"') || ft_strchr(ms->cmd, '\''))
+		return (0);
+	ret = 0;
+	tab = ft_strsplit(ms->cmd, ' ');
+	pwd = ft_strnew(100);
+	pwd = getcwd(pwd, 100);
+	i = -1;
+	while (tab[++i])
+		if (ft_strchr(tab[i], '*'))
+		{
+			ft_wildcard(&tab[i], pwd);
+			if (!tab[i])
 			{
-				tmp = ft_strdup(tab[i]);
-				ft_wildcard(&tab[i], pwd);
-				if (!tab[i])
-					tab[i] = ft_strdup(tmp);
+				tab[i] = ft_strnew(0);
+				ret = 1;
 			}
-		ms->cmd = join_from_tab(tab, 0, " ");
-		ms->cmd_freable = 1;
-		free_wildvar(&tab, &pwd, &tmp);
-	}
+		}
+	free_wildvar(ms, &tab, &pwd, ret);
+	return (ret);
 }

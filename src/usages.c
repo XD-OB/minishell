@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 07:31:50 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:23:17 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:31:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		msg_type(mode_t mode, char *cmd)
 {
-	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+	ft_dprintf(2, "%{RED}-obsh%{eoc}: ");
 	ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
 	if (S_ISDIR(mode))
 		ft_dprintf(2, "is a Directory\n");
@@ -33,7 +33,7 @@ int		msg_type(mode_t mode, char *cmd)
 
 int		msg_usrerr(char *cmd, int n)
 {
-	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+	ft_dprintf(2, "%{RED}-obsh%{eoc}: ");
 	ft_dprintf(2, "%{CYAN}%s%{eoc}: ", cmd);
 	if (n == 0)
 		ft_dprintf(2, "Unknown error\n");
@@ -54,14 +54,14 @@ void	usage_env(char *str)
 
 int		fork_error(void)
 {
-	ft_dprintf(2, "%{red}-obsh%{eoc}: %{CYAN}fork%{eoc}: ");
+	ft_dprintf(2, "%{RED}-obsh%{eoc}: %{CYAN}fork%{eoc}: ");
 	ft_dprintf(2, "Can't create a processus");
 	return (1);
 }
 
 void	msg_cmd_nfound(char *str)
 {
-	ft_dprintf(2, "%{red}-obsh%{eoc}: ");
+	ft_dprintf(2, "%{RED}-obsh%{eoc}: ");
 	ft_dprintf(2, "%{CYAN}%s%{eoc}", str);
 	ft_dprintf(2, ": command not found\n");
 }

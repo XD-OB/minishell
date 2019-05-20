@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 15:14:17 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 06:40:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:31:59 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int					main(int ac, char **av, char **envp)
 		{
 			ms.cmd_freable = 0;
 			ms.cmd = ms.tab_cmd[i];
-			wildcard(&ms);
+			if (wildcard(&ms))
+				continue ;
 			if (ft_strcmp(ms.cmd, ""))
 				if (cmd_lancher(&ms))
 					return (free_ms(&ms, NULL));

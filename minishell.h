@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 07:23:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 08:23:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void				show_env(char **envp);
 **     wildcard:     ----------------------------------------------------
 */
 int					ft_wildcard(char **str, char *path);
-void				wildcard(t_minishell *ms);
+int					wildcard(t_minishell *ms);
 int					manage_mid(char **str, char **b_star, char **a_star);
 void				new_verify(char ***tab, char *str);
 int					is_fine_a(char *str, char *after);
