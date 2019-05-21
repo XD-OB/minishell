@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 22:11:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/20 22:57:13 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <sys/wait.h>
 # include <dirent.h>
 # include <signal.h>
-# include <readline/readline.h>
 # include "libft/libft.h"
 
 # define PATH_BUILTIN "./src/builtins:"

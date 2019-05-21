@@ -6,7 +6,7 @@
 #    By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/20 22:14:24 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/21 06:29:46 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,12 @@ all : $(NAME)
 $(NAME) :
 		@make -C ./libft re && make -C ./libft clean
 		@gcc -c $(FLAGS) -I ./ $(SRC)
-		@gcc -o $(NAME) $(OBJ) $(LIB) -lreadline
-		@echo "$(CYAN)The MINISHELL is ready :)$(EOC)"
+		@gcc -o $(NAME) $(OBJ) $(LIB)
+		@echo "$(CYAN) _______ __     _______ __ "
+		@echo "$(CYAN)|       |  |--.|     __|  |--."
+		@echo "$(CYAN)|   -   |  _  ||__     |     |"
+		@echo "$(CYAN)|_______|_____||_______|__|__|$(EOC)"
+		@echo "$(GREEN)    V1.0.1$(EOC)   by:$(GREEN) obelouch\n$(EOC)"
 
 clean :
 		@/bin/rm -rf $(OBJ)
