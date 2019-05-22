@@ -6,13 +6,13 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 00:50:12 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 21:47:03 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:52:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		env_cmd(t_minishell *ms, t_env env)
+int		env_cmd(t_minishell *ms, t_env env)
 {
 	ms->cmd = join_from_tab(env.tab, env.start_cmd, " ");
 	if (!env.tab[env.start_cmd])

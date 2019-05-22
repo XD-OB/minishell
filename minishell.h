@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 21:18:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 23:06:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,6 @@ void				fill_new_ms(t_minishell *new_ms, t_minishell ms);
 int					free_ms(t_minishell *ms, char *cmd);
 void				free_mscmd(t_minishell *ms);
 /*
-**       prints:    ----------------------------------------------------
-*/
-void				print_sbslch(char *str);
-int					print_var(char **envp, char *var, int last);
-void				print_ee(char *str, t_echo echo);
-/*
 **          env:    ----------------------------------------------------
 */
 int					fill_env(t_env *env, char *cmd);
@@ -157,6 +151,11 @@ void				add_2_dicstr(t_dicstr **tab, char *var, char *value);
 /*
 **					-----------------------------------------------------
 */
+void				replace_tilda(t_minishell *ms);
+int					found_expans(t_minishell *ms);
+int					is_relative(char *path);
+void				rel_to_abs(char **r_path);
+void				print_sbslch(char *str);
 char				*home_path(char **envp);
 char				*user_name(char **envp);
 int					is_exit(char *str);

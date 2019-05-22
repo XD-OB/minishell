@@ -6,11 +6,24 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/19 08:04:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 22:13:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:32:50 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void		print_sbslch(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != 92)
+			ft_putchar(str[i]);
+		i++;
+	}
+}
 
 int			tab_well_quoted(char **tab)
 {

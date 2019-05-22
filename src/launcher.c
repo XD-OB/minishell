@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 07:33:09 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 06:40:32 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:55:57 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ int			builtin_child(t_minishell *ms)
 	else if (!ft_strcmp(ms->cmd, "printenv") ||
 			!ft_strncmp(ms->cmd, "printenv ", 9))
 		ms->last = ft_printenv(ms);
-	//else if (ms->cmd[0] == '$' && ms->cmd[1])
-	//	ms->last = ft_dollarenv(ms);
 	else
 		return (0);
 	return (1);

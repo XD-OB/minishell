@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 08:56:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 10:23:32 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:26:52 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,53 @@ static int		var_fnd_envp(char **envp, char *str, char *tmp)
 	return(0);
 }
 
-static void		fill_var(t_minishell *ms, char **str)
+static int		var_fnd_tabvar(t_dicstr **tab, char *var, char *value)
+{
+	int			i;
+
+	i = 0;
+	while ((*tab)[i].var)
+	{
+		if (!ft_strcmp((*tab)[i].var, var))
+		{
+			if ((*tab)[i].value)
+				free((*tab)[i].value);
+			(*tab)[i].value = ft_strdup(value);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+static void		fill_var(t_minishell *ms, char *str)
 {
 	char		*tmp;
 	int			egal;
 
+	int			i;
+
 	egal = 0;
-	while ((*str)[egal] && (*str)[egal] != '=')
+	while (str[egal] && str[egal] != '=')
 		egal++;
-	tmp = ft_strndup(*str, egal);
-	if (var_fnd_envp(ms->envp, *str, tmp))
+	tmp = ft_strndup(str, egal);
+	if (var_fnd_envp(ms->envp, str, tmp))
 	{
 		free(tmp);
 		return ;
 	}
-	add_2_dicstr(&ms->tab_var, tmp, &(*str)[egal + 1]);
+	i = 0;
+	if (!ms->tab_var ||
+		!var_fnd_tabvar(&ms->tab_var, tmp, &str[egal + 1]))
+		add_2_dicstr(&ms->tab_var, tmp, &str[egal + 1]);
 	free(tmp);
 }
 
 int				affect_vars(t_minishell *ms)
 {
-	char			**tab;
-	int				len;
-	int				i;
+	char		**tab;
+	int			len;
+	int			i;
 
 	tab = ft_strsplit(ms->cmd, ' ');
 	len = len_tab(tab);
@@ -68,7 +92,7 @@ int				affect_vars(t_minishell *ms)
 		ft_trimstr(&tab[i]);
 		if (!ft_strchr(tab[i], '=') || tab[i][0] == '=')
 			break ;
-		fill_var(ms, &tab[i]);
+		fill_var(ms, tab[i]);
 	}
 	if (i < len)
 	{

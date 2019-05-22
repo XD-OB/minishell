@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 21:10:08 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 21:13:30 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 23:29:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ static char		*ft_search_value(t_minishell *ms, char *var)
 			free(tmp);
 			return (ft_strdup(&ms->envp[i][len_var]));
 		}
-	i = -1;
 	free(tmp);
-	while (ms->tab_var[++i].var)
-		if (!ft_strcmp(ms->tab_var[i].var, var))
-			return (ft_strdup(ms->tab_var[i].value));
-	ft_printf("%{RED}%s%{eoc}: Undefined variable", var);
-	return (NULL);
+	if (ms->tab_var)
+	{
+		i = -1;
+		while (ms->tab_var[++i].var)
+			if (!ft_strcmp(ms->tab_var[i].var, var))
+				return (ft_strdup(ms->tab_var[i].value));
+	}
+	ft_printf("%{RED}-obsh%{eoc}: %s: Undefined variable\n", var);
+	return (ft_strnew(0));
 }
 
 static void		dollar_echange(t_minishell *ms, char **str, int start, int end)
@@ -47,16 +50,12 @@ static void		dollar_echange(t_minishell *ms, char **str, int start, int end)
 	var = ft_strsub(*str, start + 1, end - start - 1);
 	str_end = ft_strdup(&(*str)[end]);
 	value = ft_search_value(ms, var);
-	if (value)
-	{
-		(ms->cmd_freable) ? free(*str) : (ms->cmd_freable = 1);
-		*str = ft_strjoin(str_start, value);
-		ft_strcombin(str, str_end);
-		free(var);
-	}
+	(ms->cmd_freable) ? free(*str) : (ms->cmd_freable = 1);
+	*str = ft_strjoin(str_start, value);
+	ft_strcombin(str, str_end);
 	free(str_start);
 	free(str_end);
-	free(value);
+	free(var);
 }
 
 void			replace_dollar(t_minishell *ms)
@@ -79,7 +78,6 @@ void			replace_dollar(t_minishell *ms)
 			end = i + 1;
 		if (end > 0 && start >= 0)
 		{
-					ft_printf("found dollar int start=%d , end=%d\n", start, end);			////////////////
 			dollar_echange(ms, &ms->cmd, start, end);
 			end = -1;
 			start = -1;

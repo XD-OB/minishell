@@ -6,7 +6,7 @@
 #    By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/22 21:12:24 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/22 23:06:01 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,9 +22,9 @@ LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit\
 			affect dollar cd env echo pwd exit setenv unsetenv printenv\
-			init_fill_env rel_path print_echo exec_cmd launcher signals\
+			init_fill_env rel_path show_env exec_cmd launcher signals\
 			clean_quote ms_tools tools2 exec wildcard wildcard_manage\
-			wildcard_tools usages dicstr show_env\
+			wildcard_tools usages dicstr expansions\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 

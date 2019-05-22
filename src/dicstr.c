@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 07:28:05 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 09:13:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:54:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,6 @@ void			add_2_dicstr(t_dicstr **tab, char *var, char *value)
 	if (*tab)
 		free_dicstr(tab);
 	*tab = new;
-
-	int j = -1;
-		ft_putstr("----------------------------\n");
-		while ((*tab)[++j].var)
-		{
-			ft_printf("var   %d: %s\n", j, (*tab)[j].var);
-			ft_printf("value %d: %s\n", j, (*tab)[j].value);
-		}
-		ft_putstr("----------------------------\n");
-
 }
 
 t_dicstr		*copy_2_dicstr(t_dicstr *tab)
@@ -79,6 +69,8 @@ t_dicstr		*copy_2_dicstr(t_dicstr *tab)
 	int			len;
 	int			i;
 
+	if (!tab)
+		return (NULL);
 	len = len_dicstr(tab);
 	new = (t_dicstr*)malloc(sizeof(t_dicstr) * (len + 1));
 	new[len].value = NULL;

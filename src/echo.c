@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 21:01:55 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 22:42:04 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,35 @@ static int		fill_echo(int len_t, char **tab, t_echo *echo)
 		}
 	}
 	return (i - 1);
+}
+
+static void		print_ee(char *str, t_echo echo)
+{
+	int			i;
+	char		q;
+	int			len;
+
+	q = str[0];
+	i = (q == 39 || q == 34) ? 0 : -1;
+	len = ft_strlen(str) - i;
+	while (str[++i] && str[i] != q)
+	{
+		if ((!echo.cap_e || echo.e) && str[i] == 92
+				&& ft_strchr("tabnvfre\\", str[++i]))
+		{
+			(str[i] == 't') ? ft_putchar(9) : 0;
+			(str[i] == 'a') ? ft_putchar(7) : 0;
+			(str[i] == 'b') ? ft_putchar(8) : 0;
+			(str[i] == 'n') ? ft_putchar(10) : 0;
+			(str[i] == 'v') ? ft_putchar(11) : 0;
+			(str[i] == 'f') ? ft_putchar(12) : 0;
+			(str[i] == 'r') ? ft_putchar(13) : 0;
+			(str[i] == 'e') ? ft_putchar(27) : 0;
+			(str[i] == 92) ? ft_putchar(92) : 0;
+		}
+		else
+			ft_putchar(str[i]);
+	}
 }
 
 int				ft_echo(t_minishell *ms)
