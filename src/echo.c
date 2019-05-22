@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/12 20:29:34 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 08:58:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 21:01:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,28 +72,6 @@ static int		fill_echo(int len_t, char **tab, t_echo *echo)
 	return (i - 1);
 }
 
-static int		core_echo(t_minishell *ms, t_echo *echo, int len_t, int i)
-{
-	if (echo->tab[i][0] == '$')
-		print_var(ms->envp, &echo->tab[i][1], ms->last);
-	else if (echo->tab[i][0] == 34 || echo->tab[i][0] == 39)
-	{
-		if (!tab_well_quoted(&echo->tab[i]))
-		{
-			print_ee(echo->tab[i], *echo);
-			ft_putchar('\n');
-			free_tabstr(&echo->tab);
-			return (1);
-		}
-		else
-			print_ee(echo->tab[i], *echo);
-	}
-	else
-		print_sbslch(echo->tab[i]);
-	(i < len_t - 1) ? ft_putchar(' ') : 0;
-	return (0);
-}
-
 int				ft_echo(t_minishell *ms)
 {
 	t_echo		echo;
@@ -108,10 +86,13 @@ int				ft_echo(t_minishell *ms)
 		return (0);
 	}
 	while (++i < len_t)
-		if (core_echo(ms, &echo, len_t, i))
-			return (0);
-	(echo.n) ? ft_printf("%{YELLOW}%%%{eoc}") : 0;
-	ft_putchar('\n');
+	{
+		(echo.tab[i][0] == 34 || echo.tab[i][0] == 39) ?
+			print_ee(echo.tab[i], echo) :
+			print_sbslch(echo.tab[i]);
+		(i < len_t - 1) ? ft_putchar(' ') : 0;
+	}
+	(echo.n) ? ft_printf("%{YELLOW}%%%{eoc}\n") : ft_putchar('\n');
 	free_tabstr(&echo.tab);
 	return (0);
 }

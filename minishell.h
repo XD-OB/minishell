@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/22 09:04:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 21:18:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,13 @@ int					ft_env(t_minishell *ms);
 int					ft_setenv(t_minishell *ms);
 int					ft_unsetenv(t_minishell *ms);
 int					ft_printenv(t_minishell *ms);
-int					ft_dollarenv(t_minishell *ms);
 int					ft_exec(t_minishell *ms);
 void				ft_exit(t_minishell *ms);
 /*
 **	 expansions:    ----------------------------------------------------
 */
 int					affect_vars(t_minishell *ms);
+void				replace_dollar(t_minishell *ms);
 /*
 **		 usages:    ----------------------------------------------------
 */
@@ -166,10 +166,7 @@ char				*ft_getpwd(char **envp);
 int					exit_val(int stats);
 pid_t				create_process(void);
 int					check_fx(char *str);
-//void				fix_path(char **envp, char ***tab);
 void				to_relative(char **a_path, char *home);
-//int					is_relative(char *path);
-//void				rel_to_abs(char **r_path);
 int					fail_qtest(char *cmd);
 void				handler_sigint(int sig);
 void				gest_signal(t_minishell *ms);

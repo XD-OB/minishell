@@ -6,7 +6,7 @@
 #    By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/09 14:29:38 by obelouch          #+#    #+#              #
-#    Updated: 2019/05/22 09:01:09 by obelouch         ###   ########.fr        #
+#    Updated: 2019/05/22 21:12:24 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,10 +21,10 @@ NAME = minishell
 LIB = -L ./libft -lft
 
 MINISHELL = ft_split_quote ft_split_invquote main prompt tools cmdsplit\
-			cd env echo pwd exit setenv unsetenv printenv dollarenv show_env\
+			affect dollar cd env echo pwd exit setenv unsetenv printenv\
 			init_fill_env rel_path print_echo exec_cmd launcher signals\
 			clean_quote ms_tools tools2 exec wildcard wildcard_manage\
-			wildcard_tools usages dicstr affect\
+			wildcard_tools usages dicstr show_env\
 
 SRC = $(addprefix src/, $(addsuffix .c, $(MINISHELL)))
 
@@ -45,7 +45,7 @@ $(NAME) :
 		@echo "$(CYAN)  ██║   ██║██╔══██╗╚════██║██╔══██║"
 		@echo "$(CYAN)  ╚██████╔╝██████╔╝███████║██║  ██║"
 		@echo "$(CYAN)   ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝$(EOC)"
-		@echo "$(GREEN)    V1.2$(EOC)    by:$(GREEN) obelouch\n$(EOC)"
+		@echo "$(GREEN)        V2.0$(EOC)    by:$(GREEN) obelouch\n$(EOC)"
 
 clean :
 		@/bin/rm -rf $(OBJ)
