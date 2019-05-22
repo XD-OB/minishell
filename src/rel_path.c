@@ -6,13 +6,13 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 01:02:53 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:23:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 10:23:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char		*home_path(char *envp[])
+char			*home_path(char **envp)
 {
 	char		*home;
 	int			i;
@@ -22,17 +22,37 @@ static char		*home_path(char *envp[])
 	while (envp[i])
 	{
 		if (!ft_strncmp(envp[i], "HOME=", 5))
+		{
 			home = ft_strdup(&envp[i][5]);
+			break ;
+		}
 		i++;
 	}
-	if (!home)
-		return (ft_strdup("/Users/user"));
 	return (home);
+}
+
+char			*user_name(char **envp)
+{
+	char		*user;
+	int			i;
+
+	i = 0;
+	user = NULL;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], "USER=", 5))
+		{
+			user = ft_strdup(&envp[i][5]);
+			break ;
+		}
+		i++;
+	}
+	return (user);
 }
 
 /*
 **	i:	0:i		1:j		2:k
-*/
+
 
 static void		remove_tilda(char **r_path, char *home)
 {
@@ -104,4 +124,4 @@ void			rel_to_abs(char **r_path)
 	tmp = *r_path;
 	*r_path = dir;
 	free(tmp);
-}
+}*/

@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 20:00:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/20 22:57:13 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 09:04:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,17 @@
 
 typedef void		(*t_sighandler)(int);
 
+typedef struct		s_dicstr
+{
+	char			*var;
+	char			*value;
+}					t_dicstr;
+
 typedef struct		s_minishell
 {
 	char			**envp;
 	char			**tab_cmd;
+	t_dicstr		*tab_var;
 	int				cmd_freable;
 	char			*cmd;
 	pid_t			pid;
@@ -38,6 +45,8 @@ typedef struct		s_minishell
 	int				last;
 	int				sig_int;
 	int				sig_bonus;
+	char			*home;
+	char			*user;
 }					t_minishell;
 
 typedef struct		s_echo
@@ -90,10 +99,15 @@ int					ft_unsetenv(t_minishell *ms);
 int					ft_printenv(t_minishell *ms);
 int					ft_dollarenv(t_minishell *ms);
 int					ft_exec(t_minishell *ms);
+void				ft_exit(t_minishell *ms);
+/*
+**	 expansions:    ----------------------------------------------------
+*/
+int					affect_vars(t_minishell *ms);
 /*
 **		 usages:    ----------------------------------------------------
 */
-int					obsh_version(void);
+void				obsh_version(void);
 void				usage_env(char *f_msg);
 int					fork_error(void);
 void				msg_cmd_nfound(char *str);
@@ -134,18 +148,28 @@ int					is_allstar(char *str);
 char				*first_w(char *str);
 char				*last_w(char *str);
 /*
+**		dicstr		-----------------------------------------------------
+*/
+int					len_dicstr(t_dicstr *tab);
+void				free_dicstr(t_dicstr **tab);
+t_dicstr			*copy_2_dicstr(t_dicstr *tab);
+void				add_2_dicstr(t_dicstr **tab, char *var, char *value);
+/*
 **					-----------------------------------------------------
 */
+char				*home_path(char **envp);
+char				*user_name(char **envp);
+int					is_exit(char *str);
 void				set_oldpath(char ***envp, char	*val);
 void				ft_setpwd(char ***envp, char *value);
 char				*ft_getpwd(char **envp);
 int					exit_val(int stats);
 pid_t				create_process(void);
 int					check_fx(char *str);
-void				fix_path(char **envp, char ***tab);
+//void				fix_path(char **envp, char ***tab);
 void				to_relative(char **a_path, char *home);
-int					is_relative(char *path);
-void				rel_to_abs(char **r_path);
+//int					is_relative(char *path);
+//void				rel_to_abs(char **r_path);
 int					fail_qtest(char *cmd);
 void				handler_sigint(int sig);
 void				gest_signal(t_minishell *ms);

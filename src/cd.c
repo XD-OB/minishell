@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/10 00:27:49 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/19 08:23:12 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 06:27:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int				ft_cd(t_minishell *ms)
 		free_tabstr(&tab);
 		return (1);
 	}
-	fix_path(ms->envp, &tab);
+	//fix_path(ms->envp, &tab);
 	if (cd_minus(tab, &ms->envp))
 	{
 		free_tabstr(&tab);
@@ -115,8 +115,8 @@ int				ft_cd(t_minishell *ms)
 		return (1);
 	if (!ft_strchr(tab[1], '/'))
 		isnt_complete(&tab[1]);
-	if (is_relative(tab[1]))
-		rel_to_abs(&tab[1]);
+	//if (is_relative(tab[1]))
+	//	rel_to_abs(&tab[1]);
 	ft_setpwd(&ms->envp, tab[1]);
 	free_tabstr(&tab);
 	return (0);

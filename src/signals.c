@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 22:12:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/05/18 02:04:29 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/05/22 02:14:03 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 void		handler_sigint(int sig)
 {
 	char	*user;
+	char	*home;
 	char	*pwd;
 
 	if (sig == SIGINT)
 	{
 		pwd = ft_strnew(500);
 		getcwd(pwd, 500);
-		to_relative(&pwd, getenv("HOME"));
-		user = getenv("USER");
-		user = ft_strdup((!user) ? "user" : user);
+		home = ft_strdup(getenv("HOME"));
+		if (ft_strstr(pwd, home))
+			to_relative(&pwd, home);
+		if (getenv("USER"))
+			user = ft_strdup(getenv("USER"));
+		else
+			user = ft_strdup("user");
 		ft_putchar('\n');
-		ft_printf("%{red}[%{GREEN}%s%{eoc}", user);
-		ft_printf("%{RED}:%{cyan} %s%{red}]%{eoc}", pwd);
-		ft_printf("%{RED}$%{eoc} ");
+		ft_printf("%{red}[%{GREEN}%s%{RED}:%{eoc}", user);
+		ft_printf("%{cyan} %s%{red}]%{RED}$%{eoc} ", pwd);
+		free(home);
 		free(user);
 		free(pwd);
 	}
