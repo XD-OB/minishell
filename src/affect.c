@@ -60,8 +60,6 @@ static void		fill_var(t_minishell *ms, char *str)
 	char		*tmp;
 	int			egal;
 
-	int			i;
-
 	egal = 0;
 	while (str[egal] && str[egal] != '=')
 		egal++;
@@ -71,7 +69,6 @@ static void		fill_var(t_minishell *ms, char *str)
 		free(tmp);
 		return ;
 	}
-	i = 0;
 	if (!ms->tab_var ||
 		!var_fnd_tabvar(&ms->tab_var, tmp, &str[egal + 1]))
 		add_2_dicstr(&ms->tab_var, tmp, &str[egal + 1]);

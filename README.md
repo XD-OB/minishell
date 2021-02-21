@@ -1,2 +1,24 @@
-# MINISHELL:
-Through the Minishellproject, you will get to the core of theUnixsystem and explorean important part of this system’s API: process creation and synchronisation. Executinga command inside a shell implies creating a new process, which execution and final statewill be monitored by its parent’s process. This set of functions will be the key to successfor yourMinishell, so be sure to code the cleanest, simplest program possible.
+# MiniShell
+![obsh](ressources/obsh.png)
+
+![Subject](ressources/minishell.pdf)
+
+Recoding my own little bash. A program capable of parsing a prompt and launching executables with arguments, along with a few built-in functions.
+
+![minishell](ressources/minishell.png)
+
+## Compile
+- Run `make`
+
+## Execute
+- `./minishell`
+
+![minishell](ressources/minishell.png)
+
+## Owner
+- Oussama Belouche 1337
+
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-c.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/contains-17-coffee-cups.svg)](https://forthebadge.com)
+

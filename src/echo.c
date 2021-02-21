@@ -76,11 +76,9 @@ static void		print_ee(char *str, t_echo echo)
 {
 	int			i;
 	char		q;
-	int			len;
 
 	q = str[0];
 	i = (q == 39 || q == 34) ? 0 : -1;
-	len = ft_strlen(str) - i;
 	while (str[++i] && str[i] != q)
 	{
 		if ((!echo.cap_e || echo.e) && str[i] == 92
