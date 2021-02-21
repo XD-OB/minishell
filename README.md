@@ -3,7 +3,9 @@
 
 ![Subject](ressources/minishell.pdf)
 
-Recoding my own little bash. A program capable of parsing a prompt and launching executables with arguments, along with a few built-in functions.
+Recoding my own little bash. A program capable of parsing a prompt and launching executables with arguments, along with a few built-in functions (meaning we don't call the executable, we re-coded them directly).
+- echo, pwd, cd, env, export, unset and exit.
+Alot of bonuses are added to this shell!
 
 ## Compile
 - Run `make`
